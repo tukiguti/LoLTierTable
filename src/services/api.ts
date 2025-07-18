@@ -1,6 +1,6 @@
 import type { Champion, ChampionData } from '../types';
 
-const DDRAGON_VERSION = '13.24.1';
+const DDRAGON_VERSION = '15.14.1';
 const LANGUAGE = 'ja_JP';
 
 export const API_ENDPOINTS = {
@@ -10,7 +10,10 @@ export const API_ENDPOINTS = {
   SPLASH_ART: (championId: string) => 
     `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${championId}_0.jpg`,
   LOCAL_CHAMPION_ICON: (championId: string) => `/champions/${championId}.png`,
+  LOCAL_TILE_ICON: (championId: string) => `/tiles/${championId}_0.jpg`,
   LOCAL_MANIFEST: '/champions/manifest.json',
+  LOCAL_DATA: '/data/champions.json',
+  LOCAL_DATA_MANIFEST: '/data/manifest.json',
 } as const;
 
 export class DataDragonAPI {
@@ -27,17 +30,18 @@ export class DataDragonAPI {
     return DataDragonAPI.instance;
   }
 
-  async checkLocalIcons(): Promise<boolean> {
+  async checkLocalData(): Promise<boolean> {
     try {
-      const response = await fetch(API_ENDPOINTS.LOCAL_MANIFEST);
-      if (response.ok) {
-        const manifest = await response.json();
+      // Check if local data manifest exists
+      const dataResponse = await fetch(API_ENDPOINTS.LOCAL_DATA_MANIFEST);
+      if (dataResponse.ok) {
+        const manifest = await dataResponse.json();
         this.useLocalIcons = true;
-        console.log('🎯 Local champion icons found! Using local assets.');
+        console.log('🎯 Local champion data found! Using local assets.');
         return true;
       }
     } catch (error) {
-      console.log('📡 No local icons found, using remote assets.');
+      console.log('📡 No local data found, using remote assets.');
     }
     
     this.useLocalIcons = false;
@@ -45,6 +49,7 @@ export class DataDragonAPI {
   }
 
   private getChampionIconUrl(championId: string): string {
+    // Use local champion icons (square icons) instead of tiles
     return this.useLocalIcons 
       ? API_ENDPOINTS.LOCAL_CHAMPION_ICON(championId)
       : API_ENDPOINTS.CHAMPION_ICON(championId);
@@ -58,17 +63,29 @@ export class DataDragonAPI {
       return this.championCache;
     }
 
-    // Check for local icons first
-    await this.checkLocalIcons();
-
+    // Check for local data first
+    const hasLocalData = await this.checkLocalData();
+    
     try {
-      const response = await fetch(API_ENDPOINTS.CHAMPIONS);
+      let data: ChampionData;
       
-      if (!response.ok) {
-        throw new Error(`Failed to fetch champions: ${response.status} ${response.statusText}`);
+      if (hasLocalData) {
+        // Use local data
+        console.log('📁 Loading champions from local data...');
+        const response = await fetch(API_ENDPOINTS.LOCAL_DATA);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch local champions: ${response.status}`);
+        }
+        data = await response.json();
+      } else {
+        // Use remote data
+        console.log('📡 Loading champions from remote API...');
+        const response = await fetch(API_ENDPOINTS.CHAMPIONS);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch champions: ${response.status} ${response.statusText}`);
+        }
+        data = await response.json();
       }
-
-      const data: ChampionData = await response.json();
       
       const champions: Champion[] = Object.values(data.data).map(champion => ({
         id: champion.id,
@@ -87,12 +104,12 @@ export class DataDragonAPI {
       
       return champions;
     } catch (error) {
-      console.error('Error fetching champions from API:', error);
+      console.error('Error fetching champions:', error);
       
-      // Try to load from cache if API fails
+      // Try to load from cache if both local and remote fail
       const cachedChampions = this.loadCachedChampions();
       if (cachedChampions) {
-        console.warn('Using cached champion data due to API error');
+        console.warn('Using cached champion data due to error');
         return cachedChampions;
       }
       
@@ -159,6 +176,12 @@ export class DataDragonAPI {
     this.championCache = null;
     this.lastFetch = 0;
     localStorage.removeItem('lol-champions-cache');
+  }
+
+  // Force refresh champions data
+  async refreshChampions(): Promise<Champion[]> {
+    this.clearCache();
+    return this.fetchChampions();
   }
 }
 
