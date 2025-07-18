@@ -1,0 +1,1623 @@
+{
+  "version": "13.24.1",
+  "language": "ja_JP",
+  "downloadedAt": "2025-07-18T04:02:06.834Z",
+  "champions": [
+    {
+      "id": "Aatrox",
+      "name": "エイトロックス",
+      "title": "ダーキンの暴剣",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Aatrox.png"
+    },
+    {
+      "id": "Ahri",
+      "name": "アーリ",
+      "title": "九尾の狐",
+      "tags": [
+        "Mage",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Ahri.png"
+    },
+    {
+      "id": "Akali",
+      "name": "アカリ",
+      "title": "主なき暗殺者",
+      "tags": [
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Akali.png"
+    },
+    {
+      "id": "Akshan",
+      "name": "アクシャン",
+      "title": "流浪の番人",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Akshan.png"
+    },
+    {
+      "id": "Alistar",
+      "name": "アリスター",
+      "title": "ミノタウロスの戦士",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "localIconPath": "/champions/Alistar.png"
+    },
+    {
+      "id": "Amumu",
+      "name": "アムム",
+      "title": "めそめそミイラ",
+      "tags": [
+        "Tank",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Amumu.png"
+    },
+    {
+      "id": "Anivia",
+      "name": "アニビア",
+      "title": "氷の不死鳥",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "localIconPath": "/champions/Anivia.png"
+    },
+    {
+      "id": "Annie",
+      "name": "アニー",
+      "title": "闇の申し子",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Annie.png"
+    },
+    {
+      "id": "Aphelios",
+      "name": "アフェリオス",
+      "title": "信ずる者の武器",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Aphelios.png"
+    },
+    {
+      "id": "Ashe",
+      "name": "アッシュ",
+      "title": "氷の射手",
+      "tags": [
+        "Marksman",
+        "Support"
+      ],
+      "localIconPath": "/champions/Ashe.png"
+    },
+    {
+      "id": "AurelionSol",
+      "name": "オレリオン・ソル",
+      "title": "星を創りし者",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/AurelionSol.png"
+    },
+    {
+      "id": "Azir",
+      "name": "アジール",
+      "title": "砂塵の皇帝",
+      "tags": [
+        "Mage",
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Azir.png"
+    },
+    {
+      "id": "Bard",
+      "name": "バード",
+      "title": "流離いの庇護者",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Bard.png"
+    },
+    {
+      "id": "Belveth",
+      "name": "ベル＝ヴェス",
+      "title": "ヴォイ��の女帝",
+      "tags": [
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Belveth.png"
+    },
+    {
+      "id": "Blitzcrank",
+      "name": "ブリッツクランク",
+      "title": "偉大なるスチームゴーレム",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Blitzcrank.png"
+    },
+    {
+      "id": "Brand",
+      "name": "ブランド",
+      "title": "復讐の炎",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Brand.png"
+    },
+    {
+      "id": "Braum",
+      "name": "ブラウム",
+      "title": "フレヨルドの漢気",
+      "tags": [
+        "Support",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Braum.png"
+    },
+    {
+      "id": "Briar",
+      "name": "ブライアー",
+      "title": "枷と飢え",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Briar.png"
+    },
+    {
+      "id": "Caitlyn",
+      "name": "ケイトリン",
+      "title": "ピルトーヴァーの保安官",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Caitlyn.png"
+    },
+    {
+      "id": "Camille",
+      "name": "カミール",
+      "title": "スチールシャドウ",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Camille.png"
+    },
+    {
+      "id": "Cassiopeia",
+      "name": "カシオペア",
+      "title": "毒蛇の抱擁",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Cassiopeia.png"
+    },
+    {
+      "id": "Chogath",
+      "name": "チョ＝ガス",
+      "title": "未知なる恐怖",
+      "tags": [
+        "Tank",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Chogath.png"
+    },
+    {
+      "id": "Corki",
+      "name": "コーキ",
+      "title": "豪気の爆撃手",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Corki.png"
+    },
+    {
+      "id": "Darius",
+      "name": "ダリウス",
+      "title": "ノクサスの戦斧",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Darius.png"
+    },
+    {
+      "id": "Diana",
+      "name": "ダイアナ",
+      "title": "嘲りの月",
+      "tags": [
+        "Fighter",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Diana.png"
+    },
+    {
+      "id": "Draven",
+      "name": "ドレイヴン",
+      "title": "栄光ある処刑人",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Draven.png"
+    },
+    {
+      "id": "DrMundo",
+      "name": "ドクター・ムンド",
+      "title": "ゾウンの狂人",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/DrMundo.png"
+    },
+    {
+      "id": "Ekko",
+      "name": "エコー",
+      "title": "砕けた時を渡る少年",
+      "tags": [
+        "Assassin",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Ekko.png"
+    },
+    {
+      "id": "Elise",
+      "name": "エリス",
+      "title": "蜘蛛の女帝",
+      "tags": [
+        "Mage",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Elise.png"
+    },
+    {
+      "id": "Evelynn",
+      "name": "イブリン",
+      "title": "苦悶の抱擁",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Evelynn.png"
+    },
+    {
+      "id": "Ezreal",
+      "name": "エズリアル",
+      "title": "光の冒険心",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Ezreal.png"
+    },
+    {
+      "id": "Fiddlesticks",
+      "name": "フィドルスティックス",
+      "title": "古の恐怖",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "localIconPath": "/champions/Fiddlesticks.png"
+    },
+    {
+      "id": "Fiora",
+      "name": "フィオラ",
+      "title": "高潔なるデュエリスト",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Fiora.png"
+    },
+    {
+      "id": "Fizz",
+      "name": "フィズ",
+      "title": "波間のトリックスター",
+      "tags": [
+        "Assassin",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Fizz.png"
+    },
+    {
+      "id": "Galio",
+      "name": "ガリオ",
+      "title": "伝説の巨像",
+      "tags": [
+        "Tank",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Galio.png"
+    },
+    {
+      "id": "Gangplank",
+      "name": "ガングプランク",
+      "title": "大海原の大災厄",
+      "tags": [
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Gangplank.png"
+    },
+    {
+      "id": "Garen",
+      "name": "ガレン",
+      "title": "デマーシアの勇士",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Garen.png"
+    },
+    {
+      "id": "Gnar",
+      "name": "ナー",
+      "title": "ミッシングリンク",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Gnar.png"
+    },
+    {
+      "id": "Gragas",
+      "name": "グラガス",
+      "title": "騒乱の飲んだくれ",
+      "tags": [
+        "Fighter",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Gragas.png"
+    },
+    {
+      "id": "Graves",
+      "name": "グレイブス",
+      "title": "無法者",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Graves.png"
+    },
+    {
+      "id": "Gwen",
+      "name": "グウェン",
+      "title": "聖なるお針子",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Gwen.png"
+    },
+    {
+      "id": "Hecarim",
+      "name": "ヘカリム",
+      "title": "戦場の幻影",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Hecarim.png"
+    },
+    {
+      "id": "Heimerdinger",
+      "name": "ハイマーディンガー",
+      "title": "誉れ高き発明王",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "localIconPath": "/champions/Heimerdinger.png"
+    },
+    {
+      "id": "Hwei",
+      "name": "フェイ",
+      "title": "夢想家",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Hwei.png"
+    },
+    {
+      "id": "Illaoi",
+      "name": "イラオイ",
+      "title": "海の女司祭",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Illaoi.png"
+    },
+    {
+      "id": "Irelia",
+      "name": "イレリア",
+      "title": "飛刃の舞い手",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Irelia.png"
+    },
+    {
+      "id": "Ivern",
+      "name": "アイバーン",
+      "title": "豊緑の神秘",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Ivern.png"
+    },
+    {
+      "id": "Janna",
+      "name": "ジャンナ",
+      "title": "嵐の怒り",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Janna.png"
+    },
+    {
+      "id": "JarvanIV",
+      "name": "ジャーヴァンⅣ",
+      "title": "デマーシアの儀範",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/JarvanIV.png"
+    },
+    {
+      "id": "Jax",
+      "name": "ジャックス",
+      "title": "最強の武器使い",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Jax.png"
+    },
+    {
+      "id": "Jayce",
+      "name": "ジェイス",
+      "title": "未来への希望",
+      "tags": [
+        "Fighter",
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Jayce.png"
+    },
+    {
+      "id": "Jhin",
+      "name": "ジン",
+      "title": "孤高の芸術家",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Jhin.png"
+    },
+    {
+      "id": "Jinx",
+      "name": "ジンクス",
+      "title": "暴走パンクガール",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Jinx.png"
+    },
+    {
+      "id": "Kaisa",
+      "name": "カイ＝サ",
+      "title": "虚無を知る娘",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Kaisa.png"
+    },
+    {
+      "id": "Kalista",
+      "name": "カリスタ",
+      "title": "復讐の槍",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Kalista.png"
+    },
+    {
+      "id": "Karma",
+      "name": "カルマ",
+      "title": "目覚めし者",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "localIconPath": "/champions/Karma.png"
+    },
+    {
+      "id": "Karthus",
+      "name": "カーサス",
+      "title": "死を歌う者",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Karthus.png"
+    },
+    {
+      "id": "Kassadin",
+      "name": "カサディン",
+      "title": "ヴォイドを歩む者",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Kassadin.png"
+    },
+    {
+      "id": "Katarina",
+      "name": "カタリナ",
+      "title": "凶兆の刃",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Katarina.png"
+    },
+    {
+      "id": "Kayle",
+      "name": "ケイル",
+      "title": "天空の正義",
+      "tags": [
+        "Fighter",
+        "Support"
+      ],
+      "localIconPath": "/champions/Kayle.png"
+    },
+    {
+      "id": "Kayn",
+      "name": "ケイン",
+      "title": "無情の影",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Kayn.png"
+    },
+    {
+      "id": "Kennen",
+      "name": "ケネン",
+      "title": "雷雲の担い手",
+      "tags": [
+        "Mage",
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Kennen.png"
+    },
+    {
+      "id": "Khazix",
+      "name": "カ＝ジックス",
+      "title": "ヴォイドの捕食者",
+      "tags": [
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Khazix.png"
+    },
+    {
+      "id": "Kindred",
+      "name": "キンドレッド",
+      "title": "永遠なる狩人",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Kindred.png"
+    },
+    {
+      "id": "Kled",
+      "name": "クレッド",
+      "title": "狂乱の騎兵",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Kled.png"
+    },
+    {
+      "id": "KogMaw",
+      "name": "コグ＝マウ",
+      "title": "深淵のアギト",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "localIconPath": "/champions/KogMaw.png"
+    },
+    {
+      "id": "KSante",
+      "name": "カ・サンテ",
+      "title": "ナズーマの誇り",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/KSante.png"
+    },
+    {
+      "id": "Leblanc",
+      "name": "ルブラン",
+      "title": "幻惑の奇術師",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Leblanc.png"
+    },
+    {
+      "id": "LeeSin",
+      "name": "リー・シン",
+      "title": "盲目の修行僧",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/LeeSin.png"
+    },
+    {
+      "id": "Leona",
+      "name": "レオナ",
+      "title": "暁光の戦士",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "localIconPath": "/champions/Leona.png"
+    },
+    {
+      "id": "Lillia",
+      "name": "リリア",
+      "title": "はにかみ屋の花",
+      "tags": [
+        "Fighter",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Lillia.png"
+    },
+    {
+      "id": "Lissandra",
+      "name": "リサンドラ",
+      "title": "氷の魔女",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Lissandra.png"
+    },
+    {
+      "id": "Lucian",
+      "name": "ルシアン",
+      "title": "不浄殲滅者",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Lucian.png"
+    },
+    {
+      "id": "Lulu",
+      "name": "ルル",
+      "title": "森の妖精使い",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Lulu.png"
+    },
+    {
+      "id": "Lux",
+      "name": "ラックス",
+      "title": "光の才女",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "localIconPath": "/champions/Lux.png"
+    },
+    {
+      "id": "Malphite",
+      "name": "マルファイト",
+      "title": "モノリスの欠片",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Malphite.png"
+    },
+    {
+      "id": "Malzahar",
+      "name": "マルザハール",
+      "title": "ヴォイドの予言者",
+      "tags": [
+        "Mage",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Malzahar.png"
+    },
+    {
+      "id": "Maokai",
+      "name": "マオカイ",
+      "title": "歪みし樹人",
+      "tags": [
+        "Tank",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Maokai.png"
+    },
+    {
+      "id": "MasterYi",
+      "name": "マスター・イー",
+      "title": "ウージューの剣客",
+      "tags": [
+        "Assassin",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/MasterYi.png"
+    },
+    {
+      "id": "Milio",
+      "name": "ミリオ",
+      "title": "やさしき炎",
+      "tags": [
+        "Support"
+      ],
+      "localIconPath": "/champions/Milio.png"
+    },
+    {
+      "id": "MissFortune",
+      "name": "ミス・フォーチュン",
+      "title": "美貌の賞金稼ぎ",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/MissFortune.png"
+    },
+    {
+      "id": "MonkeyKing",
+      "name": "ウーコン",
+      "title": "美猴王",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/MonkeyKing.png"
+    },
+    {
+      "id": "Mordekaiser",
+      "name": "モルデカイザー",
+      "title": "鋼の魂奪者",
+      "tags": [
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Mordekaiser.png"
+    },
+    {
+      "id": "Morgana",
+      "name": "モルガナ",
+      "title": "堕天の高潔",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "localIconPath": "/champions/Morgana.png"
+    },
+    {
+      "id": "Naafiri",
+      "name": "ナフィーリ",
+      "title": "百刃の猟犬",
+      "tags": [
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Naafiri.png"
+    },
+    {
+      "id": "Nami",
+      "name": "ナミ",
+      "title": "潮呼びの巫女",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Nami.png"
+    },
+    {
+      "id": "Nasus",
+      "name": "ナサス",
+      "title": "砂漠の司書",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Nasus.png"
+    },
+    {
+      "id": "Nautilus",
+      "name": "ノーチラス",
+      "title": "深海の巨人",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "localIconPath": "/champions/Nautilus.png"
+    },
+    {
+      "id": "Neeko",
+      "name": "ニーコ",
+      "title": "不思議のカメレオン",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "localIconPath": "/champions/Neeko.png"
+    },
+    {
+      "id": "Nidalee",
+      "name": "ニダリー",
+      "title": "半獣の狩人",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Nidalee.png"
+    },
+    {
+      "id": "Nilah",
+      "name": "ニーラ",
+      "title": "放たれし喜び",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Nilah.png"
+    },
+    {
+      "id": "Nocturne",
+      "name": "ノクターン",
+      "title": "終わりなき悪夢",
+      "tags": [
+        "Assassin",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Nocturne.png"
+    },
+    {
+      "id": "Nunu",
+      "name": "ヌヌ＆ウィルンプ",
+      "title": "少年とイエティ",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Nunu.png"
+    },
+    {
+      "id": "Olaf",
+      "name": "オラフ",
+      "title": "狂戦士",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Olaf.png"
+    },
+    {
+      "id": "Orianna",
+      "name": "オリアナ",
+      "title": "時計仕掛けの舞姫",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "localIconPath": "/champions/Orianna.png"
+    },
+    {
+      "id": "Ornn",
+      "name": "オーン",
+      "title": "山の下の焔",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Ornn.png"
+    },
+    {
+      "id": "Pantheon",
+      "name": "パンテオン",
+      "title": "砕けぬ槍",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Pantheon.png"
+    },
+    {
+      "id": "Poppy",
+      "name": "ポッピー",
+      "title": "大鎚の守護者",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Poppy.png"
+    },
+    {
+      "id": "Pyke",
+      "name": "パイク",
+      "title": "ブラッドハーバーの殺戮鬼",
+      "tags": [
+        "Support",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Pyke.png"
+    },
+    {
+      "id": "Qiyana",
+      "name": "キヤナ",
+      "title": "エレメントの女帝",
+      "tags": [
+        "Assassin",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Qiyana.png"
+    },
+    {
+      "id": "Quinn",
+      "name": "クイン",
+      "title": "デマーシアの両翼",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Quinn.png"
+    },
+    {
+      "id": "Rakan",
+      "name": "ラカン",
+      "title": "魅惑の翼",
+      "tags": [
+        "Support"
+      ],
+      "localIconPath": "/champions/Rakan.png"
+    },
+    {
+      "id": "Rammus",
+      "name": "ラムス",
+      "title": "アーマージロ",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Rammus.png"
+    },
+    {
+      "id": "RekSai",
+      "name": "レク＝サイ",
+      "title": "地底の恐怖",
+      "tags": [
+        "Fighter"
+      ],
+      "localIconPath": "/champions/RekSai.png"
+    },
+    {
+      "id": "Rell",
+      "name": "レル",
+      "title": "鋼鉄の乙女",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "localIconPath": "/champions/Rell.png"
+    },
+    {
+      "id": "Renata",
+      "name": "レナータ・グラスク",
+      "title": "ケミテック長者",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Renata.png"
+    },
+    {
+      "id": "Renekton",
+      "name": "レネクトン",
+      "title": "砂漠の解体屋",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Renekton.png"
+    },
+    {
+      "id": "Rengar",
+      "name": "レンガー",
+      "title": "孤高のハンター",
+      "tags": [
+        "Assassin",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Rengar.png"
+    },
+    {
+      "id": "Riven",
+      "name": "リヴェン",
+      "title": "贖罪の追放者",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Riven.png"
+    },
+    {
+      "id": "Rumble",
+      "name": "ランブル",
+      "title": "戦慄の機甲兵",
+      "tags": [
+        "Fighter",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Rumble.png"
+    },
+    {
+      "id": "Ryze",
+      "name": "ライズ",
+      "title": "ルーンの魔導師",
+      "tags": [
+        "Mage",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Ryze.png"
+    },
+    {
+      "id": "Samira",
+      "name": "サミーラ",
+      "title": "砂漠の薔薇",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Samira.png"
+    },
+    {
+      "id": "Sejuani",
+      "name": "セジュアニ",
+      "title": "極北の激憤",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Sejuani.png"
+    },
+    {
+      "id": "Senna",
+      "name": "セナ",
+      "title": "救済者",
+      "tags": [
+        "Marksman",
+        "Support"
+      ],
+      "localIconPath": "/champions/Senna.png"
+    },
+    {
+      "id": "Seraphine",
+      "name": "セラフィーン",
+      "title": "希望のメロディー",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "localIconPath": "/champions/Seraphine.png"
+    },
+    {
+      "id": "Sett",
+      "name": "セト",
+      "title": "ザ・ボス",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Sett.png"
+    },
+    {
+      "id": "Shaco",
+      "name": "シャコ",
+      "title": "悪魔の道化師",
+      "tags": [
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Shaco.png"
+    },
+    {
+      "id": "Shen",
+      "name": "シェン",
+      "title": "黄昏の瞳",
+      "tags": [
+        "Tank"
+      ],
+      "localIconPath": "/champions/Shen.png"
+    },
+    {
+      "id": "Shyvana",
+      "name": "シヴァーナ",
+      "title": "半龍人",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Shyvana.png"
+    },
+    {
+      "id": "Singed",
+      "name": "シンジド",
+      "title": "マッドケミスト",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Singed.png"
+    },
+    {
+      "id": "Sion",
+      "name": "サイオン",
+      "title": "不死身の重戦車",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Sion.png"
+    },
+    {
+      "id": "Sivir",
+      "name": "シヴィア",
+      "title": "戦場の女王",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Sivir.png"
+    },
+    {
+      "id": "Skarner",
+      "name": "スカーナー",
+      "title": "水晶の尖兵",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Skarner.png"
+    },
+    {
+      "id": "Sona",
+      "name": "ソナ",
+      "title": "沈黙の弦奏師",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Sona.png"
+    },
+    {
+      "id": "Soraka",
+      "name": "ソラカ",
+      "title": "星の子",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Soraka.png"
+    },
+    {
+      "id": "Swain",
+      "name": "スウェイン",
+      "title": "ノクサス帝国元帥",
+      "tags": [
+        "Mage",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Swain.png"
+    },
+    {
+      "id": "Sylas",
+      "name": "サイラス",
+      "title": "解き放たれし者",
+      "tags": [
+        "Mage",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Sylas.png"
+    },
+    {
+      "id": "Syndra",
+      "name": "シンドラ",
+      "title": "暗黒の女王",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Syndra.png"
+    },
+    {
+      "id": "TahmKench",
+      "name": "タム・ケンチ",
+      "title": "川の王様",
+      "tags": [
+        "Support",
+        "Tank"
+      ],
+      "localIconPath": "/champions/TahmKench.png"
+    },
+    {
+      "id": "Taliyah",
+      "name": "タリヤ",
+      "title": "ストーンウィーバー",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "localIconPath": "/champions/Taliyah.png"
+    },
+    {
+      "id": "Talon",
+      "name": "タロン",
+      "title": "将軍の懐刀",
+      "tags": [
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Talon.png"
+    },
+    {
+      "id": "Taric",
+      "name": "タリック",
+      "title": "ヴァロランの守護者",
+      "tags": [
+        "Support",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Taric.png"
+    },
+    {
+      "id": "Teemo",
+      "name": "ティーモ",
+      "title": "俊足の斥候",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Teemo.png"
+    },
+    {
+      "id": "Thresh",
+      "name": "スレッシュ",
+      "title": "縛鎖の看守",
+      "tags": [
+        "Support",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Thresh.png"
+    },
+    {
+      "id": "Tristana",
+      "name": "トリスターナ",
+      "title": "ヨードルの主砲",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Tristana.png"
+    },
+    {
+      "id": "Trundle",
+      "name": "トランドル",
+      "title": "トロールキング",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Trundle.png"
+    },
+    {
+      "id": "Tryndamere",
+      "name": "トリンダメア",
+      "title": "孤高の蛮王",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Tryndamere.png"
+    },
+    {
+      "id": "TwistedFate",
+      "name": "ツイステッド・フェイト",
+      "title": "不敗のイカサマ師",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/TwistedFate.png"
+    },
+    {
+      "id": "Twitch",
+      "name": "トゥイッチ",
+      "title": "黒死のドブネズミ",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Twitch.png"
+    },
+    {
+      "id": "Udyr",
+      "name": "ウディア",
+      "title": "精霊と歩む者",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Udyr.png"
+    },
+    {
+      "id": "Urgot",
+      "name": "アーゴット",
+      "title": "ドレッドノート",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Urgot.png"
+    },
+    {
+      "id": "Varus",
+      "name": "ヴァルス",
+      "title": "報復の一矢",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Varus.png"
+    },
+    {
+      "id": "Vayne",
+      "name": "ヴェイン",
+      "title": "ナイトハンター",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Vayne.png"
+    },
+    {
+      "id": "Veigar",
+      "name": "ベイガー",
+      "title": "小さき大魔王",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Veigar.png"
+    },
+    {
+      "id": "Velkoz",
+      "name": "ヴェル＝コズ",
+      "title": "ヴォイドの瞳",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Velkoz.png"
+    },
+    {
+      "id": "Vex",
+      "name": "ヴェックス",
+      "title": "終わりなき憂鬱",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Vex.png"
+    },
+    {
+      "id": "Vi",
+      "name": "ヴァイ",
+      "title": "ピルトーヴァーの用心棒",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Vi.png"
+    },
+    {
+      "id": "Viego",
+      "name": "ヴィエゴ",
+      "title": "滅びの王",
+      "tags": [
+        "Assassin",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Viego.png"
+    },
+    {
+      "id": "Viktor",
+      "name": "ビクター",
+      "title": "機械文明の先触れ",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Viktor.png"
+    },
+    {
+      "id": "Vladimir",
+      "name": "ブラッドミア",
+      "title": "真紅の死神",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Vladimir.png"
+    },
+    {
+      "id": "Volibear",
+      "name": "ボリベア",
+      "title": "無慈悲の嵐",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Volibear.png"
+    },
+    {
+      "id": "Warwick",
+      "name": "ワーウィック",
+      "title": "解き放たれたゾウンの激憤",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Warwick.png"
+    },
+    {
+      "id": "Xayah",
+      "name": "ザヤ",
+      "title": "反逆の刃",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Xayah.png"
+    },
+    {
+      "id": "Xerath",
+      "name": "ゼラス",
+      "title": "超越魔神",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Xerath.png"
+    },
+    {
+      "id": "XinZhao",
+      "name": "シン・ジャオ",
+      "title": "デマーシアの家令長",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/XinZhao.png"
+    },
+    {
+      "id": "Yasuo",
+      "name": "ヤスオ",
+      "title": "赦されざる者",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Yasuo.png"
+    },
+    {
+      "id": "Yone",
+      "name": "ヨネ",
+      "title": "忘られざる者",
+      "tags": [
+        "Assassin",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Yone.png"
+    },
+    {
+      "id": "Yorick",
+      "name": "ヨリック",
+      "title": "魂の導き手",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "localIconPath": "/champions/Yorick.png"
+    },
+    {
+      "id": "Yuumi",
+      "name": "ユーミ",
+      "title": "マジカルキャット",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Yuumi.png"
+    },
+    {
+      "id": "Zac",
+      "name": "ザック",
+      "title": "親愛なる秘密兵器",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "localIconPath": "/champions/Zac.png"
+    },
+    {
+      "id": "Zed",
+      "name": "ゼド",
+      "title": "影の頭領",
+      "tags": [
+        "Assassin"
+      ],
+      "localIconPath": "/champions/Zed.png"
+    },
+    {
+      "id": "Zeri",
+      "name": "ゼリ",
+      "title": "ゾウンの火花",
+      "tags": [
+        "Marksman"
+      ],
+      "localIconPath": "/champions/Zeri.png"
+    },
+    {
+      "id": "Ziggs",
+      "name": "ジグス",
+      "title": "ヘクス爆薬のエキスパート",
+      "tags": [
+        "Mage"
+      ],
+      "localIconPath": "/champions/Ziggs.png"
+    },
+    {
+      "id": "Zilean",
+      "name": "ジリアン",
+      "title": "時の番人",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "localIconPath": "/champions/Zilean.png"
+    },
+    {
+      "id": "Zoe",
+      "name": "ゾーイ",
+      "title": "超常の遊び",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "localIconPath": "/champions/Zoe.png"
+    },
+    {
+      "id": "Zyra",
+      "name": "ザイラ",
+      "title": "茨の目覚め",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "localIconPath": "/champions/Zyra.png"
+    }
+  ]
+}
