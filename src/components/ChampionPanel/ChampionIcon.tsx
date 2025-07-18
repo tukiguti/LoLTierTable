@@ -39,12 +39,12 @@ export const ChampionIcon: React.FC<ChampionIconProps> = ({
         <img
           src={champion.iconUrl}
           alt={champion.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover rounded-lg"
           onError={handleImageError}
           loading="lazy"
         />
       ) : (
-        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+        <div className="w-full h-full bg-gray-200 flex items-center justify-center rounded-lg">
           <span className="text-xs font-semibold text-gray-600 text-center p-1">
             {champion.name}
           </span>

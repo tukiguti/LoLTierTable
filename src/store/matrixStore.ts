@@ -6,8 +6,8 @@ export const useMatrixStore = create<MatrixState>((set) => ({
   xAxisLabel: 'X軸',
   yAxisLabel: 'Y軸',
   gridSize: {
-    width: 10,
-    height: 10,
+    width: 11,
+    height: 11,
   },
 
   addChampion: (champion: Champion, x: number, y: number) =>
@@ -52,19 +52,22 @@ export const useMatrixStore = create<MatrixState>((set) => ({
 
   updateGridSize: (width: number, height: number) =>
     set((state) => {
-      const newWidth = Math.max(5, Math.min(width, 20));
-      const newHeight = Math.max(5, Math.min(height, 20));
+      // Force odd numbers for center axis
+      const newWidth = Math.max(5, Math.min(width, 19));
+      const newHeight = Math.max(5, Math.min(height, 19));
+      const oddWidth = newWidth % 2 === 0 ? newWidth + 1 : newWidth;
+      const oddHeight = newHeight % 2 === 0 ? newHeight + 1 : newHeight;
       
       // Adjust champion positions if they're outside new grid
       const adjustedChampions = state.champions.map(pc => ({
         ...pc,
-        x: Math.min(pc.x, newWidth - 1),
-        y: Math.min(pc.y, newHeight - 1),
+        x: Math.min(pc.x, oddWidth - 1),
+        y: Math.min(pc.y, oddHeight - 1),
       }));
 
       return {
         ...state,
-        gridSize: { width: newWidth, height: newHeight },
+        gridSize: { width: oddWidth, height: oddHeight },
         champions: adjustedChampions,
       };
     }),
@@ -74,6 +77,6 @@ export const useMatrixStore = create<MatrixState>((set) => ({
       champions: [],
       xAxisLabel: 'X軸',
       yAxisLabel: 'Y軸',
-      gridSize: { width: 10, height: 10 },
+      gridSize: { width: 11, height: 11 },
     })),
 }));

@@ -41,7 +41,7 @@ export const TierRow: React.FC<TierRowProps> = ({
     <div className="flex items-center bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm mb-2">
       {/* Tier Label Section */}
       <div 
-        className="w-24 h-16 flex items-center justify-center text-white font-bold text-lg relative"
+        className="w-24 h-20 flex items-center justify-center text-white font-bold text-lg relative"
         style={{ backgroundColor: tier.color, color: 'white' }}
       >
         {isEditing ? (
@@ -81,12 +81,12 @@ export const TierRow: React.FC<TierRowProps> = ({
       <DroppableZone
         id={tier.id}
         data={{ tier }}
-        className="flex-1 min-h-16 p-2"
+        className="flex-1 min-h-20 p-2"
         activeClassName="bg-blue-50 border-blue-300"
       >
         <div className="flex flex-wrap gap-2">
           {tier.champions.length === 0 ? (
-            <div className="w-full h-12 flex items-center justify-center text-gray-400 text-sm border-2 border-dashed border-gray-200 rounded">
+            <div className="w-full h-16 flex items-center justify-center text-gray-400 text-sm border-2 border-dashed border-gray-200 rounded">
               チャンピオンをドロップ
             </div>
           ) : (
@@ -95,7 +95,7 @@ export const TierRow: React.FC<TierRowProps> = ({
                 key={`${tier.id}__${champion.id}__${index}`}
                 uniqueId={`${tier.id}__${champion.id}__${index}`}
                 champion={champion}
-                size="small"
+                size="medium"
               />
             ))
           )}
@@ -103,7 +103,7 @@ export const TierRow: React.FC<TierRowProps> = ({
       </DroppableZone>
 
       {/* Actions */}
-      <div className="w-12 flex flex-col h-16">
+      <div className="w-12 flex flex-col h-20">
         {canDelete && (
           <button
             onClick={() => onDeleteTier(tier.id)}
