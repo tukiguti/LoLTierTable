@@ -97,7 +97,7 @@ function App() {
         const row = parseInt(rowStr);
         const col = parseInt(colStr);
         x = col;
-        y = 11 - 1 - row;  // Flip Y axis to match grid coordinate system
+        y = row;  // Use row directly without flipping for center axis
         // For center axis, we don't set a quadrant (leave it undefined)
       } else {
         // Handle quadrant drops: format like "topLeft-2-1"
@@ -130,8 +130,16 @@ function App() {
         }
         
         // Place the champion at the new position
-        // Only set quadrant if we're in quadrant mode
-        const finalQuadrant = currentMode === 'quadrant' ? quadrant : undefined;
+        // Set quadrant based on mode and drop location
+        let finalQuadrant: string | undefined = undefined;
+        if (currentMode === 'quadrant') {
+          if (quadrant) {
+            finalQuadrant = quadrant; // Normal quadrant
+          } else {
+            finalQuadrant = 'center'; // Center axis in quadrant mode
+          }
+        }
+        // For grid mode, finalQuadrant remains undefined
         addChampionToMatrix(champion, x, y, finalQuadrant);
       }
     }
