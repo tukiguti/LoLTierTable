@@ -5,17 +5,33 @@ export const useMatrixStore = create<MatrixState>((set) => ({
   champions: [],
   xAxisLabel: 'X軸',
   yAxisLabel: 'Y軸',
+  topLabel: '上',
+  bottomLabel: '下',
+  leftLabel: '左',
+  rightLabel: '右',
+  matrixType: 'grid',
+  quadrantLabels: {
+    topLeft: '第2象限',
+    topRight: '第1象限',
+    bottomLeft: '第3象限',
+    bottomRight: '第4象限',
+  },
   gridSize: {
     width: 11,
     height: 11,
   },
 
-  addChampion: (champion: Champion, x: number, y: number) =>
+  addChampion: (champion: Champion, x: number, y: number, quadrant?: string) =>
     set((state) => {
       const newPlacedChampion: PlacedChampion = {
         champion,
-        x: Math.max(0, Math.min(x, state.gridSize.width - 1)),
-        y: Math.max(0, Math.min(y, state.gridSize.height - 1)),
+        x: state.matrixType === 'quadrant' && quadrant 
+          ? Math.max(0, Math.min(x, Math.floor(state.gridSize.width / 2) - 1))
+          : Math.max(0, Math.min(x, state.gridSize.width - 1)),
+        y: state.matrixType === 'quadrant' && quadrant 
+          ? Math.max(0, Math.min(y, Math.floor(state.gridSize.width / 2) - 1))
+          : Math.max(0, Math.min(y, state.gridSize.height - 1)),
+        quadrant,
       };
 
       return {
@@ -50,6 +66,30 @@ export const useMatrixStore = create<MatrixState>((set) => ({
   updateYAxisLabel: (label: string) =>
     set((state) => ({ ...state, yAxisLabel: label })),
 
+  updateTopLabel: (label: string) =>
+    set((state) => ({ ...state, topLabel: label })),
+
+  updateBottomLabel: (label: string) =>
+    set((state) => ({ ...state, bottomLabel: label })),
+
+  updateLeftLabel: (label: string) =>
+    set((state) => ({ ...state, leftLabel: label })),
+
+  updateRightLabel: (label: string) =>
+    set((state) => ({ ...state, rightLabel: label })),
+
+  setMatrixType: (type: 'grid' | 'quadrant') =>
+    set((state) => ({ ...state, matrixType: type })),
+
+  updateQuadrantLabel: (quadrant: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string) =>
+    set((state) => ({
+      ...state,
+      quadrantLabels: {
+        ...state.quadrantLabels,
+        [quadrant]: label,
+      },
+    })),
+
   updateGridSize: (width: number, height: number) =>
     set((state) => {
       // Force odd numbers for center axis
@@ -77,6 +117,17 @@ export const useMatrixStore = create<MatrixState>((set) => ({
       champions: [],
       xAxisLabel: 'X軸',
       yAxisLabel: 'Y軸',
+      topLabel: '上',
+      bottomLabel: '下',
+      leftLabel: '左',
+      rightLabel: '右',
+      matrixType: 'grid',
+      quadrantLabels: {
+        topLeft: '第2象限',
+        topRight: '第1象限',
+        bottomLeft: '第3象限',
+        bottomRight: '第4象限',
+      },
       gridSize: { width: 11, height: 11 },
     })),
 }));

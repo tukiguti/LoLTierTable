@@ -1,6 +1,7 @@
 import React from 'react';
 import { useMatrixStore } from '../../store/matrixStore';
 import { MatrixGrid } from './MatrixGrid';
+import { QuadrantGrid } from './QuadrantGrid';
 import { MatrixControls } from './MatrixControls';
 import { DroppableZone } from '../DragDrop/DroppableZone';
 
@@ -14,10 +15,22 @@ export const Matrix: React.FC<MatrixProps> = ({ onSave, onExport }) => {
     champions,
     xAxisLabel,
     yAxisLabel,
+    topLabel,
+    bottomLabel,
+    leftLabel,
+    rightLabel,
     gridSize,
+    matrixType,
+    quadrantLabels,
     updateXAxisLabel,
     updateYAxisLabel,
+    updateTopLabel,
+    updateBottomLabel,
+    updateLeftLabel,
+    updateRightLabel,
     updateGridSize,
+    setMatrixType,
+    updateQuadrantLabel,
     resetMatrix,
   } = useMatrixStore();
 
@@ -46,24 +59,46 @@ export const Matrix: React.FC<MatrixProps> = ({ onSave, onExport }) => {
   return (
     <div className="space-y-4">
       <MatrixControls
-        xAxisLabel={xAxisLabel}
-        yAxisLabel={yAxisLabel}
+        topLabel={topLabel}
+        bottomLabel={bottomLabel}
+        leftLabel={leftLabel}
+        rightLabel={rightLabel}
         gridSize={gridSize}
-        onXAxisLabelChange={updateXAxisLabel}
-        onYAxisLabelChange={updateYAxisLabel}
+        matrixType={matrixType}
+        quadrantLabels={quadrantLabels}
+        onTopLabelChange={updateTopLabel}
+        onBottomLabelChange={updateBottomLabel}
+        onLeftLabelChange={updateLeftLabel}
+        onRightLabelChange={updateRightLabel}
         onGridSizeChange={updateGridSize}
+        onMatrixTypeChange={setMatrixType}
+        onQuadrantLabelChange={updateQuadrantLabel}
         onReset={handleReset}
         onSave={onSave ? handleSave : undefined}
         onExport={onExport ? handleExport : undefined}
       />
 
       <div className="flex justify-center">
-        <MatrixGrid
-          champions={champions}
-          gridSize={gridSize}
-          xAxisLabel={xAxisLabel}
-          yAxisLabel={yAxisLabel}
-        />
+        {matrixType === 'grid' ? (
+          <MatrixGrid
+            champions={champions}
+            gridSize={gridSize}
+            topLabel={topLabel}
+            bottomLabel={bottomLabel}
+            leftLabel={leftLabel}
+            rightLabel={rightLabel}
+          />
+        ) : (
+          <QuadrantGrid
+            champions={champions}
+            topLabel={topLabel}
+            bottomLabel={bottomLabel}
+            leftLabel={leftLabel}
+            rightLabel={rightLabel}
+            quadrantLabels={quadrantLabels}
+            quadrantSize={Math.floor(gridSize.width / 2)} // Use half of grid width for quadrant size
+          />
+        )}
       </div>
 
       {/* Trash Bin */}

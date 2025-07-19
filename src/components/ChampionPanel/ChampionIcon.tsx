@@ -9,9 +9,9 @@ interface ChampionIconProps {
 }
 
 const sizeClasses = {
-  small: 'w-8 h-8',
-  medium: 'w-12 h-12',
-  large: 'w-16 h-16',
+  small: 'w-12 h-12',
+  medium: 'w-16 h-16',
+  large: 'w-20 h-20',
 };
 
 export const ChampionIcon: React.FC<ChampionIconProps> = ({

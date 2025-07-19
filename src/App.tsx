@@ -61,11 +61,11 @@ function App() {
         const championId = parts[1];
         const championIndex = parseInt(parts[2]);
         removeChampionFromTier(championId, sourceTierId, championIndex);
-      } else if (currentMode === 'matrix' && draggedId.startsWith('matrix-')) {
+      } else if (currentMode === 'matrix' && (draggedId.startsWith('matrix-') || draggedId.startsWith('quadrant-'))) {
         // Remove from matrix
         const { removeChampion } = useMatrixStore.getState();
         const parts = draggedId.split('-');
-        if (parts.length >= 4) {
+        if (parts.length >= 3) {
           const championId = parts[1];
           removeChampion(championId);
         }
@@ -74,25 +74,46 @@ function App() {
     }
 
     // Handle matrix drops when in matrix mode
-    if (currentMode === 'matrix' && overId.startsWith('matrix-')) {
-      const [, xStr, yStr] = overId.split('-');
-      const x = parseInt(xStr);
-      const y = parseInt(yStr);
+    if (currentMode === 'matrix' && (overId.startsWith('matrix-') || overId.includes('-'))) {
+      let x: number, y: number, quadrant: string | undefined;
       
-      if (!isNaN(x) && !isNaN(y) && x >= 0 && x < gridSize.width && y >= 0 && y < gridSize.height) {
+      if (overId.startsWith('matrix-')) {
+        const [, xStr, yStr] = overId.split('-');
+        x = parseInt(xStr);
+        y = parseInt(yStr);
+      } else {
+        // Handle quadrant drops: format like "topLeft-2-1" or "quadrant-topLeft-2-1"
+        const parts = overId.split('-');
+        if (parts.length >= 3) {
+          if (parts[0] === 'quadrant') {
+            quadrant = parts[1];
+            x = parseInt(parts[2]);
+            y = parseInt(parts[3]);
+          } else {
+            // Direct quadrant format: "topLeft-2-1"
+            quadrant = parts[0];
+            x = parseInt(parts[1]);
+            y = parseInt(parts[2]);
+          }
+        } else {
+          return;
+        }
+      }
+      
+      if (!isNaN(x) && !isNaN(y) && x >= 0 && y >= 0) {
         // Check if this is a placed champion being moved
-        if (draggedId.startsWith('matrix-')) {
+        if (draggedId.includes('-') && (draggedId.startsWith('matrix-') || draggedId.startsWith('quadrant-') || draggedId.includes('topLeft') || draggedId.includes('topRight') || draggedId.includes('bottomLeft') || draggedId.includes('bottomRight'))) {
           // This is a placed champion - remove from old position first
           const { removeChampion } = useMatrixStore.getState();
           const parts = draggedId.split('-');
-          if (parts.length >= 4) {
-            const [, championId, oldX, oldY] = parts;
+          if (parts.length >= 2) {
+            const championId = parts[1] || parts[0]; // Handle different formats
             removeChampion(championId);
           }
         }
         
         // Place the champion at the new position
-        addChampionToMatrix(champion, x, y);
+        addChampionToMatrix(champion, x, y, quadrant);
       }
     }
     
