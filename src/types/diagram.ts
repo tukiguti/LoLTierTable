@@ -1,7 +1,7 @@
 import type { TierListData } from './tierlist';
 import type { MatrixData } from './matrix';
 
-export type DiagramType = 'tierlist' | 'matrix';
+export type DiagramType = 'tierlist' | 'matrix' | 'quadrant';
 
 export interface SavedDiagram {
   id: string;

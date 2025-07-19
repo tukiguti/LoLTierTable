@@ -142,4 +142,10 @@ export const useTierListStore = create<TierListState>((set) => ({
       tiers: DEFAULT_TIERS,
       unplacedChampions: state.unplacedChampions // Keep unplacedChampions available
     })),
+
+  resetTiers: () =>
+    set((state) => ({
+      tiers: DEFAULT_TIERS,
+      unplacedChampions: state.unplacedChampions // Keep unplacedChampions available
+    })),
 }));

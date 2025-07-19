@@ -23,11 +23,11 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Mode Toggle */}
           <div className="flex items-center">
-            <div className="bg-gray-100 p-1 rounded-lg">
+            <div className="bg-gray-100 p-1 rounded-lg flex">
               <button
                 onClick={() => onModeChange('tierlist')}
                 className={`
-                  px-4 py-2 text-sm font-medium rounded-md transition-colors
+                  px-3 py-2 text-sm font-medium rounded-md transition-colors
                   ${currentMode === 'tierlist'
                     ? 'bg-white text-gray-900 shadow-sm'
                     : 'text-gray-600 hover:text-gray-900'
@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 onClick={() => onModeChange('matrix')}
                 className={`
-                  px-4 py-2 text-sm font-medium rounded-md transition-colors
+                  px-3 py-2 text-sm font-medium rounded-md transition-colors mx-1
                   ${currentMode === 'matrix'
                     ? 'bg-white text-gray-900 shadow-sm'
                     : 'text-gray-600 hover:text-gray-900'
@@ -47,6 +47,18 @@ export const Header: React.FC<HeaderProps> = ({
                 `}
               >
                 マトリクス
+              </button>
+              <button
+                onClick={() => onModeChange('quadrant')}
+                className={`
+                  px-3 py-2 text-sm font-medium rounded-md transition-colors
+                  ${currentMode === 'quadrant'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                  }
+                `}
+              >
+                4分割マトリクス
               </button>
             </div>
           </div>

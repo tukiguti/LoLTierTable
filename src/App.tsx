@@ -6,8 +6,9 @@ import { useChampionData } from './hooks/useChampionData';
 import { Header } from './components/Layout/Header';
 import { Sidebar } from './components/Layout/Sidebar';
 import { LoadingSpinner } from './components/Layout/LoadingSpinner';
-import { TierList } from './components/TierList';
-import { Matrix } from './components/Matrix';
+import { SimpleTierList } from './components/TierList/SimpleTierList';
+import { GridMatrix } from './components/Matrix/GridMatrix';
+import { QuadrantMatrix } from './components/Matrix/QuadrantMatrix';
 import { DragDropContext } from './components/DragDrop/DragDropContext';
 import type { Champion } from './types';
 import type { DragEndEvent } from '@dnd-kit/core';
@@ -24,10 +25,7 @@ function App() {
   const { champions, loading } = useChampionData();
   const { setUnplacedChampions } = useTierListStore();
   const { 
-    addChampion: addChampionToMatrix, 
-    moveChampion: moveChampionInMatrix,
-    champions: matrixChampions,
-    gridSize 
+    addChampion: addChampionToMatrix
   } = useMatrixStore();
 
   // Initialize unplaced champions when champion data loads
@@ -61,11 +59,18 @@ function App() {
         const championId = parts[1];
         const championIndex = parseInt(parts[2]);
         removeChampionFromTier(championId, sourceTierId, championIndex);
-      } else if (currentMode === 'matrix' && (draggedId.startsWith('matrix-') || draggedId.startsWith('quadrant-'))) {
-        // Remove from matrix
+      } else if ((currentMode === 'matrix' || currentMode === 'quadrant') && 
+                 (draggedId.startsWith('grid-') || 
+                  draggedId.startsWith('matrix-') || 
+                  draggedId.startsWith('center-') ||
+                  draggedId.startsWith('topLeft-') || 
+                  draggedId.startsWith('topRight-') || 
+                  draggedId.startsWith('bottomLeft-') || 
+                  draggedId.startsWith('bottomRight-'))) {
+        // Remove from matrix (both grid and quadrant modes)
         const { removeChampion } = useMatrixStore.getState();
         const parts = draggedId.split('-');
-        if (parts.length >= 3) {
+        if (parts.length >= 2) {
           const championId = parts[1];
           removeChampion(championId);
         }
@@ -73,28 +78,34 @@ function App() {
       return;
     }
 
-    // Handle matrix drops when in matrix mode
-    if (currentMode === 'matrix' && (overId.startsWith('matrix-') || overId.includes('-'))) {
+    // Handle matrix drops when in matrix or quadrant mode
+    if ((currentMode === 'matrix' || currentMode === 'quadrant') && 
+        (overId.startsWith('grid-') || overId.startsWith('matrix-') || overId.startsWith('center-') || overId.includes('-'))) {
       let x: number, y: number, quadrant: string | undefined;
       
-      if (overId.startsWith('matrix-')) {
+      if (overId.startsWith('grid-')) {
         const [, xStr, yStr] = overId.split('-');
         x = parseInt(xStr);
         y = parseInt(yStr);
+      } else if (overId.startsWith('matrix-')) {
+        const [, xStr, yStr] = overId.split('-');
+        x = parseInt(xStr);
+        y = parseInt(yStr);
+      } else if (overId.startsWith('center-')) {
+        // Handle center axis drops - format is "center-row-col"
+        const [, rowStr, colStr] = overId.split('-');
+        const row = parseInt(rowStr);
+        const col = parseInt(colStr);
+        x = col;
+        y = 11 - 1 - row;  // Flip Y axis to match grid coordinate system
+        // For center axis, we don't set a quadrant (leave it undefined)
       } else {
-        // Handle quadrant drops: format like "topLeft-2-1" or "quadrant-topLeft-2-1"
+        // Handle quadrant drops: format like "topLeft-2-1"
         const parts = overId.split('-');
         if (parts.length >= 3) {
-          if (parts[0] === 'quadrant') {
-            quadrant = parts[1];
-            x = parseInt(parts[2]);
-            y = parseInt(parts[3]);
-          } else {
-            // Direct quadrant format: "topLeft-2-1"
-            quadrant = parts[0];
-            x = parseInt(parts[1]);
-            y = parseInt(parts[2]);
-          }
+          quadrant = parts[0];
+          x = parseInt(parts[1]);
+          y = parseInt(parts[2]);
         } else {
           return;
         }
@@ -102,18 +113,26 @@ function App() {
       
       if (!isNaN(x) && !isNaN(y) && x >= 0 && y >= 0) {
         // Check if this is a placed champion being moved
-        if (draggedId.includes('-') && (draggedId.startsWith('matrix-') || draggedId.startsWith('quadrant-') || draggedId.includes('topLeft') || draggedId.includes('topRight') || draggedId.includes('bottomLeft') || draggedId.includes('bottomRight'))) {
+        if (draggedId.startsWith('grid-') || 
+            draggedId.startsWith('matrix-') || 
+            draggedId.startsWith('center-') ||
+            draggedId.startsWith('topLeft-') || 
+            draggedId.startsWith('topRight-') || 
+            draggedId.startsWith('bottomLeft-') || 
+            draggedId.startsWith('bottomRight-')) {
           // This is a placed champion - remove from old position first
           const { removeChampion } = useMatrixStore.getState();
           const parts = draggedId.split('-');
           if (parts.length >= 2) {
-            const championId = parts[1] || parts[0]; // Handle different formats
+            const championId = parts[1];
             removeChampion(championId);
           }
         }
         
         // Place the champion at the new position
-        addChampionToMatrix(champion, x, y, quadrant);
+        // Only set quadrant if we're in quadrant mode
+        const finalQuadrant = currentMode === 'quadrant' ? quadrant : undefined;
+        addChampionToMatrix(champion, x, y, finalQuadrant);
       }
     }
     
@@ -177,11 +196,9 @@ function App() {
           />
 
           <main className="flex-1 overflow-auto p-4 lg:p-6">
-            {currentMode === 'tierlist' ? (
-              <TierList />
-            ) : (
-              <Matrix />
-            )}
+            {currentMode === 'tierlist' && <SimpleTierList />}
+            {currentMode === 'matrix' && <GridMatrix />}
+            {currentMode === 'quadrant' && <QuadrantMatrix />}
           </main>
         </div>
       </DragDropContext>
