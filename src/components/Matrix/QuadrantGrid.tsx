@@ -88,10 +88,12 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
               pc.y === localY
             )
           : champions.find(pc => 
-              !pc.quadrant && 
+              pc.quadrant === 'center' && 
               pc.x === col && 
-              pc.y === (totalSize - 1 - row)  // Flip Y axis for consistency
+              pc.y === row
             );
+            
+            
             
         
         const cellId = quadrantType 
@@ -124,7 +126,7 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
               <DraggableChampion
                 uniqueId={quadrantType 
                   ? `${quadrantType}-${champion.champion.id}-${localX}-${localY}`
-                  : `center-${champion.champion.id}-${col}-${totalSize - 1 - row}`
+                  : `center-${champion.champion.id}-${col}-${row}`
                 }
                 champion={champion.champion}
                 size="small"

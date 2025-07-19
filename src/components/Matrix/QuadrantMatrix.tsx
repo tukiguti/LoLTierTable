@@ -49,7 +49,12 @@ export const QuadrantMatrix: React.FC = () => {
 
   const handleReset = () => {
     if (window.confirm('4分割マトリクスをリセットしますか？配置されたチャンピオンも削除されます。')) {
-      resetMatrix();
+      // Remove only quadrant mode champions (keep grid mode champions)
+      const { removeChampion } = useMatrixStore.getState();
+      const quadrantChampionsToRemove = champions.filter(pc => pc.quadrant !== undefined);
+      quadrantChampionsToRemove.forEach(pc => {
+        removeChampion(pc.champion.id);
+      });
     }
   };
 
@@ -249,7 +254,7 @@ export const QuadrantMatrix: React.FC = () => {
 
       {/* Stats */}
       <div className="text-center text-sm text-gray-500">
-        配置済みチャンピオン: {champions.length} 体
+        配置済みチャンピオン: {champions.filter(pc => pc.quadrant !== undefined).length} 体
       </div>
     </div>
   );

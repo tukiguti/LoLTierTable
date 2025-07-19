@@ -28,10 +28,10 @@ export const GridMatrix: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
 
   const gridSize = 10;
-  const cellSize = 45;
+  const cellSize = 55; // Increased from 45 to 55
 
-  // Get champions that are NOT in quadrant mode (no quadrant property)
-  const gridChampions = champions.filter(pc => !pc.quadrant);
+  // Get champions that are in grid mode only (quadrant is exactly undefined)
+  const gridChampions = champions.filter(pc => pc.quadrant === undefined);
 
   const handleDirectionEdit = (direction: 'top' | 'bottom' | 'left' | 'right', currentLabel: string) => {
     setEditingDirection(direction);
@@ -74,14 +74,11 @@ export const GridMatrix: React.FC = () => {
 
   const handleReset = () => {
     if (window.confirm('グリッドマトリクスをリセットしますか？配置されたチャンピオンも削除されます。')) {
-      // Reset only grid champions (not quadrant champions)
-      const quadrantChampions = champions.filter(pc => pc.quadrant);
-      const { resetMatrix } = useMatrixStore.getState();
-      resetMatrix();
-      // Re-add quadrant champions
-      const { addChampion } = useMatrixStore.getState();
-      quadrantChampions.forEach(pc => {
-        addChampion(pc.champion, pc.x, pc.y, pc.quadrant);
+      // Remove only grid champions (keep all quadrant mode champions)
+      const { removeChampion } = useMatrixStore.getState();
+      const gridChampionsToRemove = champions.filter(pc => pc.quadrant === undefined);
+      gridChampionsToRemove.forEach(pc => {
+        removeChampion(pc.champion.id);
       });
     }
   };

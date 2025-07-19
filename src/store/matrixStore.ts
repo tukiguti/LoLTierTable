@@ -28,10 +28,10 @@ export const useMatrixStore = create<MatrixState>((set) => ({
       // For grid mode, use full grid coordinates (0-10)
       const newPlacedChampion: PlacedChampion = {
         champion,
-        x: state.matrixType === 'quadrant' && quadrant 
+        x: state.matrixType === 'quadrant' && quadrant && quadrant !== 'center'
           ? Math.max(0, Math.min(x, Math.floor(state.gridSize.width / 2) - 1))  // 0-4 for quadrants
           : Math.max(0, Math.min(x, state.gridSize.width - 1)),  // 0-10 for center axis or grid mode
-        y: state.matrixType === 'quadrant' && quadrant 
+        y: state.matrixType === 'quadrant' && quadrant && quadrant !== 'center'
           ? Math.max(0, Math.min(y, Math.floor(state.gridSize.width / 2) - 1))  // 0-4 for quadrants
           : Math.max(0, Math.min(y, state.gridSize.height - 1)),  // 0-10 for center axis or grid mode
         quadrant,
@@ -41,7 +41,7 @@ export const useMatrixStore = create<MatrixState>((set) => ({
       const filteredChampions = state.champions.filter(pc => 
         !(pc.x === newPlacedChampion.x && 
           pc.y === newPlacedChampion.y && 
-          (quadrant ? pc.quadrant === quadrant : !pc.quadrant))
+          pc.quadrant === newPlacedChampion.quadrant)
       );
 
       return {
