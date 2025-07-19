@@ -22,61 +22,110 @@ interface QuadrantGridProps {
 type QuadrantType = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
 
 const QUADRANT_CONFIG = {
-  topLeft: { bg: 'bg-blue-50', border: 'border-blue-300', label: 'bg-blue-600' },
-  topRight: { bg: 'bg-green-50', border: 'border-green-300', label: 'bg-green-600' },
-  bottomLeft: { bg: 'bg-purple-50', border: 'border-purple-300', label: 'bg-purple-600' },
-  bottomRight: { bg: 'bg-red-50', border: 'border-red-300', label: 'bg-red-600' }
+  topLeft: { bg: '#dbeafe', border: 'border-blue-400', label: 'bg-blue-600' }, // blue-100
+  topRight: { bg: '#dcfce7', border: 'border-green-400', label: 'bg-green-600' }, // green-100
+  bottomLeft: { bg: '#f3e8ff', border: 'border-purple-400', label: 'bg-purple-600' }, // purple-100
+  bottomRight: { bg: '#fee2e2', border: 'border-red-400', label: 'bg-red-600' } // red-100
 } as const;
 
 export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
   champions,
   quadrantLabels,
-  quadrantSize = 4,
-  cellSize = 45,
+  cellSize = 50,
 }) => {
-  // Get champions for a specific quadrant
-  const getChampionsInQuadrant = (quadrant: QuadrantType) => {
-    return champions.filter(pc => 
-      pc.quadrant === quadrant &&
-      pc.x >= 0 && pc.x < quadrantSize && 
-      pc.y >= 0 && pc.y < quadrantSize
-    );
-  };
 
-  // Render a single quadrant
-  const renderQuadrant = (quadrantType: QuadrantType) => {
-    const config = QUADRANT_CONFIG[quadrantType];
-    const quadrantChampions = getChampionsInQuadrant(quadrantType);
-    
+  // Render the complete 11x11 grid
+  const renderFullGrid = () => {
     const cells = [];
-    for (let row = 0; row < quadrantSize; row++) {
-      for (let col = 0; col < quadrantSize; col++) {
-        const localX = col;
-        const localY = quadrantSize - 1 - row;
+    const totalSize = 11; // 11x11 grid
+    const centerIndex = 5; // Center position (0-indexed)
+    
+    for (let row = 0; row < totalSize; row++) {
+      for (let col = 0; col < totalSize; col++) {
+        // Determine which quadrant this cell belongs to, or if it's center axis
+        let quadrantType: QuadrantType | null = null;
+        let localX: number = 0, localY: number = 0;
+        let backgroundColor = '#ffffff'; // Default for center axis
         
-        const champion = quadrantChampions.find(pc => 
-          pc.x === localX && pc.y === localY
-        );
+        const isCenterRow = row === centerIndex;
+        const isCenterCol = col === centerIndex;
         
-        const cellId = `${quadrantType}-${localX}-${localY}`;
+        if (!isCenterRow && !isCenterCol) {
+          // Not on center axis - determine quadrant and calculate local coordinates
+          if (row < centerIndex && col < centerIndex) {
+            // Top-left quadrant (第2象限) - Blue
+            quadrantType = 'topLeft';
+            localX = col;
+            localY = (centerIndex - 1) - row;
+            backgroundColor = QUADRANT_CONFIG.topLeft.bg;
+          } else if (row < centerIndex && col > centerIndex) {
+            // Top-right quadrant (第1象限) - Green
+            quadrantType = 'topRight';
+            localX = col - (centerIndex + 1);
+            localY = (centerIndex - 1) - row;
+            backgroundColor = QUADRANT_CONFIG.topRight.bg;
+          } else if (row > centerIndex && col < centerIndex) {
+            // Bottom-left quadrant (第3象限) - Purple
+            quadrantType = 'bottomLeft';
+            localX = col;
+            localY = row - (centerIndex + 1);
+            backgroundColor = QUADRANT_CONFIG.bottomLeft.bg;
+          } else if (row > centerIndex && col > centerIndex) {
+            // Bottom-right quadrant (第4象限) - Red
+            quadrantType = 'bottomRight';
+            localX = col - (centerIndex + 1);
+            localY = row - (centerIndex + 1);
+            backgroundColor = QUADRANT_CONFIG.bottomRight.bg;
+          }
+        }
+        
+        
+        // Find champion in this position
+        const champion = quadrantType 
+          ? champions.find(pc => 
+              pc.quadrant === quadrantType && 
+              pc.x === localX && 
+              pc.y === localY
+            )
+          : champions.find(pc => 
+              !pc.quadrant && 
+              pc.x === col && 
+              pc.y === (totalSize - 1 - row)  // Flip Y axis for consistency
+            );
+            
+        
+        const cellId = quadrantType 
+          ? `${quadrantType}-${localX}-${localY}`
+          : `center-${row}-${col}`;
 
         cells.push(
           <DroppableZone
             key={cellId}
             id={cellId}
-            data={{ 
+            data={quadrantType ? { 
               x: localX, 
               y: localY, 
               type: 'quadrant-cell', 
               quadrant: quadrantType 
+            } : {
+              x: col,
+              y: row,
+              type: 'center-axis'
             }}
-            className={`${config.bg} border border-gray-400 flex items-center justify-center relative cursor-pointer hover:bg-opacity-80 transition-all`}
-            style={{ width: cellSize, height: cellSize }}
-            activeClassName="ring-2 ring-blue-400 bg-blue-100"
+            className="flex items-center justify-center relative transition-all border border-gray-200"
+            style={{ 
+              width: cellSize, 
+              height: cellSize,
+              backgroundColor: backgroundColor
+            }}
+            activeClassName="ring-2 ring-blue-400"
           >
             {champion && (
               <DraggableChampion
-                uniqueId={`${quadrantType}-${champion.champion.id}-${localX}-${localY}`}
+                uniqueId={quadrantType 
+                  ? `${quadrantType}-${champion.champion.id}-${localX}-${localY}`
+                  : `center-${champion.champion.id}-${col}-${totalSize - 1 - row}`
+                }
                 champion={champion.champion}
                 size="small"
               />
@@ -85,20 +134,9 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
         );
       }
     }
-
-    return (
-      <div className={`relative border-2 ${config.border} rounded-lg shadow-md ${config.bg} p-2`}>
-        <div 
-          className="grid gap-1"
-          style={{
-            gridTemplateColumns: `repeat(${quadrantSize}, ${cellSize}px)`,
-            gridTemplateRows: `repeat(${quadrantSize}, ${cellSize}px)`
-          }}
-        >
-          {cells}
-        </div>
-      </div>
-    );
+    
+    
+    return cells;
   };
 
   // Render quadrant label
@@ -113,75 +151,63 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
     );
   };
 
-  const quadrantSizeWithPadding = quadrantSize * cellSize + 16; // +16 for internal padding
-  const gridGap = 24; // gap between quadrants
-  const totalGridSize = quadrantSizeWithPadding * 2 + gridGap;
-  const labelSpace = 60; // Space for labels outside grid
-  const containerPadding = 20;
+  const totalSize = 11;
+
+  const gridWidth = totalSize * cellSize;
+  const halfGrid = gridWidth / 2;
 
   return (
-    <div className="flex flex-col items-center space-y-4">
-      {/* Large container with space for external labels */}
-      <div 
-        className="relative bg-gray-100 rounded-2xl shadow-2xl"
-        style={{ 
-          width: totalGridSize + labelSpace * 2 + containerPadding * 2,
-          height: totalGridSize + labelSpace * 2 + containerPadding * 2,
-          padding: `${labelSpace + containerPadding}px`
-        }}
-      >
-        {/* External Labels - positioned outside the grid area */}
+    <div className="flex flex-col items-center space-y-8">
+      {/* Container with labels */}
+      <div className="relative" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+        {/* External Labels - positioned at corners of each quadrant */}
         <div 
           className="absolute"
-          style={{ top: containerPadding, left: containerPadding }}
+          style={{ 
+            top: '10px', 
+            left: `${halfGrid/2 - 40}px`,
+          }}
         >
           {renderQuadrantLabel('topLeft')}
         </div>
         <div 
           className="absolute"
-          style={{ top: containerPadding, right: containerPadding }}
+          style={{ 
+            top: '10px', 
+            right: `${halfGrid/2 - 40}px`,
+          }}
         >
           {renderQuadrantLabel('topRight')}
         </div>
         <div 
           className="absolute"
-          style={{ bottom: containerPadding, left: containerPadding }}
+          style={{ 
+            bottom: '10px', 
+            left: `${halfGrid/2 - 40}px`,
+          }}
         >
           {renderQuadrantLabel('bottomLeft')}
         </div>
         <div 
           className="absolute"
-          style={{ bottom: containerPadding, right: containerPadding }}
+          style={{ 
+            bottom: '10px', 
+            right: `${halfGrid/2 - 40}px`,
+          }}
         >
           {renderQuadrantLabel('bottomRight')}
         </div>
 
-        {/* Central Cross Lines - only in grid area */}
+        {/* 11x11 Grid */}
         <div 
-          className="absolute flex items-center justify-center pointer-events-none"
+          className="grid bg-white rounded-lg shadow-lg p-2"
           style={{
-            top: labelSpace + containerPadding,
-            left: labelSpace + containerPadding,
-            width: totalGridSize,
-            height: totalGridSize
+            gridTemplateColumns: `repeat(${totalSize}, ${cellSize}px)`,
+            gridTemplateRows: `repeat(${totalSize}, ${cellSize}px)`,
+            gap: '0px'
           }}
         >
-          <div className="absolute w-0.5 h-full bg-gray-600 opacity-30"></div>
-          <div className="absolute h-0.5 w-full bg-gray-600 opacity-30"></div>
-        </div>
-
-        {/* Main 2x2 Quadrant Grid - centered in container */}
-        <div 
-          className="grid gap-6"
-          style={{
-            gridTemplateColumns: `repeat(2, ${quadrantSizeWithPadding}px)`,
-            gridTemplateRows: `repeat(2, ${quadrantSizeWithPadding}px)`
-          }}
-        >
-          {renderQuadrant('topLeft')}
-          {renderQuadrant('topRight')}
-          {renderQuadrant('bottomLeft')}
-          {renderQuadrant('bottomRight')}
+          {renderFullGrid()}
         </div>
       </div>
     </div>

@@ -23,20 +23,30 @@ export const useMatrixStore = create<MatrixState>((set) => ({
 
   addChampion: (champion: Champion, x: number, y: number, quadrant?: string) =>
     set((state) => {
+      // For quadrant mode, if quadrant is undefined (center axis), use full grid coordinates
+      // For quadrant mode with quadrant, use limited coordinates (0-4)
+      // For grid mode, use full grid coordinates (0-10)
       const newPlacedChampion: PlacedChampion = {
         champion,
         x: state.matrixType === 'quadrant' && quadrant 
-          ? Math.max(0, Math.min(x, Math.floor(state.gridSize.width / 2) - 1))
-          : Math.max(0, Math.min(x, state.gridSize.width - 1)),
+          ? Math.max(0, Math.min(x, Math.floor(state.gridSize.width / 2) - 1))  // 0-4 for quadrants
+          : Math.max(0, Math.min(x, state.gridSize.width - 1)),  // 0-10 for center axis or grid mode
         y: state.matrixType === 'quadrant' && quadrant 
-          ? Math.max(0, Math.min(y, Math.floor(state.gridSize.width / 2) - 1))
-          : Math.max(0, Math.min(y, state.gridSize.height - 1)),
+          ? Math.max(0, Math.min(y, Math.floor(state.gridSize.width / 2) - 1))  // 0-4 for quadrants
+          : Math.max(0, Math.min(y, state.gridSize.height - 1)),  // 0-10 for center axis or grid mode
         quadrant,
       };
 
+      // Remove any existing champion at the same position
+      const filteredChampions = state.champions.filter(pc => 
+        !(pc.x === newPlacedChampion.x && 
+          pc.y === newPlacedChampion.y && 
+          (quadrant ? pc.quadrant === quadrant : !pc.quadrant))
+      );
+
       return {
         ...state,
-        champions: [...state.champions, newPlacedChampion]
+        champions: [...filteredChampions, newPlacedChampion]
       };
     }),
 
@@ -111,6 +121,28 @@ export const useMatrixStore = create<MatrixState>((set) => ({
         champions: adjustedChampions,
       };
     }),
+
+  updateAxisLabels: (xLabel: string, yLabel: string) =>
+    set((state) => ({ ...state, xAxisLabel: xLabel, yAxisLabel: yLabel })),
+
+  setGridSize: (size: number) =>
+    set((state) => {
+      const newSize = Math.max(5, Math.min(size, 19));
+      const oddSize = newSize % 2 === 0 ? newSize + 1 : newSize;
+      
+      const adjustedChampions = state.champions.map(pc => ({
+        ...pc,
+        x: Math.min(pc.x, oddSize - 1),
+        y: Math.min(pc.y, oddSize - 1),
+      }));
+
+      return {
+        ...state,
+        gridSize: { width: oddSize, height: oddSize },
+        champions: adjustedChampions,
+      };
+    }),
+
 
   resetMatrix: () =>
     set(() => ({

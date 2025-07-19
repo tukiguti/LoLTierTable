@@ -59,5 +59,7 @@ export interface MatrixState {
   updateGridSize: (width: number, height: number) => void;
   setMatrixType: (type: 'grid' | 'quadrant') => void;
   updateQuadrantLabel: (quadrant: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string) => void;
+  updateAxisLabels: (xLabel: string, yLabel: string) => void;
+  setGridSize: (size: number) => void;
   resetMatrix: () => void;
 }

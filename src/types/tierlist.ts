@@ -25,4 +25,5 @@ export interface TierListState {
   addTier: () => void;
   removeTier: (tierId: string) => void;
   resetTierList: () => void;
+  resetTiers: () => void;
 }
