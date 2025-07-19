@@ -1,29 +1,51 @@
 import React, { useState } from 'react';
 
 interface MatrixControlsProps {
-  xAxisLabel: string;
-  yAxisLabel: string;
+  topLabel: string;
+  bottomLabel: string;
+  leftLabel: string;
+  rightLabel: string;
   gridSize: { width: number; height: number };
-  onXAxisLabelChange: (label: string) => void;
-  onYAxisLabelChange: (label: string) => void;
+  matrixType: 'grid' | 'quadrant';
+  quadrantLabels: {
+    topLeft: string;
+    topRight: string;
+    bottomLeft: string;
+    bottomRight: string;
+  };
+  onTopLabelChange: (label: string) => void;
+  onBottomLabelChange: (label: string) => void;
+  onLeftLabelChange: (label: string) => void;
+  onRightLabelChange: (label: string) => void;
   onGridSizeChange: (width: number, height: number) => void;
+  onMatrixTypeChange: (type: 'grid' | 'quadrant') => void;
+  onQuadrantLabelChange: (quadrant: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string) => void;
   onReset: () => void;
   onSave?: () => void;
   onExport?: () => void;
 }
 
 export const MatrixControls: React.FC<MatrixControlsProps> = ({
-  xAxisLabel,
-  yAxisLabel,
+  topLabel,
+  bottomLabel,
+  leftLabel,
+  rightLabel,
   gridSize,
-  onXAxisLabelChange,
-  onYAxisLabelChange,
+  matrixType,
+  quadrantLabels,
+  onTopLabelChange,
+  onBottomLabelChange,
+  onLeftLabelChange,
+  onRightLabelChange,
   onGridSizeChange,
+  onMatrixTypeChange,
+  onQuadrantLabelChange,
   onReset,
   onSave,
   onExport,
 }) => {
   const [showSettings, setShowSettings] = useState(false);
+  const [activeTab, setActiveTab] = useState<'type' | 'labels' | 'grid'>('type');
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -41,68 +63,275 @@ export const MatrixControls: React.FC<MatrixControlsProps> = ({
       </div>
 
       {showSettings && (
-        <div className="p-4 space-y-4">
-          {/* Axis Labels */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                X軸ラベル
-              </label>
-              <input
-                type="text"
-                value={xAxisLabel}
-                onChange={(e) => onXAxisLabelChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="例: 使いやすさ"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Y軸ラベル
-              </label>
-              <input
-                type="text"
-                value={yAxisLabel}
-                onChange={(e) => onYAxisLabelChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="例: 強さ"
-              />
-            </div>
+        <>
+          {/* Tab Navigation */}
+          <div className="border-b border-gray-200">
+            <nav className="flex space-x-8 px-4" aria-label="Tabs">
+              <button
+                onClick={() => setActiveTab('type')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'type'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                タイプ選択
+              </button>
+              <button
+                onClick={() => setActiveTab('labels')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'labels'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                ラベル設定
+              </button>
+              <button
+                onClick={() => setActiveTab('grid')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'grid'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {matrixType === 'grid' ? 'グリッド設定' : 'サイズ設定'}
+              </button>
+            </nav>
           </div>
+        </>
+      )}
 
-          {/* Grid Size */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                幅 (5-20)
-              </label>
-              <input
-                type="range"
-                min="5"
-                max="20"
-                value={gridSize.width}
-                onChange={(e) => onGridSizeChange(parseInt(e.target.value), gridSize.height)}
-                className="w-full"
-              />
-              <div className="text-sm text-gray-500 mt-1">{gridSize.width}</div>
+      {showSettings && (
+        <div className="p-4">
+          {/* Tab Content */}
+          {activeTab === 'type' && (
+            <div className="space-y-4">
+              <h4 className="text-md font-medium text-gray-800">マトリクスタイプ選択</h4>
+              <div className="space-y-3">
+                <label className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="matrixType"
+                    value="grid"
+                    checked={matrixType === 'grid'}
+                    onChange={(e) => onMatrixTypeChange(e.target.value as 'grid' | 'quadrant')}
+                    className="mr-3"
+                  />
+                  <div>
+                    <div className="text-sm font-medium text-gray-900">グリッドマトリクス</div>
+                    <div className="text-xs text-gray-500">軸ベースの細かいグリッド配置</div>
+                  </div>
+                </label>
+                <label className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="matrixType"
+                    value="quadrant"
+                    checked={matrixType === 'quadrant'}
+                    onChange={(e) => onMatrixTypeChange(e.target.value as 'grid' | 'quadrant')}
+                    className="mr-3"
+                  />
+                  <div>
+                    <div className="text-sm font-medium text-gray-900">4分割マトリクス</div>
+                    <div className="text-xs text-gray-500">4つの領域に分けた配置</div>
+                  </div>
+                </label>
+              </div>
             </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                高さ (5-20)
-              </label>
-              <input
-                type="range"
-                min="5"
-                max="20"
-                value={gridSize.height}
-                onChange={(e) => onGridSizeChange(gridSize.width, parseInt(e.target.value))}
-                className="w-full"
-              />
-              <div className="text-sm text-gray-500 mt-1">{gridSize.height}</div>
+          )}
+
+          {activeTab === 'labels' && (
+            <div className="space-y-6">
+              {/* Grid mode: Show axis labels */}
+              {matrixType === 'grid' && (
+                <div className="space-y-4">
+                  <h4 className="text-md font-medium text-gray-800">軸ラベル設定</h4>
+                  
+                  {/* Axis labels */}
+                  <div className="space-y-3">
+                    {/* 上 */}
+                    <div className="flex items-center gap-3">
+                      <label className="text-sm font-medium text-gray-700 min-w-[120px]">上:</label>
+                      <input
+                        type="text"
+                        value={topLabel}
+                        onChange={(e) => onTopLabelChange(e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 bg-gray-50 rounded text-sm"
+                        placeholder="上"
+                      />
+                    </div>
+                    
+                    {/* 下 */}
+                    <div className="flex items-center gap-3">
+                      <label className="text-sm font-medium text-gray-700 min-w-[120px]">下:</label>
+                      <input
+                        type="text"
+                        value={bottomLabel}
+                        onChange={(e) => onBottomLabelChange(e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 bg-gray-50 rounded text-sm"
+                        placeholder="下"
+                      />
+                    </div>
+                    
+                    {/* 左 */}
+                    <div className="flex items-center gap-3">
+                      <label className="text-sm font-medium text-gray-700 min-w-[120px]">左:</label>
+                      <input
+                        type="text"
+                        value={leftLabel}
+                        onChange={(e) => onLeftLabelChange(e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 bg-gray-50 rounded text-sm"
+                        placeholder="左"
+                      />
+                    </div>
+                    
+                    {/* 右 */}
+                    <div className="flex items-center gap-3">
+                      <label className="text-sm font-medium text-gray-700 min-w-[120px]">右:</label>
+                      <input
+                        type="text"
+                        value={rightLabel}
+                        onChange={(e) => onRightLabelChange(e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 bg-gray-50 rounded text-sm"
+                        placeholder="右"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Quadrant mode: Show quadrant labels */}
+              {matrixType === 'quadrant' && (
+                <div className="space-y-4">
+                  <h4 className="text-md font-medium text-gray-800">象限ラベル設定</h4>
+                  
+                  {/* Quadrant labels - 第一象限から順番に */}
+                  <div className="space-y-3">
+                    {/* 第一象限 (右上) */}
+                    <div className="flex items-center gap-3">
+                      <label className="text-sm font-medium text-green-600 min-w-[120px]">右上 (第一象限):</label>
+                      <input
+                        type="text"
+                        value={quadrantLabels.topRight}
+                        onChange={(e) => onQuadrantLabelChange('topRight', e.target.value)}
+                        className="flex-1 px-3 py-2 border border-green-300 bg-green-50 rounded text-sm"
+                        placeholder="第一象限"
+                      />
+                    </div>
+                    
+                    {/* 第二象限 (左上) */}
+                    <div className="flex items-center gap-3">
+                      <label className="text-sm font-medium text-blue-600 min-w-[120px]">左上 (第二象限):</label>
+                      <input
+                        type="text"
+                        value={quadrantLabels.topLeft}
+                        onChange={(e) => onQuadrantLabelChange('topLeft', e.target.value)}
+                        className="flex-1 px-3 py-2 border border-blue-300 bg-blue-50 rounded text-sm"
+                        placeholder="第二象限"
+                      />
+                    </div>
+                    
+                    {/* 第三象限 (左下) */}
+                    <div className="flex items-center gap-3">
+                      <label className="text-sm font-medium text-purple-600 min-w-[120px]">左下 (第三象限):</label>
+                      <input
+                        type="text"
+                        value={quadrantLabels.bottomLeft}
+                        onChange={(e) => onQuadrantLabelChange('bottomLeft', e.target.value)}
+                        className="flex-1 px-3 py-2 border border-purple-300 bg-purple-50 rounded text-sm"
+                        placeholder="第三象限"
+                      />
+                    </div>
+                    
+                    {/* 第四象限 (右下) */}
+                    <div className="flex items-center gap-3">
+                      <label className="text-sm font-medium text-red-600 min-w-[120px]">右下 (第四象限):</label>
+                      <input
+                        type="text"
+                        value={quadrantLabels.bottomRight}
+                        onChange={(e) => onQuadrantLabelChange('bottomRight', e.target.value)}
+                        className="flex-1 px-3 py-2 border border-red-300 bg-red-50 rounded text-sm"
+                        placeholder="第四象限"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          )}
+
+          {activeTab === 'grid' && (
+            <div className="space-y-4">
+              <h4 className="text-md font-medium text-gray-800">
+                {matrixType === 'grid' ? 'グリッドサイズ設定' : '象限サイズ設定'}
+              </h4>
+              
+              {matrixType === 'grid' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      幅 (5-20)
+                    </label>
+                    <input
+                      type="range"
+                      min="5"
+                      max="20"
+                      value={gridSize.width}
+                      onChange={(e) => onGridSizeChange(parseInt(e.target.value), gridSize.height)}
+                      className="w-full"
+                    />
+                    <div className="text-sm text-gray-500 mt-1">{gridSize.width}</div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      高さ (5-20)
+                    </label>
+                    <input
+                      type="range"
+                      min="5"
+                      max="20"
+                      value={gridSize.height}
+                      onChange={(e) => onGridSizeChange(gridSize.width, parseInt(e.target.value))}
+                      className="w-full"
+                    />
+                    <div className="text-sm text-gray-500 mt-1">{gridSize.height}</div>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      各象限のサイズ (3-10)
+                    </label>
+                    <input
+                      type="range"
+                      min="3"
+                      max="10"
+                      value={Math.floor(gridSize.width / 2)}
+                      onChange={(e) => {
+                        const quadrantSize = parseInt(e.target.value);
+                        onGridSizeChange(quadrantSize * 2, quadrantSize * 2);
+                      }}
+                      className="w-full"
+                    />
+                    <div className="text-sm text-gray-500 mt-1">
+                      {Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)} 
+                      (全体: {gridSize.width} × {gridSize.width})
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded">
+                    <p className="font-medium mb-1">象限構成：</p>
+                    <p>• 右上: 第一象限 ({Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)})</p>
+                    <p>• 左上: 第二象限 ({Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)})</p>
+                    <p>• 左下: 第三象限 ({Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)})</p>
+                    <p>• 右下: 第四象限 ({Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)})</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 

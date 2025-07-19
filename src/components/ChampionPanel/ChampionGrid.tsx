@@ -25,7 +25,7 @@ export const ChampionGrid: React.FC<ChampionGridProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-8 gap-2 p-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(2rem, 1fr))' }}>
+    <div className="grid gap-3 p-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(3rem, 1fr))' }}>
       {champions.map((champion) => (
         <DraggableChampion
           key={champion.id}

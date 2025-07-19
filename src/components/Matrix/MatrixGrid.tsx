@@ -6,16 +6,20 @@ import { DroppableZone } from '../DragDrop/DroppableZone';
 interface MatrixGridProps {
   champions: PlacedChampion[];
   gridSize: { width: number; height: number };
-  xAxisLabel: string;
-  yAxisLabel: string;
+  topLabel: string;
+  bottomLabel: string;
+  leftLabel: string;
+  rightLabel: string;
   cellSize?: number;
 }
 
 export const MatrixGrid: React.FC<MatrixGridProps> = ({
   champions,
   gridSize,
-  xAxisLabel,
-  yAxisLabel,
+  topLabel,
+  bottomLabel,
+  leftLabel,
+  rightLabel,
   cellSize = 48,
 }) => {
   const getChampionAtPosition = (x: number, y: number) => {
@@ -67,21 +71,40 @@ export const MatrixGrid: React.FC<MatrixGridProps> = ({
     );
   };
 
-  // Calculate center positions for label positioning
+  // Calculate center positions
   const centerX = Math.floor(gridSize.width / 2);
   const centerY = Math.floor(gridSize.height / 2);
   
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-      {/* Grid container with overlaid labels */}
-      <div className="relative">
+      {/* Grid layout with integrated labels */}
+      <div 
+        className="grid gap-2"
+        style={{ 
+          gridTemplateColumns: '60px 1fr 60px',
+          gridTemplateRows: '40px 1fr 40px'
+        }}
+      >
+        {/* Top row */}
+        <div></div>
+        <div className="flex items-center justify-center text-sm font-medium text-gray-700 bg-gray-50 rounded px-3 py-2">
+          {topLabel}
+        </div>
+        <div></div>
+
+        {/* Middle row */}
+        <div className="flex items-center justify-center text-sm font-medium text-gray-700 bg-gray-50 rounded px-2 py-3 writing-mode-vertical">
+          <span className="transform -rotate-90 whitespace-nowrap">{leftLabel}</span>
+        </div>
+        
+        {/* Matrix grid */}
         <div 
-          className="grid gap-1 mx-auto"
+          className="grid gap-1"
           style={{ 
             gridTemplateColumns: `repeat(${gridSize.width}, ${cellSize}px)`,
             gridTemplateRows: `repeat(${gridSize.height}, ${cellSize}px)`,
-            width: `${gridSize.width * (cellSize + 4)}px`,
-            height: `${gridSize.height * (cellSize + 4)}px`
+            justifyContent: 'center',
+            alignContent: 'center'
           }}
         >
           {Array.from({ length: gridSize.height }, (_, row) =>
@@ -93,27 +116,16 @@ export const MatrixGrid: React.FC<MatrixGridProps> = ({
           )}
         </div>
         
-        {/* Y-axis Label - Positioned at center column */}
-        <div 
-          className="absolute top-0 text-sm font-medium text-gray-700 bg-white px-2 py-1 border border-gray-300 rounded"
-          style={{ 
-            left: `${centerX * (cellSize + 4) + (cellSize / 2) - 10}px`,
-            top: '-30px'
-          }}
-        >
-          {yAxisLabel}
+        <div className="flex items-center justify-center text-sm font-medium text-gray-700 bg-gray-50 rounded px-2 py-3">
+          <span className="transform rotate-90 whitespace-nowrap">{rightLabel}</span>
         </div>
-        
-        {/* X-axis Label - Positioned at center row */}
-        <div 
-          className="absolute right-0 text-sm font-medium text-gray-700 bg-white px-2 py-1 border border-gray-300 rounded"
-          style={{ 
-            right: '-40px',
-            top: `${(gridSize.height - 1 - centerY) * (cellSize + 4) + (cellSize / 2) - 10}px`
-          }}
-        >
-          {xAxisLabel}
+
+        {/* Bottom row */}
+        <div></div>
+        <div className="flex items-center justify-center text-sm font-medium text-gray-700 bg-gray-50 rounded px-3 py-2">
+          {bottomLabel}
         </div>
+        <div></div>
       </div>
     </div>
   );

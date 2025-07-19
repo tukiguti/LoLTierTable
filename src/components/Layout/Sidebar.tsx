@@ -16,7 +16,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onChampionSelect,
 }) => {
   return (
-    <div className="w-80 bg-gray-50 border-r border-gray-200 overflow-y-auto">
+    <div className="w-96 bg-gray-50 border-r border-gray-200 overflow-y-auto">
       <div className="flex items-center h-16 px-4 border-b border-gray-200">
         <h2 className="text-lg font-semibold text-gray-900">チャンピオン</h2>
       </div>

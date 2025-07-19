@@ -81,7 +81,7 @@ export const ChampionPanel: React.FC<ChampionPanelProps> = ({
         </div>
       </div>
 
-      <div className="max-h-96 overflow-y-auto">
+      <div className="max-h-[500px] overflow-y-auto">
         <ChampionGrid
           champions={filteredChampions}
           onChampionSelect={handleChampionSelect}
