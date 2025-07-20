@@ -40,7 +40,7 @@ export const DraggableChampion: React.FC<DraggableChampionProps> = ({
       {...listeners}
       {...attributes}
       className={`
-        ${isDragging ? 'dragging z-50' : ''}
+        ${isDragging ? 'dragging z-50 opacity-50' : ''}
         ${className}
       `}
     >
