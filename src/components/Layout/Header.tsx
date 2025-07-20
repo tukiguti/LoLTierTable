@@ -49,16 +49,16 @@ export const Header: React.FC<HeaderProps> = ({
                 マトリクス
               </button>
               <button
-                onClick={() => onModeChange('quadrant')}
+                onClick={() => onModeChange('scatter')}
                 className={`
                   px-3 py-2 text-sm font-medium rounded-md transition-colors
-                  ${currentMode === 'quadrant'
+                  ${currentMode === 'scatter'
                     ? 'bg-white text-gray-900 shadow-sm'
                     : 'text-gray-600 hover:text-gray-900'
                   }
                 `}
               >
-                4分割マトリクス
+                ゾーンスキャッター
               </button>
             </div>
           </div>

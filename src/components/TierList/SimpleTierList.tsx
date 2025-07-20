@@ -2,11 +2,28 @@ import React, { useState } from 'react';
 import { useTierListStore } from '../../store/tierListStore';
 import { DraggableChampion } from '../DragDrop/DraggableChampion';
 import { DroppableZone } from '../DragDrop/DroppableZone';
+import { ChampionGroupManager } from '../ChampionGroup/ChampionGroupManager';
+import { useAppStore } from '../../store/appStore';
 
 export const SimpleTierList: React.FC = () => {
-  const { tiers, addTier, removeTier, updateTierLabel, updateTierColor, resetTiers } = useTierListStore();
+  const { 
+    tiers, 
+    stagingChampions, 
+    addTier, 
+    removeTier, 
+    updateTierLabel, 
+    updateTierColor, 
+    resetTiers,
+    addChampionToStaging,
+    removeChampionFromStaging,
+    clearStaging
+  } = useTierListStore();
+  
+  const { champions: allChampions } = useAppStore();
+  
   const [editingTier, setEditingTier] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
+  const [showGroupManager, setShowGroupManager] = useState(false);
 
   const handleLabelEdit = (tierId: string, currentLabel: string) => {
     setEditingTier(tierId);
@@ -38,6 +55,16 @@ export const SimpleTierList: React.FC = () => {
     if (window.confirm('すべてのティアをリセットしますか？配置されたチャンピオンも削除されます。')) {
       resetTiers();
     }
+  };
+
+  const handleImportToStaging = (importedChampions: any[]) => {
+    // Clear existing staging champions first
+    clearStaging();
+
+    // Add imported champions to staging
+    importedChampions.forEach((champion) => {
+      addChampionToStaging(champion);
+    });
   };
 
   return (
@@ -143,6 +170,50 @@ export const SimpleTierList: React.FC = () => {
         ))}
       </div>
 
+      {/* Temporary Staging Area */}
+      <div className="bg-white rounded-lg shadow-sm border p-4">
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-sm font-medium text-gray-700">一時設置エリア</h3>
+          <button
+            onClick={() => setShowGroupManager(!showGroupManager)}
+            className="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          >
+            {showGroupManager ? ' 閉じる' : '管理'}
+          </button>
+        </div>
+        <DroppableZone
+          id="temp-staging"
+          data={{ type: 'temp-staging' }}
+          className="min-h-20 bg-gray-50 border-2 border-gray-300 border-dashed rounded-lg p-3 flex flex-wrap gap-2 justify-center items-center"
+          activeClassName="bg-blue-50 border-blue-400"
+        >
+          {stagingChampions.length === 0 ? (
+            <div className="text-gray-400 text-sm">チャンピオンをここにドラッグして一時保存</div>
+          ) : (
+            stagingChampions.map((champion, index) => (
+              <DraggableChampion
+                key={champion.id}
+                uniqueId={`staging-${champion.id}-${index}`}
+                champion={champion}
+                size="small"
+              />
+            ))
+          )}
+        </DroppableZone>
+        
+        {/* Champion Group Manager */}
+        {showGroupManager && (
+          <div className="mt-4">
+            <ChampionGroupManager
+              champions={allChampions}
+              onImportToStaging={handleImportToStaging}
+              currentStagingChampions={stagingChampions}
+              currentMode="tierlist"
+            />
+          </div>
+        )}
+      </div>
+
       {/* Trash Zone */}
       <div className="flex justify-center mt-6">
         <DroppableZone
@@ -159,7 +230,7 @@ export const SimpleTierList: React.FC = () => {
 
       {/* Stats */}
       <div className="text-center text-sm text-gray-500">
-        配置済みチャンピオン: {tiers.reduce((sum, tier) => sum + tier.champions.length, 0)} 体
+        配置済みチャンピオン: {tiers.reduce((sum, tier) => sum + tier.champions.length, 0)} 体 | 一時保存: {stagingChampions.length} 体
       </div>
     </div>
   );

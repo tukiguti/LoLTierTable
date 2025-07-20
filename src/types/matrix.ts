@@ -4,7 +4,7 @@ export interface PlacedChampion {
   champion: Champion;
   x: number;
   y: number;
-  quadrant?: string; // For quadrant-based positioning
+  quadrant?: string; // For zone-based positioning
 }
 
 export interface MatrixData {
@@ -19,8 +19,14 @@ export interface MatrixData {
     width: number;
     height: number;
   };
-  matrixType: 'grid' | 'quadrant';
+  matrixType: 'grid' | 'scatter';
   quadrantLabels?: {
+    topLeft: string;
+    topRight: string;
+    bottomLeft: string;
+    bottomRight: string;
+  };
+  zoneLabels?: {
     topLeft: string;
     topRight: string;
     bottomLeft: string;
@@ -40,8 +46,14 @@ export interface MatrixState {
     width: number;
     height: number;
   };
-  matrixType: 'grid' | 'quadrant';
+  matrixType: 'grid' | 'scatter';
   quadrantLabels: {
+    topLeft: string;
+    topRight: string;
+    bottomLeft: string;
+    bottomRight: string;
+  };
+  zoneLabels: {
     topLeft: string;
     topRight: string;
     bottomLeft: string;
@@ -57,9 +69,11 @@ export interface MatrixState {
   updateLeftLabel: (label: string) => void;
   updateRightLabel: (label: string) => void;
   updateGridSize: (width: number, height: number) => void;
-  setMatrixType: (type: 'grid' | 'quadrant') => void;
+  setMatrixType: (type: 'grid' | 'scatter') => void;
   updateQuadrantLabel: (quadrant: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string) => void;
+  updateZoneLabel: (zone: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string) => void;
   updateAxisLabels: (xLabel: string, yLabel: string) => void;
   setGridSize: (size: number) => void;
+  addChampionsToStaging: (champions: Champion[]) => void;
   resetMatrix: () => void;
 }

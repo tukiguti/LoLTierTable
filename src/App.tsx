@@ -8,7 +8,7 @@ import { Sidebar } from './components/Layout/Sidebar';
 import { LoadingSpinner } from './components/Layout/LoadingSpinner';
 import { SimpleTierList } from './components/TierList/SimpleTierList';
 import { GridMatrix } from './components/Matrix/GridMatrix';
-import { QuadrantMatrix } from './components/Matrix/QuadrantMatrix';
+import { ZoneScatterMatrix } from './components/Matrix/ZoneScatterMatrix';
 import { DragDropContext } from './components/DragDrop/DragDropContext';
 import type { Champion } from './types';
 import type { DragEndEvent } from '@dnd-kit/core';
@@ -59,15 +59,24 @@ function App() {
         const championId = parts[1];
         const championIndex = parseInt(parts[2]);
         removeChampionFromTier(championId, sourceTierId, championIndex);
-      } else if ((currentMode === 'matrix' || currentMode === 'quadrant') && 
+      } else if (currentMode === 'tierlist' && draggedId.startsWith('staging-')) {
+        // Remove from staging area in tierlist mode
+        const { removeChampionFromStaging } = useTierListStore.getState();
+        const parts = draggedId.split('-');
+        if (parts.length >= 2) {
+          const championId = parts[1];
+          removeChampionFromStaging(championId);
+        }
+      } else if ((currentMode === 'matrix' || currentMode === 'scatter') && 
                  (draggedId.startsWith('grid-') || 
                   draggedId.startsWith('matrix-') || 
                   draggedId.startsWith('center-') ||
                   draggedId.startsWith('topLeft-') || 
                   draggedId.startsWith('topRight-') || 
                   draggedId.startsWith('bottomLeft-') || 
-                  draggedId.startsWith('bottomRight-'))) {
-        // Remove from matrix (both grid and quadrant modes)
+                  draggedId.startsWith('bottomRight-') ||
+                  draggedId.startsWith('staging-'))) {
+        // Remove from matrix (both grid and scatter modes, and staging)
         const { removeChampion } = useMatrixStore.getState();
         const parts = draggedId.split('-');
         if (parts.length >= 2) {
@@ -78,9 +87,49 @@ function App() {
       return;
     }
 
-    // Handle matrix drops when in matrix or quadrant mode
-    if ((currentMode === 'matrix' || currentMode === 'quadrant') && 
-        (overId.startsWith('grid-') || overId.startsWith('matrix-') || overId.startsWith('center-') || overId.includes('-'))) {
+    // Handle temporary staging area drops FIRST
+    if (overId === 'temp-staging') {
+      console.log('Dropping champion to staging area:', champion.name);
+      
+      if (currentMode === 'tierlist') {
+        const { addChampionToStaging } = useTierListStore.getState();
+        addChampionToStaging(champion);
+      } else if (currentMode === 'matrix' || currentMode === 'scatter') {
+        const { addChampion, removeChampion, champions } = useMatrixStore.getState();
+        
+        // Remove champion from previous position if it exists
+        const existingChampion = champions.find(pc => pc.champion.id === champion.id);
+        if (existingChampion) {
+          removeChampion(champion.id);
+        }
+        
+        // Find next available position in staging area (after removal)
+        const stagingChampions = champions.filter(pc => pc.quadrant === 'staging' && pc.champion.id !== champion.id);
+        const nextIndex = stagingChampions.length;
+        
+        // Place champion in staging area with unique x position
+        addChampion(champion, nextIndex, 0, 'staging');
+      }
+      return;
+    }
+
+    // Handle matrix drops when in matrix or scatter mode
+    if ((currentMode === 'matrix' || currentMode === 'scatter') && 
+        (overId.startsWith('grid-') || overId.startsWith('matrix-') || overId.startsWith('center-') || 
+         overId.startsWith('topLeft-') || overId.startsWith('topRight-') || 
+         overId.startsWith('bottomLeft-') || overId.startsWith('bottomRight-'))) {
+      
+      // First, remove champion from previous position if it was already placed
+      if (draggedId.startsWith('staging-') || draggedId.startsWith('grid-') || draggedId.startsWith('matrix-') || 
+          draggedId.startsWith('center-') || draggedId.startsWith('topLeft-') || draggedId.startsWith('topRight-') || 
+          draggedId.startsWith('bottomLeft-') || draggedId.startsWith('bottomRight-')) {
+        const { removeChampion } = useMatrixStore.getState();
+        const parts = draggedId.split('-');
+        if (parts.length >= 2) {
+          const championId = parts[1];
+          removeChampion(championId);
+        }
+      }
       let x: number, y: number, quadrant: string | undefined;
       
       if (overId.startsWith('grid-')) {
@@ -100,7 +149,7 @@ function App() {
         y = row;  // Use row directly without flipping for center axis
         // For center axis, we don't set a quadrant (leave it undefined)
       } else {
-        // Handle quadrant drops: format like "topLeft-2-1"
+        // Handle scatter zone drops: format like "topLeft-2-1"
         const parts = overId.split('-');
         if (parts.length >= 3) {
           quadrant = parts[0];
@@ -130,13 +179,13 @@ function App() {
         }
         
         // Place the champion at the new position
-        // Set quadrant based on mode and drop location
+        // Set zone based on mode and drop location
         let finalQuadrant: string | undefined = undefined;
-        if (currentMode === 'quadrant') {
+        if (currentMode === 'scatter') {
           if (quadrant) {
-            finalQuadrant = quadrant; // Normal quadrant
+            finalQuadrant = quadrant; // Normal zone
           } else {
-            finalQuadrant = 'center'; // Center axis in quadrant mode
+            finalQuadrant = 'center'; // Center axis in scatter mode
           }
         }
         // For grid mode, finalQuadrant remains undefined
@@ -146,12 +195,24 @@ function App() {
     
     // Handle tier list drops when in tier list mode
     if (currentMode === 'tierlist') {
-      const { addChampionToTier, removeChampionFromTier } = useTierListStore.getState();
+      const { addChampionToTier, removeChampionFromTier, removeChampionFromStaging } = useTierListStore.getState();
       const { tiers } = useTierListStore.getState();
       
       // Find target tier
       const targetTier = tiers.find(tier => tier.id === overId);
       if (!targetTier) return;
+
+      // Check if this is from staging area
+      if (draggedId.startsWith('staging-')) {
+        // Remove from staging and add to tier
+        const parts = draggedId.split('-');
+        if (parts.length >= 2) {
+          const championId = parts[1];
+          removeChampionFromStaging(championId);
+          addChampionToTier(championId, targetTier.id);
+        }
+        return;
+      }
 
       // Check if this is a placed champion being moved
       if (draggedId.includes('__')) {
@@ -206,7 +267,7 @@ function App() {
           <main className="flex-1 overflow-auto p-4 lg:p-6">
             {currentMode === 'tierlist' && <SimpleTierList />}
             {currentMode === 'matrix' && <GridMatrix />}
-            {currentMode === 'quadrant' && <QuadrantMatrix />}
+            {currentMode === 'scatter' && <ZoneScatterMatrix />}
           </main>
         </div>
       </DragDropContext>

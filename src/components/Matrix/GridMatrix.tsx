@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useMatrixStore } from '../../store/matrixStore';
 import { DraggableChampion } from '../DragDrop/DraggableChampion';
 import { DroppableZone } from '../DragDrop/DroppableZone';
+import { ChampionGroupManager } from '../ChampionGroup/ChampionGroupManager';
+import { useAppStore } from '../../store/appStore';
 
 export const GridMatrix: React.FC = () => {
   const { 
     champions, 
-    resetMatrix,
     topLabel,
     bottomLabel,
     leftLabel,
@@ -15,8 +16,11 @@ export const GridMatrix: React.FC = () => {
     updateBottomLabel,
     updateLeftLabel,
     updateRightLabel,
-    setMatrixType
+    setMatrixType,
+    addChampionsToStaging
   } = useMatrixStore();
+  
+  const { champions: allChampions } = useAppStore();
   
   // Set matrix type to grid when this component mounts
   React.useEffect(() => {
@@ -26,6 +30,7 @@ export const GridMatrix: React.FC = () => {
   const [editingDirection, setEditingDirection] = useState<'top' | 'bottom' | 'left' | 'right' | null>(null);
   const [editValue, setEditValue] = useState('');
   const [showSettings, setShowSettings] = useState(false);
+  const [showGroupManager, setShowGroupManager] = useState(false);
 
   const gridSize = 10;
   const cellSize = 55; // Increased from 45 to 55
@@ -81,6 +86,15 @@ export const GridMatrix: React.FC = () => {
         removeChampion(pc.champion.id);
       });
     }
+  };
+
+  const handleImportToStaging = (importedChampions: any[]) => {
+    console.log('GridMatrix: Importing champions to staging:', importedChampions.length);
+    
+    // Use the new batch function for reliable import
+    addChampionsToStaging(importedChampions);
+    
+    console.log('GridMatrix: Import completed using batch function');
   };
 
   // Get champion at specific position (grid mode only)
@@ -306,6 +320,52 @@ export const GridMatrix: React.FC = () => {
         </div>
       </div>
 
+      {/* Temporary Staging Area */}
+      <div className="bg-white rounded-lg shadow-sm border p-4">
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-sm font-medium text-gray-700">一時設置エリア</h3>
+          <button
+            onClick={() => setShowGroupManager(!showGroupManager)}
+            className="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          >
+            {showGroupManager ? ' 閉じる' : '管理'}
+          </button>
+        </div>
+        <DroppableZone
+          id="temp-staging"
+          data={{ type: 'temp-staging' }}
+          className="min-h-20 bg-gray-50 border-2 border-gray-300 border-dashed rounded-lg p-3 flex flex-wrap gap-2 justify-center items-center"
+          activeClassName="bg-blue-50 border-blue-400"
+        >
+          {champions.filter(pc => pc.quadrant === 'staging').length === 0 ? (
+            <div className="text-gray-400 text-sm">チャンピオンをここにドラッグして一時保存</div>
+          ) : (
+            champions
+              .filter(pc => pc.quadrant === 'staging')
+              .map((pc, index) => (
+                <DraggableChampion
+                  key={pc.champion.id}
+                  uniqueId={`staging-${pc.champion.id}-${index}`}
+                  champion={pc.champion}
+                  size="small"
+                />
+              ))
+          )}
+        </DroppableZone>
+        
+        {/* Champion Group Manager */}
+        {showGroupManager && (
+          <div className="mt-4">
+            <ChampionGroupManager
+              champions={allChampions}
+              onImportToStaging={handleImportToStaging}
+              currentStagingChampions={champions.filter(pc => pc.quadrant === 'staging').map(pc => pc.champion)}
+              currentMode="matrix"
+            />
+          </div>
+        )}
+      </div>
+
       {/* Trash Zone */}
       <div className="flex justify-center">
         <DroppableZone
@@ -322,7 +382,7 @@ export const GridMatrix: React.FC = () => {
 
       {/* Stats */}
       <div className="text-center text-sm text-gray-500">
-        配置済みチャンピオン: {gridChampions.length} 体
+        配置済みチャンピオン: {gridChampions.length} 体 | 一時保存: {champions.filter(pc => pc.quadrant === 'staging').length} 体
       </div>
     </div>
   );

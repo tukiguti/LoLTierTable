@@ -6,7 +6,7 @@ interface MatrixControlsProps {
   leftLabel: string;
   rightLabel: string;
   gridSize: { width: number; height: number };
-  matrixType: 'grid' | 'quadrant';
+  matrixType: 'grid' | 'scatter';
   quadrantLabels: {
     topLeft: string;
     topRight: string;
@@ -18,7 +18,7 @@ interface MatrixControlsProps {
   onLeftLabelChange: (label: string) => void;
   onRightLabelChange: (label: string) => void;
   onGridSizeChange: (width: number, height: number) => void;
-  onMatrixTypeChange: (type: 'grid' | 'quadrant') => void;
+  onMatrixTypeChange: (type: 'grid' | 'scatter') => void;
   onQuadrantLabelChange: (quadrant: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string) => void;
   onReset: () => void;
   onSave?: () => void;
@@ -115,7 +115,7 @@ export const MatrixControls: React.FC<MatrixControlsProps> = ({
                     name="matrixType"
                     value="grid"
                     checked={matrixType === 'grid'}
-                    onChange={(e) => onMatrixTypeChange(e.target.value as 'grid' | 'quadrant')}
+                    onChange={(e) => onMatrixTypeChange(e.target.value as 'grid' | 'scatter')}
                     className="mr-3"
                   />
                   <div>
@@ -127,9 +127,9 @@ export const MatrixControls: React.FC<MatrixControlsProps> = ({
                   <input
                     type="radio"
                     name="matrixType"
-                    value="quadrant"
-                    checked={matrixType === 'quadrant'}
-                    onChange={(e) => onMatrixTypeChange(e.target.value as 'grid' | 'quadrant')}
+                    value="scatter"
+                    checked={matrixType === 'scatter'}
+                    onChange={(e) => onMatrixTypeChange(e.target.value as 'grid' | 'scatter')}
                     className="mr-3"
                   />
                   <div>
@@ -201,8 +201,8 @@ export const MatrixControls: React.FC<MatrixControlsProps> = ({
                 </div>
               )}
 
-              {/* Quadrant mode: Show quadrant labels */}
-              {matrixType === 'quadrant' && (
+              {/* Scatter mode: Show zone labels */}
+              {matrixType === 'scatter' && (
                 <div className="space-y-4">
                   <h4 className="text-md font-medium text-gray-800">象限ラベル設定</h4>
                   
@@ -303,7 +303,7 @@ export const MatrixControls: React.FC<MatrixControlsProps> = ({
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      各象限のサイズ (3-10)
+                      各ゾーンのサイズ (3-10)
                     </label>
                     <input
                       type="range"
@@ -311,8 +311,8 @@ export const MatrixControls: React.FC<MatrixControlsProps> = ({
                       max="10"
                       value={Math.floor(gridSize.width / 2)}
                       onChange={(e) => {
-                        const quadrantSize = parseInt(e.target.value);
-                        onGridSizeChange(quadrantSize * 2, quadrantSize * 2);
+                        const zoneSize = parseInt(e.target.value);
+                        onGridSizeChange(zoneSize * 2, zoneSize * 2);
                       }}
                       className="w-full"
                     />
@@ -322,11 +322,11 @@ export const MatrixControls: React.FC<MatrixControlsProps> = ({
                     </div>
                   </div>
                   <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded">
-                    <p className="font-medium mb-1">象限構成：</p>
-                    <p>• 右上: 第一象限 ({Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)})</p>
-                    <p>• 左上: 第二象限 ({Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)})</p>
-                    <p>• 左下: 第三象限 ({Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)})</p>
-                    <p>• 右下: 第四象限 ({Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)})</p>
+                    <p className="font-medium mb-1">ゾーン構成：</p>
+                    <p>• 右上: ゾーン1 ({Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)})</p>
+                    <p>• 左上: ゾーン2 ({Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)})</p>
+                    <p>• 左下: ゾーン3 ({Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)})</p>
+                    <p>• 右下: ゾーン4 ({Math.floor(gridSize.width / 2)} × {Math.floor(gridSize.width / 2)})</p>
                   </div>
                 </div>
               )}

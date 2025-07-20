@@ -16,6 +16,12 @@ export const useMatrixStore = create<MatrixState>((set) => ({
     bottomLeft: '第3象限',
     bottomRight: '第4象限',
   },
+  zoneLabels: {
+    topLeft: 'ゾーン2',
+    topRight: 'ゾーン1',
+    bottomLeft: 'ゾーン3',
+    bottomRight: 'ゾーン4',
+  },
   gridSize: {
     width: 11,
     height: 11,
@@ -23,25 +29,26 @@ export const useMatrixStore = create<MatrixState>((set) => ({
 
   addChampion: (champion: Champion, x: number, y: number, quadrant?: string) =>
     set((state) => {
-      // For quadrant mode, if quadrant is undefined (center axis), use full grid coordinates
-      // For quadrant mode with quadrant, use limited coordinates (0-4)
+      // For scatter mode, if quadrant is undefined (center axis), use full grid coordinates
+      // For scatter mode with quadrant, use limited coordinates (0-4)
       // For grid mode, use full grid coordinates (0-10)
       const newPlacedChampion: PlacedChampion = {
         champion,
-        x: state.matrixType === 'quadrant' && quadrant && quadrant !== 'center'
-          ? Math.max(0, Math.min(x, Math.floor(state.gridSize.width / 2) - 1))  // 0-4 for quadrants
+        x: state.matrixType === 'scatter' && quadrant && quadrant !== 'center'
+          ? Math.max(0, Math.min(x, Math.floor(state.gridSize.width / 2) - 1))  // 0-4 for zones
           : Math.max(0, Math.min(x, state.gridSize.width - 1)),  // 0-10 for center axis or grid mode
-        y: state.matrixType === 'quadrant' && quadrant && quadrant !== 'center'
-          ? Math.max(0, Math.min(y, Math.floor(state.gridSize.width / 2) - 1))  // 0-4 for quadrants
+        y: state.matrixType === 'scatter' && quadrant && quadrant !== 'center'
+          ? Math.max(0, Math.min(y, Math.floor(state.gridSize.width / 2) - 1))  // 0-4 for zones
           : Math.max(0, Math.min(y, state.gridSize.height - 1)),  // 0-10 for center axis or grid mode
         quadrant,
       };
 
-      // Remove any existing champion at the same position
+      // Remove any existing champion at the same position OR same champion ID
       const filteredChampions = state.champions.filter(pc => 
         !(pc.x === newPlacedChampion.x && 
           pc.y === newPlacedChampion.y && 
-          pc.quadrant === newPlacedChampion.quadrant)
+          pc.quadrant === newPlacedChampion.quadrant) &&
+        pc.champion.id !== newPlacedChampion.champion.id
       );
 
       return {
@@ -51,10 +58,25 @@ export const useMatrixStore = create<MatrixState>((set) => ({
     }),
 
   removeChampion: (championId: string) =>
-    set((state) => ({
-      ...state,
-      champions: state.champions.filter(pc => pc.champion.id !== championId)
-    })),
+    set((state) => {
+      const updatedChampions = state.champions.filter(pc => pc.champion.id !== championId);
+      
+      // Reorganize staging area positions to fill gaps
+      const stagingChampions = updatedChampions.filter(pc => pc.quadrant === 'staging');
+      const nonStagingChampions = updatedChampions.filter(pc => pc.quadrant !== 'staging');
+      
+      // Reassign x positions for staging champions to fill gaps
+      const reorganizedStagingChampions = stagingChampions.map((pc, index) => ({
+        ...pc,
+        x: index,
+        y: 0
+      }));
+      
+      return {
+        ...state,
+        champions: [...nonStagingChampions, ...reorganizedStagingChampions]
+      };
+    }),
 
   moveChampion: (championId: string, x: number, y: number) =>
     set((state) => ({
@@ -88,7 +110,7 @@ export const useMatrixStore = create<MatrixState>((set) => ({
   updateRightLabel: (label: string) =>
     set((state) => ({ ...state, rightLabel: label })),
 
-  setMatrixType: (type: 'grid' | 'quadrant') =>
+  setMatrixType: (type: 'grid' | 'scatter') =>
     set((state) => ({ ...state, matrixType: type })),
 
   updateQuadrantLabel: (quadrant: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string) =>
@@ -97,6 +119,15 @@ export const useMatrixStore = create<MatrixState>((set) => ({
       quadrantLabels: {
         ...state.quadrantLabels,
         [quadrant]: label,
+      },
+    })),
+
+  updateZoneLabel: (zone: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string) =>
+    set((state) => ({
+      ...state,
+      zoneLabels: {
+        ...state.zoneLabels,
+        [zone]: label,
       },
     })),
 
@@ -143,6 +174,27 @@ export const useMatrixStore = create<MatrixState>((set) => ({
       };
     }),
 
+  // Batch add champions to staging area
+  addChampionsToStaging: (championsToAdd: Champion[]) =>
+    set((state) => {
+      // Remove existing staging champions
+      const nonStagingChampions = state.champions.filter(pc => pc.quadrant !== 'staging');
+      
+      // Create new staging champions with unique positions
+      const newStagingChampions = championsToAdd.map((champion, index) => ({
+        champion,
+        x: index,
+        y: 0,
+        quadrant: 'staging' as string
+      }));
+      
+      console.log('MatrixStore: Adding', newStagingChampions.length, 'champions to staging');
+      
+      return {
+        ...state,
+        champions: [...nonStagingChampions, ...newStagingChampions]
+      };
+    }),
 
   resetMatrix: () =>
     set(() => ({

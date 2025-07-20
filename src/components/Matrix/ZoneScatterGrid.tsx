@@ -3,34 +3,34 @@ import type { PlacedChampion } from '../../types';
 import { DraggableChampion } from '../DragDrop/DraggableChampion';
 import { DroppableZone } from '../DragDrop/DroppableZone';
 
-interface QuadrantGridProps {
+interface ZoneScatterGridProps {
   champions: PlacedChampion[];
   topLabel: string;
   bottomLabel: string;
   leftLabel: string;
   rightLabel: string;
-  quadrantLabels: {
+  zoneLabels: {
     topLeft: string;
     topRight: string;
     bottomLeft: string;
     bottomRight: string;
   };
-  quadrantSize?: number;
+  zoneSize?: number;
   cellSize?: number;
 }
 
-type QuadrantType = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
+type ZoneType = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
 
-const QUADRANT_CONFIG = {
+const ZONE_CONFIG = {
   topLeft: { bg: '#dbeafe', border: 'border-blue-400', label: 'bg-blue-600' }, // blue-100
   topRight: { bg: '#dcfce7', border: 'border-green-400', label: 'bg-green-600' }, // green-100
   bottomLeft: { bg: '#f3e8ff', border: 'border-purple-400', label: 'bg-purple-600' }, // purple-100
   bottomRight: { bg: '#fee2e2', border: 'border-red-400', label: 'bg-red-600' } // red-100
 } as const;
 
-export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
+export const ZoneScatterGrid: React.FC<ZoneScatterGridProps> = ({
   champions,
-  quadrantLabels,
+  zoneLabels,
   cellSize = 50,
 }) => {
 
@@ -42,8 +42,8 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
     
     for (let row = 0; row < totalSize; row++) {
       for (let col = 0; col < totalSize; col++) {
-        // Determine which quadrant this cell belongs to, or if it's center axis
-        let quadrantType: QuadrantType | null = null;
+        // Determine which zone this cell belongs to, or if it's center axis
+        let zoneType: ZoneType | null = null;
         let localX: number = 0, localY: number = 0;
         let backgroundColor = '#ffffff'; // Default for center axis
         
@@ -51,39 +51,39 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
         const isCenterCol = col === centerIndex;
         
         if (!isCenterRow && !isCenterCol) {
-          // Not on center axis - determine quadrant and calculate local coordinates
+          // Not on center axis - determine zone and calculate local coordinates
           if (row < centerIndex && col < centerIndex) {
-            // Top-left quadrant (第2象限) - Blue
-            quadrantType = 'topLeft';
+            // Top-left zone (ゾーン2) - Blue
+            zoneType = 'topLeft';
             localX = col;
             localY = (centerIndex - 1) - row;
-            backgroundColor = QUADRANT_CONFIG.topLeft.bg;
+            backgroundColor = ZONE_CONFIG.topLeft.bg;
           } else if (row < centerIndex && col > centerIndex) {
-            // Top-right quadrant (第1象限) - Green
-            quadrantType = 'topRight';
+            // Top-right zone (ゾーン1) - Green
+            zoneType = 'topRight';
             localX = col - (centerIndex + 1);
             localY = (centerIndex - 1) - row;
-            backgroundColor = QUADRANT_CONFIG.topRight.bg;
+            backgroundColor = ZONE_CONFIG.topRight.bg;
           } else if (row > centerIndex && col < centerIndex) {
-            // Bottom-left quadrant (第3象限) - Purple
-            quadrantType = 'bottomLeft';
+            // Bottom-left zone (ゾーン3) - Purple
+            zoneType = 'bottomLeft';
             localX = col;
             localY = row - (centerIndex + 1);
-            backgroundColor = QUADRANT_CONFIG.bottomLeft.bg;
+            backgroundColor = ZONE_CONFIG.bottomLeft.bg;
           } else if (row > centerIndex && col > centerIndex) {
-            // Bottom-right quadrant (第4象限) - Red
-            quadrantType = 'bottomRight';
+            // Bottom-right zone (ゾーン4) - Red
+            zoneType = 'bottomRight';
             localX = col - (centerIndex + 1);
             localY = row - (centerIndex + 1);
-            backgroundColor = QUADRANT_CONFIG.bottomRight.bg;
+            backgroundColor = ZONE_CONFIG.bottomRight.bg;
           }
         }
         
         
         // Find champion in this position
-        const champion = quadrantType 
+        const champion = zoneType 
           ? champions.find(pc => 
-              pc.quadrant === quadrantType && 
+              pc.quadrant === zoneType && 
               pc.x === localX && 
               pc.y === localY
             )
@@ -96,19 +96,19 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
             
             
         
-        const cellId = quadrantType 
-          ? `${quadrantType}-${localX}-${localY}`
+        const cellId = zoneType 
+          ? `${zoneType}-${localX}-${localY}`
           : `center-${row}-${col}`;
 
         cells.push(
           <DroppableZone
             key={cellId}
             id={cellId}
-            data={quadrantType ? { 
+            data={zoneType ? { 
               x: localX, 
               y: localY, 
-              type: 'quadrant-cell', 
-              quadrant: quadrantType 
+              type: 'scatter-cell', 
+              zone: zoneType 
             } : {
               x: col,
               y: row,
@@ -124,8 +124,8 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
           >
             {champion && (
               <DraggableChampion
-                uniqueId={quadrantType 
-                  ? `${quadrantType}-${champion.champion.id}-${localX}-${localY}`
+                uniqueId={zoneType 
+                  ? `${zoneType}-${champion.champion.id}-${localX}-${localY}`
                   : `center-${champion.champion.id}-${col}-${row}`
                 }
                 champion={champion.champion}
@@ -141,10 +141,10 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
     return cells;
   };
 
-  // Render quadrant label
-  const renderQuadrantLabel = (quadrantType: QuadrantType) => {
-    const config = QUADRANT_CONFIG[quadrantType];
-    const label = quadrantLabels[quadrantType];
+  // Render zone label
+  const renderZoneLabel = (zoneType: ZoneType) => {
+    const config = ZONE_CONFIG[zoneType];
+    const label = zoneLabels[zoneType];
     
     return (
       <div className={`${config.label} text-white text-xs font-bold px-2 py-1 rounded shadow-md`}>
@@ -162,7 +162,7 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
     <div className="flex flex-col items-center space-y-8">
       {/* Container with labels */}
       <div className="relative" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
-        {/* External Labels - positioned at corners of each quadrant */}
+        {/* External Labels - positioned at corners of each zone */}
         <div 
           className="absolute"
           style={{ 
@@ -170,7 +170,7 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
             left: `${halfGrid/2 - 40}px`,
           }}
         >
-          {renderQuadrantLabel('topLeft')}
+          {renderZoneLabel('topLeft')}
         </div>
         <div 
           className="absolute"
@@ -179,7 +179,7 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
             right: `${halfGrid/2 - 40}px`,
           }}
         >
-          {renderQuadrantLabel('topRight')}
+          {renderZoneLabel('topRight')}
         </div>
         <div 
           className="absolute"
@@ -188,7 +188,7 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
             left: `${halfGrid/2 - 40}px`,
           }}
         >
-          {renderQuadrantLabel('bottomLeft')}
+          {renderZoneLabel('bottomLeft')}
         </div>
         <div 
           className="absolute"
@@ -197,7 +197,7 @@ export const QuadrantGrid: React.FC<QuadrantGridProps> = ({
             right: `${halfGrid/2 - 40}px`,
           }}
         >
-          {renderQuadrantLabel('bottomRight')}
+          {renderZoneLabel('bottomRight')}
         </div>
 
         {/* 11x11 Grid */}
