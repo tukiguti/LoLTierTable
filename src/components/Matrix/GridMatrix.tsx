@@ -121,7 +121,7 @@ export const GridMatrix: React.FC = () => {
             key={cellId}
             id={cellId}
             data={{ x, y, type: 'grid-cell' }}
-            className="border border-gray-200 flex items-center justify-center relative cursor-pointer transition-all hover:bg-blue-50 bg-white"
+            className="border border-gray-200 flex items-center justify-center relative cursor-pointer transition-all hover:bg-blue-50 bg-white drop-zone-grid min-h-[55px] min-w-[55px]"
             style={{ 
               width: cellSize, 
               height: cellSize,
@@ -130,7 +130,7 @@ export const GridMatrix: React.FC = () => {
               borderTopWidth: isCenterY ? '3px' : '1px', 
               borderTopColor: isCenterY ? '#3b82f6' : '#e5e7eb'
             }}
-            activeClassName="bg-blue-200 border-blue-500"
+            activeClassName="bg-blue-200 border-blue-500 ring-2 ring-blue-400"
           >
             {champion && (
               <DraggableChampion
@@ -177,10 +177,10 @@ export const GridMatrix: React.FC = () => {
           <div className="space-y-4 border-t pt-4">
             <h3 className="text-md font-medium text-gray-800 mb-4">軸ラベル設定</h3>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-3">
               {/* Top Label */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">上ラベル</label>
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700 min-w-[60px]">上：</label>
                 {editingDirection === 'top' ? (
                   <input
                     type="text"
@@ -188,13 +188,13 @@ export const GridMatrix: React.FC = () => {
                     onChange={(e) => setEditValue(e.target.value)}
                     onKeyDown={(e) => handleDirectionKeyPress(e, 'top')}
                     onBlur={() => handleDirectionSave('top')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     autoFocus
                   />
                 ) : (
                   <div
                     onClick={() => handleDirectionEdit('top', topLabel)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 bg-white"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 bg-white"
                   >
                     {topLabel || 'クリックして編集'}
                   </div>
@@ -202,8 +202,8 @@ export const GridMatrix: React.FC = () => {
               </div>
 
               {/* Right Label */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">右ラベル</label>
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700 min-w-[60px]">右：</label>
                 {editingDirection === 'right' ? (
                   <input
                     type="text"
@@ -211,13 +211,13 @@ export const GridMatrix: React.FC = () => {
                     onChange={(e) => setEditValue(e.target.value)}
                     onKeyDown={(e) => handleDirectionKeyPress(e, 'right')}
                     onBlur={() => handleDirectionSave('right')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     autoFocus
                   />
                 ) : (
                   <div
                     onClick={() => handleDirectionEdit('right', rightLabel)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 bg-white"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 bg-white"
                   >
                     {rightLabel || 'クリックして編集'}
                   </div>
@@ -225,8 +225,8 @@ export const GridMatrix: React.FC = () => {
               </div>
 
               {/* Left Label */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">左ラベル</label>
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700 min-w-[60px]">左：</label>
                 {editingDirection === 'left' ? (
                   <input
                     type="text"
@@ -234,13 +234,13 @@ export const GridMatrix: React.FC = () => {
                     onChange={(e) => setEditValue(e.target.value)}
                     onKeyDown={(e) => handleDirectionKeyPress(e, 'left')}
                     onBlur={() => handleDirectionSave('left')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     autoFocus
                   />
                 ) : (
                   <div
                     onClick={() => handleDirectionEdit('left', leftLabel)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 bg-white"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 bg-white"
                   >
                     {leftLabel || 'クリックして編集'}
                   </div>
@@ -248,8 +248,8 @@ export const GridMatrix: React.FC = () => {
               </div>
 
               {/* Bottom Label */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">下ラベル</label>
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700 min-w-[60px]">下：</label>
                 {editingDirection === 'bottom' ? (
                   <input
                     type="text"
@@ -257,13 +257,13 @@ export const GridMatrix: React.FC = () => {
                     onChange={(e) => setEditValue(e.target.value)}
                     onKeyDown={(e) => handleDirectionKeyPress(e, 'bottom')}
                     onBlur={() => handleDirectionSave('bottom')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     autoFocus
                   />
                 ) : (
                   <div
                     onClick={() => handleDirectionEdit('bottom', bottomLabel)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 bg-white"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 bg-white"
                   >
                     {bottomLabel || 'クリックして編集'}
                   </div>

@@ -43,11 +43,22 @@ function App() {
   const handleGlobalDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
-    if (!over || !active.data.current?.champion) return;
+    if (!over || !active.data.current?.champion) {
+      console.log('DragEnd: Missing over or champion data', { over: !!over, champion: !!active.data.current?.champion });
+      return;
+    }
 
     const champion = active.data.current.champion;
     const overId = over.id as string;
     const draggedId = active.id as string;
+    
+    console.log('DragEnd:', { 
+      championName: champion.name, 
+      overId, 
+      draggedId, 
+      currentMode,
+      overData: over.data?.current 
+    });
 
     // Handle drops to trash
     if (overId === 'trash') {
@@ -87,7 +98,7 @@ function App() {
       return;
     }
 
-    // Handle temporary staging area drops FIRST
+    // Handle temporary staging area drops FIRST (but after mode checks)
     if (overId === 'temp-staging') {
       console.log('Dropping champion to staging area:', champion.name);
       
@@ -113,11 +124,32 @@ function App() {
       return;
     }
 
-    // Handle matrix drops when in matrix or scatter mode
-    if ((currentMode === 'matrix' || currentMode === 'scatter') && 
-        (overId.startsWith('grid-') || overId.startsWith('matrix-') || overId.startsWith('center-') || 
+    // Check condition parts
+    const isModeMatch = (currentMode === 'matrix' || currentMode === 'scatter');
+    const isValidDropId = (overId.startsWith('grid-') || overId.startsWith('matrix-') || overId.startsWith('center-') || 
          overId.startsWith('topLeft-') || overId.startsWith('topRight-') || 
-         overId.startsWith('bottomLeft-') || overId.startsWith('bottomRight-'))) {
+         overId.startsWith('bottomLeft-') || overId.startsWith('bottomRight-'));
+    
+    console.log('Drop condition check:', { 
+      isModeMatch, 
+      isValidDropId, 
+      currentMode, 
+      overId,
+      overIdChecks: {
+        grid: overId.startsWith('grid-'),
+        matrix: overId.startsWith('matrix-'),
+        center: overId.startsWith('center-'),
+        topLeft: overId.startsWith('topLeft-'),
+        topRight: overId.startsWith('topRight-'),
+        bottomLeft: overId.startsWith('bottomLeft-'),
+        bottomRight: overId.startsWith('bottomRight-')
+      }
+    });
+
+    // Handle matrix drops when in matrix or scatter mode
+    if (isModeMatch && isValidDropId) {
+      
+      console.log('Processing matrix/scatter drop:', { currentMode, overId });
       
       // First, remove champion from previous position if it was already placed
       if (draggedId.startsWith('staging-') || draggedId.startsWith('grid-') || draggedId.startsWith('matrix-') || 
@@ -161,6 +193,8 @@ function App() {
       }
       
       if (!isNaN(x) && !isNaN(y) && x >= 0 && y >= 0) {
+        console.log('Valid coordinates found:', { x, y, draggedId });
+        
         // Check if this is a placed champion being moved
         if (draggedId.startsWith('grid-') || 
             draggedId.startsWith('matrix-') || 
@@ -169,6 +203,7 @@ function App() {
             draggedId.startsWith('topRight-') || 
             draggedId.startsWith('bottomLeft-') || 
             draggedId.startsWith('bottomRight-')) {
+          console.log('Moving existing placed champion');
           // This is a placed champion - remove from old position first
           const { removeChampion } = useMatrixStore.getState();
           const parts = draggedId.split('-');
@@ -176,6 +211,17 @@ function App() {
             const championId = parts[1];
             removeChampion(championId);
           }
+        } else if (draggedId.startsWith('staging-')) {
+          console.log('Moving from staging area');
+          // Remove from staging area
+          const { removeChampion } = useMatrixStore.getState();
+          const parts = draggedId.split('-');
+          if (parts.length >= 2) {
+            const championId = parts[1];
+            removeChampion(championId);
+          }
+        } else {
+          console.log('Adding new champion from panel');
         }
         
         // Place the champion at the new position
@@ -189,6 +235,13 @@ function App() {
           }
         }
         // For grid mode, finalQuadrant remains undefined
+        console.log('Adding champion to matrix:', { 
+          championName: champion.name, 
+          x, 
+          y, 
+          finalQuadrant, 
+          currentMode 
+        });
         addChampionToMatrix(champion, x, y, finalQuadrant);
       }
     }

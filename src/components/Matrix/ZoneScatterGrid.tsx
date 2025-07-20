@@ -114,13 +114,13 @@ export const ZoneScatterGrid: React.FC<ZoneScatterGridProps> = ({
               y: row,
               type: 'center-axis'
             }}
-            className="flex items-center justify-center relative transition-all border border-gray-200"
+            className="flex items-center justify-center relative transition-all border border-gray-200 drop-zone-scatter min-h-[55px] min-w-[55px]"
             style={{ 
               width: cellSize, 
               height: cellSize,
               backgroundColor: backgroundColor
             }}
-            activeClassName="ring-2 ring-blue-400"
+            activeClassName="ring-2 ring-blue-400 bg-blue-100"
           >
             {champion && (
               <DraggableChampion

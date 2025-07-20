@@ -29,6 +29,14 @@ export const useMatrixStore = create<MatrixState>((set) => ({
 
   addChampion: (champion: Champion, x: number, y: number, quadrant?: string) =>
     set((state) => {
+      console.log('MatrixStore.addChampion called:', { 
+        championName: champion.name, 
+        x, 
+        y, 
+        quadrant, 
+        matrixType: state.matrixType 
+      });
+      
       // For scatter mode, if quadrant is undefined (center axis), use full grid coordinates
       // For scatter mode with quadrant, use limited coordinates (0-4)
       // For grid mode, use full grid coordinates (0-10)
@@ -51,10 +59,17 @@ export const useMatrixStore = create<MatrixState>((set) => ({
         pc.champion.id !== newPlacedChampion.champion.id
       );
 
-      return {
+      const result = {
         ...state,
         champions: [...filteredChampions, newPlacedChampion]
       };
+      
+      console.log('MatrixStore.addChampion result:', { 
+        newChampionCount: result.champions.length,
+        newChampion: newPlacedChampion
+      });
+      
+      return result;
     }),
 
   removeChampion: (championId: string) =>

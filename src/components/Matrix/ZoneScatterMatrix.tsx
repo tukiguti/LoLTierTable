@@ -104,135 +104,101 @@ export const ZoneScatterMatrix: React.FC = () => {
           <div className="space-y-4 border-t pt-4">
             <h3 className="text-md font-medium text-gray-800 mb-4">ゾーンスキャッター設定</h3>
             
-            {/* Quadrant Labels in Visual 2x2 Layout */}
-            <div className="bg-gray-50 p-6 rounded-lg border">
-              <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-                {/* 上段: 1 | 2 */}
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-green-100 border border-green-300 rounded flex items-center justify-center">
-                      <span className="text-xs font-bold text-green-700">1</span>
-                    </div>
-                    <label className="text-sm font-medium text-gray-700">ゾーン1（右上）</label>
+            <div className="space-y-3">
+              {/* Zone 1 (Top Right) */}
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700 min-w-[80px]">右上：</label>
+                {editingZone === 'topRight' ? (
+                  <input
+                    type="text"
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onKeyDown={(e) => handleZoneKeyPress(e, 'topRight')}
+                    onBlur={() => handleZoneSave('topRight')}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    autoFocus
+                    placeholder="例: 理想的"
+                  />
+                ) : (
+                  <div
+                    onClick={() => handleZoneEdit('topRight', zoneLabels.topRight)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 bg-white"
+                  >
+                    {zoneLabels.topRight || 'クリックして編集'}
                   </div>
-                  {editingZone === 'topRight' ? (
-                    <input
-                      type="text"
-                      value={editValue}
-                      onChange={(e) => setEditValue(e.target.value)}
-                      onKeyDown={(e) => handleZoneKeyPress(e, 'topRight')}
-                      onBlur={() => handleZoneSave('topRight')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                      autoFocus
-                      placeholder="例: 理想的"
-                    />
-                  ) : (
-                    <div
-                      onClick={() => handleZoneEdit('topRight', zoneLabels.topRight)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-white transition-colors bg-green-50 min-h-[42px] flex items-center"
-                    >
-                      <span className={zoneLabels.topRight ? 'text-gray-900' : 'text-gray-500'}>
-                        {zoneLabels.topRight || 'クリックして編集'}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-blue-100 border border-blue-300 rounded flex items-center justify-center">
-                      <span className="text-xs font-bold text-blue-700">2</span>
-                    </div>
-                    <label className="text-sm font-medium text-gray-700">ゾーン2（左上）</label>
-                  </div>
-                  {editingZone === 'topLeft' ? (
-                    <input
-                      type="text"
-                      value={editValue}
-                      onChange={(e) => setEditValue(e.target.value)}
-                      onKeyDown={(e) => handleZoneKeyPress(e, 'topLeft')}
-                      onBlur={() => handleZoneSave('topLeft')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                      autoFocus
-                      placeholder="例: 高コスト・強力"
-                    />
-                  ) : (
-                    <div
-                      onClick={() => handleZoneEdit('topLeft', zoneLabels.topLeft)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-white transition-colors bg-blue-50 min-h-[42px] flex items-center"
-                    >
-                      <span className={zoneLabels.topLeft ? 'text-gray-900' : 'text-gray-500'}>
-                        {zoneLabels.topLeft || 'クリックして編集'}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* 下段: 3 | 4 */}
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-purple-100 border border-purple-300 rounded flex items-center justify-center">
-                      <span className="text-xs font-bold text-purple-700">3</span>
-                    </div>
-                    <label className="text-sm font-medium text-gray-700">ゾーン3（左下）</label>
-                  </div>
-                  {editingZone === 'bottomLeft' ? (
-                    <input
-                      type="text"
-                      value={editValue}
-                      onChange={(e) => setEditValue(e.target.value)}
-                      onKeyDown={(e) => handleZoneKeyPress(e, 'bottomLeft')}
-                      onBlur={() => handleZoneSave('bottomLeft')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                      autoFocus
-                      placeholder="例: 低コスト・弱い"
-                    />
-                  ) : (
-                    <div
-                      onClick={() => handleZoneEdit('bottomLeft', zoneLabels.bottomLeft)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-white transition-colors bg-purple-50 min-h-[42px] flex items-center"
-                    >
-                      <span className={zoneLabels.bottomLeft ? 'text-gray-900' : 'text-gray-500'}>
-                        {zoneLabels.bottomLeft || 'クリックして編集'}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-red-100 border border-red-300 rounded flex items-center justify-center">
-                      <span className="text-xs font-bold text-red-700">4</span>
-                    </div>
-                    <label className="text-sm font-medium text-gray-700">第4象限（右下）</label>
-                  </div>
-                  {editingZone === 'bottomRight' ? (
-                    <input
-                      type="text"
-                      value={editValue}
-                      onChange={(e) => setEditValue(e.target.value)}
-                      onKeyDown={(e) => handleZoneKeyPress(e, 'bottomRight')}
-                      onBlur={() => handleZoneSave('bottomRight')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                      autoFocus
-                      placeholder="例: 低コスト・強力"
-                    />
-                  ) : (
-                    <div
-                      onClick={() => handleZoneEdit('bottomRight', zoneLabels.bottomRight)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-white transition-colors bg-red-50 min-h-[42px] flex items-center"
-                    >
-                      <span className={zoneLabels.bottomRight ? 'text-gray-900' : 'text-gray-500'}>
-                        {zoneLabels.bottomRight || 'クリックして編集'}
-                      </span>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
-              
-              {/* Instructions */}
-              <div className="mt-4 text-xs text-gray-600 text-center">
-                各象限ラベルをクリックして編集できます。Enterで確定、Escでキャンセル
+
+              {/* Zone 2 (Top Left) */}
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700 min-w-[80px]">左上：</label>
+                {editingZone === 'topLeft' ? (
+                  <input
+                    type="text"
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onKeyDown={(e) => handleZoneKeyPress(e, 'topLeft')}
+                    onBlur={() => handleZoneSave('topLeft')}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    autoFocus
+                    placeholder="例: 高コスト・強力"
+                  />
+                ) : (
+                  <div
+                    onClick={() => handleZoneEdit('topLeft', zoneLabels.topLeft)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 bg-white"
+                  >
+                    {zoneLabels.topLeft || 'クリックして編集'}
+                  </div>
+                )}
+              </div>
+
+              {/* Zone 3 (Bottom Left) */}
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700 min-w-[80px]">左下：</label>
+                {editingZone === 'bottomLeft' ? (
+                  <input
+                    type="text"
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onKeyDown={(e) => handleZoneKeyPress(e, 'bottomLeft')}
+                    onBlur={() => handleZoneSave('bottomLeft')}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    autoFocus
+                    placeholder="例: 低コスト・弱い"
+                  />
+                ) : (
+                  <div
+                    onClick={() => handleZoneEdit('bottomLeft', zoneLabels.bottomLeft)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 bg-white"
+                  >
+                    {zoneLabels.bottomLeft || 'クリックして編集'}
+                  </div>
+                )}
+              </div>
+
+              {/* Zone 4 (Bottom Right) */}
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700 min-w-[80px]">右下：</label>
+                {editingZone === 'bottomRight' ? (
+                  <input
+                    type="text"
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onKeyDown={(e) => handleZoneKeyPress(e, 'bottomRight')}
+                    onBlur={() => handleZoneSave('bottomRight')}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    autoFocus
+                    placeholder="例: 低コスト・強力"
+                  />
+                ) : (
+                  <div
+                    onClick={() => handleZoneEdit('bottomRight', zoneLabels.bottomRight)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 bg-white"
+                  >
+                    {zoneLabels.bottomRight || 'クリックして編集'}
+                  </div>
+                )}
               </div>
             </div>
           </div>
