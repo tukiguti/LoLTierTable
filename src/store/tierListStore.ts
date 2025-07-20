@@ -12,6 +12,7 @@ const DEFAULT_TIERS: Tier[] = [
 export const useTierListStore = create<TierListState>((set) => ({
   tiers: DEFAULT_TIERS,
   unplacedChampions: [],
+  stagingChampions: [],
 
   setUnplacedChampions: (champions: Champion[]) =>
     set({ unplacedChampions: champions }),
@@ -147,5 +148,36 @@ export const useTierListStore = create<TierListState>((set) => ({
     set((state) => ({
       tiers: DEFAULT_TIERS,
       unplacedChampions: state.unplacedChampions // Keep unplacedChampions available
+    })),
+
+  // Staging area functions
+  addChampionToStaging: (champion: Champion) =>
+    set((state) => {
+      // Remove champion from existing location first
+      const newTiers = state.tiers.map(tier => ({
+        ...tier,
+        champions: tier.champions.filter(c => c.id !== champion.id)
+      }));
+      
+      // Remove from staging if already there to avoid duplicates
+      const newStagingChampions = state.stagingChampions.filter(c => c.id !== champion.id);
+      
+      return {
+        ...state,
+        tiers: newTiers,
+        stagingChampions: [...newStagingChampions, champion]
+      };
+    }),
+
+  removeChampionFromStaging: (championId: string) =>
+    set((state) => ({
+      ...state,
+      stagingChampions: state.stagingChampions.filter(c => c.id !== championId)
+    })),
+
+  clearStaging: () =>
+    set((state) => ({
+      ...state,
+      stagingChampions: []
     })),
 }));

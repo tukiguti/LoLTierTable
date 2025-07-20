@@ -48,7 +48,7 @@ export const TierList: React.FC<TierListProps> = ({ onSave, onExport }) => {
       onSave();
     } else {
       // Default save behavior - could implement auto-save to localStorage
-      console.log('Saving tier list...', { tiers, unplacedChampions });
+      console.log('Saving tier list...', { tiers });
     }
   };
 

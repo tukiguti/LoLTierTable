@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMatrixStore } from '../../store/matrixStore';
 import { MatrixGrid } from './MatrixGrid';
-import { QuadrantGrid } from './QuadrantGrid';
+import { ZoneScatterGrid } from './ZoneScatterGrid';
 import { MatrixControls } from './MatrixControls';
 import { DroppableZone } from '../DragDrop/DroppableZone';
 
@@ -89,14 +89,15 @@ export const Matrix: React.FC<MatrixProps> = ({ onSave, onExport }) => {
             rightLabel={rightLabel}
           />
         ) : (
-          <QuadrantGrid
+          <ZoneScatterGrid
             champions={champions}
             topLabel={topLabel}
             bottomLabel={bottomLabel}
             leftLabel={leftLabel}
             rightLabel={rightLabel}
-            quadrantLabels={quadrantLabels}
-            quadrantSize={Math.floor(gridSize.width / 2)} // Use half of grid width for quadrant size
+            zoneLabels={quadrantLabels}
+            zoneSize={Math.floor(gridSize.width / 2)} // Use half of grid width for zone size
+            cellSize={45}
           />
         )}
       </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useMatrixStore } from '../../store/matrixStore';
 import { DraggableChampion } from '../DragDrop/DraggableChampion';
 import { DroppableZone } from '../DragDrop/DroppableZone';
-import { QuadrantGrid } from './QuadrantGrid';
+import { ZoneScatterGrid } from './ZoneScatterGrid';
 
 export const SimpleMatrix: React.FC = () => {
   const { 
@@ -199,9 +199,9 @@ export const SimpleMatrix: React.FC = () => {
                   <input
                     type="radio"
                     name="matrixType"
-                    value="quadrant"
-                    checked={matrixType === 'quadrant'}
-                    onChange={() => setMatrixType('quadrant')}
+                    value="scatter"
+                    checked={matrixType === 'scatter'}
+                    onChange={() => setMatrixType('scatter')}
                     className="mr-2"
                   />
                   <span className="text-sm">4分割マトリクス</span>
@@ -340,8 +340,8 @@ export const SimpleMatrix: React.FC = () => {
               </div>
             )}
 
-            {/* Quadrant Matrix Settings */}
-            {matrixType === 'quadrant' && (
+            {/* Scatter Matrix Settings */}
+            {matrixType === 'scatter' && (
               <div>
                 <h3 className="text-md font-medium text-gray-800 mb-4">4分割マトリクス設定</h3>
                 
@@ -542,14 +542,14 @@ export const SimpleMatrix: React.FC = () => {
             </div>
           </div>
         ) : (
-          <QuadrantGrid
+          <ZoneScatterGrid
             champions={champions}
             topLabel=""
             bottomLabel=""
             leftLabel=""
             rightLabel=""
-            quadrantLabels={quadrantLabels}
-            quadrantSize={5}
+            zoneLabels={quadrantLabels}
+            zoneSize={5}
             cellSize={55}
           />
         )}

@@ -16,6 +16,7 @@ export interface TierListData {
 export interface TierListState {
   tiers: Tier[];
   unplacedChampions: Champion[];
+  stagingChampions: Champion[];
   setUnplacedChampions: (champions: Champion[]) => void;
   addChampionToTier: (championId: string, tierId: string) => void;
   removeChampionFromTier: (championId: string, tierId: string, championIndex?: number) => void;
@@ -26,4 +27,7 @@ export interface TierListState {
   removeTier: (tierId: string) => void;
   resetTierList: () => void;
   resetTiers: () => void;
+  addChampionToStaging: (champion: Champion) => void;
+  removeChampionFromStaging: (championId: string) => void;
+  clearStaging: () => void;
 }
