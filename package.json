@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://tukiguti.github.io/LoLTierTable/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -11,7 +12,11 @@
     "download-icons": "node scripts/download-icons.js",
     "setup": "npm run download-icons",
     "setup-local": "node scripts/setup-local-data.js",
-    "setup-local-version": "node scripts/setup-local-data.js --version"
+    "setup-local-version": "node scripts/setup-local-data.js --version",
+    "rm": "rm -rf docs",
+    "mv": "mv build docs",
+    "git": "git add . && git commit && git push origin master",
+    "deploy": "npm run rm && npm run build && npm run mv && npm run git"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
