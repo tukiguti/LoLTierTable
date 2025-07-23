@@ -15,7 +15,6 @@ export const SimpleTierList: React.FC = () => {
     updateTierColor, 
     resetTiers,
     addChampionToStaging,
-    removeChampionFromStaging,
     clearStaging
   } = useTierListStore();
   

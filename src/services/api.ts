@@ -35,7 +35,7 @@ export class DataDragonAPI {
       // Check if local data manifest exists
       const dataResponse = await fetch(API_ENDPOINTS.LOCAL_DATA_MANIFEST);
       if (dataResponse.ok) {
-        const manifest = await dataResponse.json();
+        await dataResponse.json();
         this.useLocalIcons = true;
         console.log('🎯 Local champion data found! Using local assets.');
         return true;

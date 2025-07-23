@@ -22,8 +22,6 @@ export const Matrix: React.FC<MatrixProps> = ({ onSave, onExport }) => {
     gridSize,
     matrixType,
     quadrantLabels,
-    updateXAxisLabel,
-    updateYAxisLabel,
     updateTopLabel,
     updateBottomLabel,
     updateLeftLabel,

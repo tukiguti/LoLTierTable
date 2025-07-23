@@ -70,10 +70,6 @@ export const MatrixGrid: React.FC<MatrixGridProps> = ({
       </DroppableZone>
     );
   };
-
-  // Calculate center positions
-  const centerX = Math.floor(gridSize.width / 2);
-  const centerY = Math.floor(gridSize.height / 2);
   
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
