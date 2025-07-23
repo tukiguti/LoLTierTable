@@ -14,8 +14,8 @@
     "setup-local": "node scripts/setup-local-data.js",
     "setup-local-version": "node scripts/setup-local-data.js --version",
     "rm": "rm -rf docs",
-    "mv": "mv build docs",
-    "git": "git add . && git commit && git push origin master",
+    "mv": "mv dist docs",
+    "git": "git add . && git commit -m 'Deploy updated build' && git push origin main",
     "deploy": "npm run rm && npm run build && npm run mv && npm run git"
   },
   "dependencies": {

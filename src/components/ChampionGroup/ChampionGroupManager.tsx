@@ -13,7 +13,6 @@ export const ChampionGroupManager: React.FC<ChampionGroupManagerProps> = ({
   champions,
   onImportToStaging,
   currentStagingChampions,
-  currentMode
 }) => {
   const [activeTab, setActiveTab] = useState<'import' | 'export'>('import');
   const [jsonInput, setJsonInput] = useState('');
