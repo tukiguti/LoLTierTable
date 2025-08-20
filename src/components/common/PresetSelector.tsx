@@ -42,6 +42,13 @@ export const PresetSelector: React.FC<PresetSelectorProps> = ({
   const handleImportPreset = () => {
     try {
       const presetData = JSON.parse(importData);
+      
+      // バリデーション
+      if (!presetData.name || !presetData.champions || !Array.isArray(presetData.champions)) {
+        alert('プリセットデータが不正です（name、championsが必要）');
+        return;
+      }
+
       const newPreset = {
         name: presetData.name,
         description: presetData.description || '',
@@ -61,7 +68,7 @@ export const PresetSelector: React.FC<PresetSelectorProps> = ({
       
       setImportData('');
       setShowImporter(false);
-      alert('プリセットを登録してtempエリアに設置しました');
+      alert(`プリセット「${newPreset.name}」を登録してtempエリアに${champions.length}体設置しました`);
     } catch (error) {
       alert('JSON形式が正しくありません');
     }
