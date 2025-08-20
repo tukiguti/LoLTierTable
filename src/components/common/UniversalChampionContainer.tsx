@@ -52,9 +52,6 @@ export const UniversalChampionContainer: React.FC<UniversalChampionContainerProp
     operationsHook.handleChampionSelect(champion);
   };
 
-  const handleChampionDoubleClick = (champion: Champion) => {
-    operationsHook.handleAddToStaging(champion);
-  };
 
   // Render content based on layout mode
   const renderContent = () => {
@@ -132,7 +129,6 @@ export const UniversalChampionContainer: React.FC<UniversalChampionContainerProp
                     champions={searchHook.filteredChampions}
                     config={displayConfig}
                     onChampionClick={handleChampionClick}
-                    onChampionDoubleClick={handleChampionDoubleClick}
                   />
                 </div>
               </div>
@@ -181,7 +177,6 @@ export const UniversalChampionContainer: React.FC<UniversalChampionContainerProp
                   champions={searchHook.filteredChampions}
                   config={displayConfig}
                   onChampionClick={handleChampionClick}
-                  onChampionDoubleClick={handleChampionDoubleClick}
                 />
               </div>
             </div>
@@ -222,7 +217,6 @@ export const UniversalChampionContainer: React.FC<UniversalChampionContainerProp
                 champions={searchHook.filteredChampions}
                 config={displayConfig}
                 onChampionClick={handleChampionClick}
-                onChampionDoubleClick={handleChampionDoubleClick}
               />
             </div>
           </>

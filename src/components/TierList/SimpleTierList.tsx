@@ -13,7 +13,6 @@ export const SimpleTierList: React.FC = () => {
   const { 
     tiers, 
     addTier, 
-    removeTier, 
     updateTierLabel, 
     resetTiers
   } = useTierListStore();

@@ -7,13 +7,11 @@ import { DEFAULT_PRESETS, SAMPLE_LANE_PRESETS } from '../../data/championPresets
 interface ChampionPresetSelectorProps {
   champions: Champion[];
   onSelectPreset: (champions: Champion[]) => void;
-  showEditButton?: boolean;
 }
 
 export const ChampionPresetSelector: React.FC<ChampionPresetSelectorProps> = ({
   champions,
   onSelectPreset,
-  showEditButton = false,
 }) => {
   const { getChampionsForPreset } = usePresetStore();
   

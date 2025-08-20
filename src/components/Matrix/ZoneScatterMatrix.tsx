@@ -37,7 +37,7 @@ export const ZoneScatterMatrix: React.FC = () => {
     return champions.filter(pc => pc.quadrant === zone);
   };
 
-  const renderZone = (zoneType: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string, bgColor: string, backgroundColor: string, gridArea?: string) => {
+  const renderZone = (zoneType: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string, backgroundColor: string, gridArea?: string) => {
     const zoneChampions = getChampionsInZone(zoneType);
     
     return (
@@ -209,12 +209,12 @@ export const ZoneScatterMatrix: React.FC = () => {
           }}
         >
           {/* Top Row: Red and Green zones */}
-          {renderZone('topLeft', zoneLabels.topLeft, 'bg-red-600', 'linear-gradient(135deg, #dc2626 0%, #fef2f2 100%)', '1 / 1')}
-          {renderZone('topRight', zoneLabels.topRight, 'bg-green-600', 'linear-gradient(225deg, #16a34a 0%, #f0fdf4 100%)', '1 / 2')}
+          {renderZone('topLeft', zoneLabels.topLeft, 'linear-gradient(135deg, #dc2626 0%, #fef2f2 100%)', '1 / 1')}
+          {renderZone('topRight', zoneLabels.topRight, 'linear-gradient(225deg, #16a34a 0%, #f0fdf4 100%)', '1 / 2')}
           
           {/* Bottom Row: Purple and Orange zones */}
-          {renderZone('bottomLeft', zoneLabels.bottomLeft, 'bg-purple-600', 'linear-gradient(45deg, #9333ea 0%, #faf5ff 100%)', '2 / 1')}
-          {renderZone('bottomRight', zoneLabels.bottomRight, 'bg-orange-600', 'linear-gradient(315deg, #ea580c 0%, #fff7ed 100%)', '2 / 2')}
+          {renderZone('bottomLeft', zoneLabels.bottomLeft, 'linear-gradient(45deg, #9333ea 0%, #faf5ff 100%)', '2 / 1')}
+          {renderZone('bottomRight', zoneLabels.bottomRight, 'linear-gradient(315deg, #ea580c 0%, #fff7ed 100%)', '2 / 2')}
         </div>
       </div>
 

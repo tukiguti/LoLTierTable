@@ -31,13 +31,13 @@ export const useChampionSearch = ({
   const filteredChampions = useMemo(() => {
     let filtered = champions;
 
-    // Filter by search term
+    // Filter by search term (champion id, name, and title)
     if (searchState.searchTerm.trim()) {
       const searchLower = searchState.searchTerm.toLowerCase();
       filtered = filtered.filter(champion =>
+        champion.id.toLowerCase().includes(searchLower) ||
         champion.name.toLowerCase().includes(searchLower) ||
-        champion.title?.toLowerCase().includes(searchLower) ||
-        champion.tags?.some(tag => tag.toLowerCase().includes(searchLower))
+        champion.title?.toLowerCase().includes(searchLower)
       );
     }
 
@@ -108,4 +108,4 @@ export const useChampionSearch = ({
     resultCount: filteredChampions.length,
     totalCount: champions.length
   };
-};
+};;;
