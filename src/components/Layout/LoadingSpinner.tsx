@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-export const LoadingSpinner: React.FC = () => {
+export const LoadingSpinner: React.FC = memo(() => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="text-center">
@@ -10,4 +10,4 @@ export const LoadingSpinner: React.FC = () => {
       </div>
     </div>
   );
-};
+});

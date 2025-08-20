@@ -6,7 +6,7 @@ interface DroppableZoneProps {
   children?: React.ReactNode;
   className?: string;
   activeClassName?: string;
-  data?: any;
+  data?: Record<string, unknown>;
   style?: React.CSSProperties;
 }
 

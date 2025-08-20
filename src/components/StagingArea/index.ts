@@ -1,0 +1,1 @@
+export { StagingAreaPanel } from './StagingAreaPanel';

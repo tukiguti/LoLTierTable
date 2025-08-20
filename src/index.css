@@ -1,5 +1,7 @@
+@import './styles/atlassian-theme.css';
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-sans);
   line-height: 1.5;
   font-weight: 400;
 }
@@ -8,7 +10,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: var(--color-neutral-50);
+  color: var(--color-neutral-900);
 }
 
 * {
@@ -166,28 +169,49 @@ button:disabled {
   box-shadow: none;
 }
 
-/* Champion icon animations */
+/* Enhanced champion icon animations */
 .champion-icon {
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
 .champion-icon:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), 0 0 15px rgba(59, 130, 246, 0.3);
+  z-index: 10;
 }
 
-/* Drag and drop styles */
+/* Enhanced drag and drop styles */
 .dragging {
-  opacity: 0.7;
-  transform: scale(0.95);
+  opacity: 0.8;
+  transform: scale(1.05) rotate(5deg);
   z-index: 1000;
+  filter: brightness(1.1) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.3));
 }
 
 .drop-zone {
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .drop-zone.active {
-  background-color: #dbeafe;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
   border-color: #3b82f6;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  transform: scale(1.02);
+}
+
+/* Enhanced button animations */
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }

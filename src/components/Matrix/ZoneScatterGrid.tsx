@@ -34,11 +34,11 @@ export const ZoneScatterGrid: React.FC<ZoneScatterGridProps> = ({
   cellSize = 50,
 }) => {
 
-  // Render the complete 11x11 grid
+  // Render the complete 51x51 grid for whiteboard-like experience
   const renderFullGrid = () => {
     const cells = [];
-    const totalSize = 11; // 11x11 grid
-    const centerIndex = 5; // Center position (0-indexed)
+    const totalSize = 51; // 51x51 grid for whiteboard experience
+    const centerIndex = 25; // Center position (0-indexed)
     
     for (let row = 0; row < totalSize; row++) {
       for (let col = 0; col < totalSize; col++) {
@@ -114,7 +114,7 @@ export const ZoneScatterGrid: React.FC<ZoneScatterGridProps> = ({
               y: row,
               type: 'center-axis'
             }}
-            className="flex items-center justify-center relative transition-all border border-gray-200 drop-zone-scatter min-h-[55px] min-w-[55px]"
+            className="flex items-center justify-center relative transition-all drop-zone-scatter"
             style={{ 
               width: cellSize, 
               height: cellSize,
@@ -153,7 +153,7 @@ export const ZoneScatterGrid: React.FC<ZoneScatterGridProps> = ({
     );
   };
 
-  const totalSize = 11;
+  const totalSize = 51;
 
   const gridWidth = totalSize * cellSize;
   const halfGrid = gridWidth / 2;
@@ -200,9 +200,9 @@ export const ZoneScatterGrid: React.FC<ZoneScatterGridProps> = ({
           {renderZoneLabel('bottomRight')}
         </div>
 
-        {/* 11x11 Grid */}
+        {/* 51x51 Grid - Whiteboard Style */}
         <div 
-          className="grid bg-white rounded-lg shadow-lg p-2"
+          className="grid bg-gray-50"
           style={{
             gridTemplateColumns: `repeat(${totalSize}, ${cellSize}px)`,
             gridTemplateRows: `repeat(${totalSize}, ${cellSize}px)`,

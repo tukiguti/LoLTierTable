@@ -37,11 +37,11 @@ export class DataDragonAPI {
       if (dataResponse.ok) {
         await dataResponse.json();
         this.useLocalIcons = true;
-        console.log('🎯 Local champion data found! Using local assets.');
+        // Local champion data found, using local assets
         return true;
       }
-    } catch (error) {
-      console.log('📡 No local data found, using remote assets.');
+    } catch {
+      // No local data found, using remote assets
     }
     
     this.useLocalIcons = false;
@@ -71,7 +71,7 @@ export class DataDragonAPI {
       
       if (hasLocalData) {
         // Use local data
-        console.log('📁 Loading champions from local data...');
+        // Loading champions from local data
         const response = await fetch(API_ENDPOINTS.LOCAL_DATA);
         if (!response.ok) {
           throw new Error(`Failed to fetch local champions: ${response.status}`);
@@ -79,7 +79,7 @@ export class DataDragonAPI {
         data = await response.json();
       } else {
         // Use remote data
-        console.log('📡 Loading champions from remote API...');
+        // Loading champions from remote API
         const response = await fetch(API_ENDPOINTS.CHAMPIONS);
         if (!response.ok) {
           throw new Error(`Failed to fetch champions: ${response.status} ${response.statusText}`);
@@ -152,7 +152,7 @@ export class DataDragonAPI {
   async preloadChampionImages(champions: Champion[]): Promise<void> {
     // Skip preloading if using local icons (they should be fast to load)
     if (this.useLocalIcons) {
-      console.log('🚀 Using local icons, skipping preload.');
+      // Using local icons, skipping preload
       return;
     }
 

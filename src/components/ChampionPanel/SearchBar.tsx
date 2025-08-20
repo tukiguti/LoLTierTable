@@ -13,12 +13,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   return (
     <div className="relative">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none" style={{ paddingLeft: 'var(--space-12)' }}>
         <svg
-          className="h-5 w-5 text-gray-400"
+          width="16"
+          height="16"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          style={{ color: 'var(--color-neutral-500)' }}
         >
           <path
             strokeLinecap="round"
@@ -32,24 +34,30 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="
-          block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md 
-          leading-5 bg-white placeholder-gray-500 
-          focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500
-          sm:text-sm
-        "
+        className="atlassian-input"
+        style={{ 
+          paddingLeft: 'calc(var(--space-12) + 16px + var(--space-8))',
+          paddingRight: value ? 'calc(var(--space-12) + 16px + var(--space-8))' : 'var(--space-12)'
+        }}
         placeholder={placeholder}
       />
       {value && (
         <button
           onClick={() => onChange('')}
-          className="absolute inset-y-0 right-0 pr-3 flex items-center"
+          className="absolute inset-y-0 right-0 flex items-center atlassian-btn-subtle"
+          style={{ 
+            paddingRight: 'var(--space-12)',
+            backgroundColor: 'transparent',
+            border: 'none'
+          }}
         >
           <svg
-            className="h-5 w-5 text-gray-400 hover:text-gray-600"
+            width="16"
+            height="16"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            style={{ color: 'var(--color-neutral-500)' }}
           >
             <path
               strokeLinecap="round"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, memo } from 'react';
 import type { DiagramType } from '../../types';
 
 interface HeaderProps {
@@ -6,10 +6,13 @@ interface HeaderProps {
   onModeChange: (mode: DiagramType) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({
+export const Header: React.FC<HeaderProps> = memo(({
   currentMode,
   onModeChange,
 }) => {
+  const handleTierlistMode = useCallback(() => onModeChange('tierlist'), [onModeChange]);
+  const handleMatrixMode = useCallback(() => onModeChange('matrix'), [onModeChange]);
+  const handleScatterMode = useCallback(() => onModeChange('scatter'), [onModeChange]);
   return (
     <header className="bg-white border-b border-gray-200 shadow-sm">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -25,7 +28,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center">
             <div className="bg-gray-100 p-1 rounded-lg flex">
               <button
-                onClick={() => onModeChange('tierlist')}
+                onClick={handleTierlistMode}
                 className={`
                   px-3 py-2 text-sm font-medium rounded-md transition-colors
                   ${currentMode === 'tierlist'
@@ -37,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({
                 ティアリスト
               </button>
               <button
-                onClick={() => onModeChange('matrix')}
+                onClick={handleMatrixMode}
                 className={`
                   px-3 py-2 text-sm font-medium rounded-md transition-colors mx-1
                   ${currentMode === 'matrix'
@@ -49,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
                 マトリクス
               </button>
               <button
-                onClick={() => onModeChange('scatter')}
+                onClick={handleScatterMode}
                 className={`
                   px-3 py-2 text-sm font-medium rounded-md transition-colors
                   ${currentMode === 'scatter'
@@ -66,4 +69,4 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
     </header>
   );
-};
+});

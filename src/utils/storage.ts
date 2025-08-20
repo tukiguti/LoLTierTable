@@ -25,7 +25,7 @@ export class StorageManager {
       const diagrams = JSON.parse(stored);
       
       // Convert date strings back to Date objects
-      return diagrams.map((diagram: any) => ({
+      return diagrams.map((diagram: SavedDiagram) => ({
         ...diagram,
         createdAt: new Date(diagram.createdAt),
         updatedAt: new Date(diagram.updatedAt),
@@ -47,8 +47,8 @@ export class StorageManager {
     
     try {
       // Calculate approximate storage usage
-      for (let key in localStorage) {
-        if (localStorage.hasOwnProperty(key)) {
+      for (const key in localStorage) {
+        if (Object.prototype.hasOwnProperty.call(localStorage, key)) {
           used += localStorage[key].length + key.length;
         }
       }
