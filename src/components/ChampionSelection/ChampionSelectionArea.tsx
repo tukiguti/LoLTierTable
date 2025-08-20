@@ -6,8 +6,6 @@ import { DroppableZone } from '../DragDrop/DroppableZone';
 import { SearchBar } from '../ChampionPanel/SearchBar';
 import { FilterPanel } from '../ChampionPanel/FilterPanel';
 import { useTierListStore } from '../../store/tierListStore';
-import { useMatrixStore } from '../../store/matrixStore';
-import { useAppStore } from '../../store/appStore';
 
 interface ChampionSelectionAreaProps {
   champions: Champion[];
@@ -23,7 +21,6 @@ export const ChampionSelectionArea: React.FC<ChampionSelectionAreaProps> = ({
   const [selectedChampion, setSelectedChampion] = useState<Champion | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   
-  const { currentMode } = useAppStore();
   const { addChampionToStaging, clearStaging } = useTierListStore();
 
   // フィルタリングされたチャンピオン
@@ -37,7 +34,8 @@ export const ChampionSelectionArea: React.FC<ChampionSelectionAreaProps> = ({
 
   const filteredChampions = React.useMemo(() => {
     return champions.filter(champion => {
-      const matchesSearch = champion.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
+      const matchesSearch = champion.id.toLowerCase().includes(searchFilter.toLowerCase()) ||
+                           champion.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
                            champion.title.toLowerCase().includes(searchFilter.toLowerCase());
       const matchesTags = selectedTags.length === 0 || 
                          selectedTags.some(tag => champion.tags.includes(tag));
@@ -179,47 +177,48 @@ export const ChampionSelectionArea: React.FC<ChampionSelectionAreaProps> = ({
                   </div>
                 </div>
               ) : (
-                <DroppableZone
-                  id="champion-selection-panel"
-                  data={{ type: 'champion-panel-return' }}
-                  className="w-full h-full"
-                  activeClassName="bg-blue-50"
-                >
-                  <div className="grid" style={{
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(48px, 1fr))', // smallサイズに合わせて調整
-                    gap: '2px', // 少し大きめのギャップ
-                    width: '100%',
-                    maxHeight: '320px',
-                    overflowY: 'auto',
-                    overflowX: 'hidden',
-                    background: 'transparent'
-                  }}>
-                    {filteredChampions.map((champion) => ( // 制限を撤廃して全チャンピオン表示
-                      <DraggableChampion
-                        key={champion.id}
-                        uniqueId={`panel-${champion.id}`}
-                        champion={champion}
-                        size="small" // 視認性を向上
-                        onClick={() => handleChampionSelect(champion)}
-                        className={`
-                          ${selectedChampion?.id === champion.id 
-                            ? 'ring-1 ring-blue-400' 
-                            : ''
-                          }
-                          hover:scale-105 transition-transform duration-100
-                        `}
-                        style={{
-                          borderRadius: '2px', // 角丸を最小限に
-                          border: 'none', // ボーダーを削除
-                          boxShadow: selectedChampion?.id === champion.id 
-                            ? '0 0 0 1px #3b82f6'
-                            : 'none' // シャドウも削除
-                        }}
-                      />
-                    ))}
-                  </div>
-                </DroppableZone>
-                  
+                <>
+                  <DroppableZone
+                    id="champion-selection-panel"
+                    data={{ type: 'champion-panel-return' }}
+                    className="w-full h-full"
+                    activeClassName="bg-blue-50"
+                  >
+                    <div className="grid" style={{
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(48px, 1fr))', // smallサイズに合わせて調整
+                      gap: '2px', // 少し大きめのギャップ
+                      width: '100%',
+                      maxHeight: '320px',
+                      overflowY: 'auto',
+                      overflowX: 'hidden',
+                      background: 'transparent'
+                    }}>
+                      {filteredChampions.map((champion) => ( // 制限を撤廃して全チャンピオン表示
+                        <DraggableChampion
+                          key={champion.id}
+                          uniqueId={`panel-${champion.id}`}
+                          champion={champion}
+                          size="small" // 視認性を向上
+                          onClick={() => handleChampionSelect(champion)}
+                          className={`
+                            ${selectedChampion?.id === champion.id 
+                              ? 'ring-1 ring-blue-400' 
+                              : ''
+                            }
+                            hover:scale-105 transition-transform duration-100
+                          `}
+                          style={{
+                            borderRadius: '2px', // 角丸を最小限に
+                            border: 'none', // ボーダーを削除
+                            boxShadow: selectedChampion?.id === champion.id 
+                              ? '0 0 0 1px #3b82f6'
+                              : 'none' // シャドウも削除
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </DroppableZone>
+                    
                   {/* Enhanced チャンピオン数表示 */}
                   <div 
                     className="text-center text-sm font-semibold mt-3 px-3 py-1 rounded-lg"
@@ -231,7 +230,7 @@ export const ChampionSelectionArea: React.FC<ChampionSelectionAreaProps> = ({
                   >
                     🎮 {filteredChampions.length}体のチャンピオン
                   </div>
-                </div>
+                </>
               )}
             </div>
           </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import type { CSSProperties } from 'react';
 import type { Champion, ChampionIconSize } from '../../types';
 
 interface ChampionIconProps {
@@ -41,7 +42,7 @@ export const ChampionIcon: React.FC<ChampionIconProps> = React.memo(({
         WebkitUserDrag: 'none', // Prevent default drag behavior
         backfaceVisibility: 'hidden', // Optimize for transforms
         perspective: '1000px', // Enable hardware acceleration
-      }}
+      } as CSSProperties}
     >
       {!imageError ? (
         <img

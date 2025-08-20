@@ -7,7 +7,6 @@ interface SearchableChampionGridProps {
   champions: Champion[];
   config: ChampionDisplayConfig;
   onChampionClick?: (champion: Champion) => void;
-  onChampionDoubleClick?: (champion: Champion) => void;
   className?: string;
 }
 
@@ -15,7 +14,6 @@ export const SearchableChampionGrid: React.FC<SearchableChampionGridProps> = ({
   champions,
   config,
   onChampionClick,
-  onChampionDoubleClick,
   className = ''
 }) => {
   const { iconSize, gridColumns, maxItems, showItemCount } = config;
