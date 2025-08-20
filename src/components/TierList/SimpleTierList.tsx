@@ -100,8 +100,10 @@ export const SimpleTierList: React.FC = () => {
             >
               {/* Enhanced Tier Label */}
               <div
-                className="w-28 flex flex-col items-center justify-center p-4 text-white font-black text-2xl shadow-inner relative border-r-2"
+                className="flex flex-col items-center justify-center p-6 text-white font-black shadow-inner relative border-r-2"
                 style={{ 
+                  width: '100px',
+                  minWidth: '100px',
                   background: `linear-gradient(135deg, ${tier.color} 0%, ${tier.color}cc 50%, ${tier.color}aa 100%)`,
                   textShadow: '3px 3px 6px rgba(0,0,0,0.7)',
                   borderRightColor: 'rgba(255, 255, 255, 0.2)'
@@ -110,24 +112,15 @@ export const SimpleTierList: React.FC = () => {
                 <InlineEditField
                   value={tier.label}
                   onSave={(value) => updateTierLabel(tier.id, value)}
-                  className="text-center font-black text-2xl text-white bg-transparent border-none outline-none uppercase tracking-wider"
-                  editClassName="text-black bg-white rounded-lg px-3 py-1 font-black text-2xl uppercase shadow-lg"
-                  displayClassName="cursor-pointer hover:bg-black hover:bg-opacity-20 rounded-lg px-2 py-1 transition-all duration-200"
-                  style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.7)' }}
-                />
-                
-                <button
-                  onClick={() => removeTier(tier.id)}
-                  className="absolute top-2 right-2 w-6 h-6 text-white hover:text-red-300 transition-all duration-200 opacity-60 hover:opacity-100 hover:scale-110"
-                  title="ティアを削除"
-                  style={{
-                    filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
+                  className="text-center font-black text-white bg-transparent border-none outline-none uppercase tracking-wider"
+                  editClassName="text-black bg-white rounded-lg px-4 py-3 font-black uppercase shadow-lg"
+                  displayClassName="cursor-pointer hover:bg-black hover:bg-opacity-20 rounded-lg px-3 py-3 transition-all duration-200"
+                  style={{ 
+                    textShadow: '3px 3px 6px rgba(0,0,0,0.7)',
+                    fontSize: '3rem',
+                    lineHeight: '1.1'
                   }}
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                />
               </div>
 
               {/* Enhanced Champion Drop Zone */}
