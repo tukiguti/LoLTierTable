@@ -156,7 +156,7 @@ export const ChampionGroupManager: React.FC<ChampionGroupManagerProps> = ({
         onImportToStaging(resolvedChampions);
         alert(`ファイルから${resolvedChampions.length}体のチャンピオンを読み込みました！`);
         
-      } catch (error) {
+      } catch {
         setImportError('ファイルの読み込みに失敗しました。有効なJSONファイルを選択してください。');
       }
     };

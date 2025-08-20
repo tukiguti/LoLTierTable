@@ -1,13 +1,9 @@
 import { create } from 'zustand';
 import type { TierListState, Tier, Champion } from '../types';
+import { createDefaultTiers, findChampionById, removeChampionById, generateUniqueId } from '../utils/storeHelpers';
+import { TIER_CONFIG } from '../utils/constants';
 
-const DEFAULT_TIERS: Tier[] = [
-  { id: 's-tier', label: 'S', color: '#ff6b6b', champions: [], order: 0 },
-  { id: 'a-tier', label: 'A', color: '#4ecdc4', champions: [], order: 1 },
-  { id: 'b-tier', label: 'B', color: '#45b7d1', champions: [], order: 2 },
-  { id: 'c-tier', label: 'C', color: '#f9ca24', champions: [], order: 3 },
-  { id: 'd-tier', label: 'D', color: '#f0932b', champions: [], order: 4 },
-];
+const DEFAULT_TIERS: Tier[] = createDefaultTiers();
 
 export const useTierListStore = create<TierListState>((set) => ({
   tiers: DEFAULT_TIERS,
@@ -19,8 +15,7 @@ export const useTierListStore = create<TierListState>((set) => ({
 
   addChampionToTier: (championId: string, tierId: string) =>
     set((state) => {
-      // Always get fresh champion instance from unplacedChampions
-      const championToAdd = state.unplacedChampions.find(c => c.id === championId);
+      const championToAdd = findChampionById(state.unplacedChampions, championId);
       
       if (!championToAdd) return state;
 
@@ -34,10 +29,7 @@ export const useTierListStore = create<TierListState>((set) => ({
         return tier;
       });
 
-      return {
-        ...state,
-        tiers: newTiers,
-      };
+      return { ...state, tiers: newTiers };
     }),
 
   removeChampionFromTier: (championId: string, tierId: string, championIndex?: number) =>
@@ -75,8 +67,7 @@ export const useTierListStore = create<TierListState>((set) => ({
     set((state) => {
       if (fromTierId === toTierId) return state;
 
-      // Always get fresh champion instance from unplacedChampions
-      const championToMove = state.unplacedChampions.find(c => c.id === championId);
+      const championToMove = findChampionById(state.unplacedChampions, championId);
       
       if (!championToMove) return state;
 
@@ -113,9 +104,9 @@ export const useTierListStore = create<TierListState>((set) => ({
     set((state) => {
       const newOrder = Math.max(...state.tiers.map(t => t.order)) + 1;
       const newTier: Tier = {
-        id: `tier-${Date.now()}`,
+        id: generateUniqueId('tier'),
         label: `Tier ${newOrder + 1}`,
-        color: '#95a5a6',
+        color: TIER_CONFIG.DEFAULT_COLORS.DEFAULT,
         champions: [],
         order: newOrder,
       };
@@ -172,7 +163,7 @@ export const useTierListStore = create<TierListState>((set) => ({
   removeChampionFromStaging: (championId: string) =>
     set((state) => ({
       ...state,
-      stagingChampions: state.stagingChampions.filter(c => c.id !== championId)
+      stagingChampions: removeChampionById(state.stagingChampions, championId)
     })),
 
   clearStaging: () =>

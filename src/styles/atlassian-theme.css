@@ -1,0 +1,345 @@
+/* Atlassian Design System inspired theme */
+:root {
+  /* Color tokens */
+  --color-brand-primary: #0052CC;
+  --color-brand-primary-hover: #0065FF;
+  --color-brand-primary-pressed: #003D99;
+  
+  --color-neutral-0: #FFFFFF;
+  --color-neutral-50: #F7F8F9;
+  --color-neutral-100: #F1F2F4;
+  --color-neutral-200: #E4E6EA;
+  --color-neutral-300: #D3D6DB;
+  --color-neutral-400: #B3B9C4;
+  --color-neutral-500: #8993A5;
+  --color-neutral-600: #6B778C;
+  --color-neutral-700: #505F79;
+  --color-neutral-800: #42526E;
+  --color-neutral-900: #253858;
+  --color-neutral-1000: #172B4D;
+  
+  --color-success: #22A06B;
+  --color-success-hover: #4BCE97;
+  --color-warning: #F79009;
+  --color-danger: #E34935;
+  
+  /* Spacing tokens */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  
+  /* Border radius */
+  --border-radius-4: 4px;
+  --border-radius-8: 8px;
+  --border-radius-12: 12px;
+  
+  /* Typography */
+  --font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-size-12: 12px;
+  --font-size-14: 14px;
+  --font-size-16: 16px;
+  --font-size-20: 20px;
+  --font-size-24: 24px;
+  --font-size-32: 32px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  color: var(--color-neutral-900);
+  background-color: var(--color-neutral-50);
+  line-height: 1.5;
+}
+
+/* Button styles */
+.atlassian-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-16);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-4);
+  font-size: var(--font-size-14);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.atlassian-btn-primary {
+  background-color: var(--color-brand-primary);
+  color: var(--color-neutral-0);
+}
+
+.atlassian-btn-primary:hover {
+  background-color: var(--color-brand-primary-hover);
+}
+
+.atlassian-btn-primary:active {
+  background-color: var(--color-brand-primary-pressed);
+}
+
+.atlassian-btn-secondary {
+  background-color: var(--color-neutral-0);
+  color: var(--color-neutral-700);
+  border-color: var(--color-neutral-300);
+}
+
+.atlassian-btn-secondary:hover {
+  background-color: var(--color-neutral-50);
+  border-color: var(--color-neutral-400);
+}
+
+.atlassian-btn-subtle {
+  background-color: transparent;
+  color: var(--color-neutral-700);
+}
+
+.atlassian-btn-subtle:hover {
+  background-color: var(--color-neutral-100);
+}
+
+.atlassian-btn-sm {
+  padding: var(--space-4) var(--space-12);
+  font-size: var(--font-size-12);
+}
+
+.atlassian-btn-lg {
+  padding: var(--space-12) var(--space-24);
+  font-size: var(--font-size-16);
+}
+
+/* Card styles */
+.atlassian-card {
+  background-color: var(--color-neutral-0);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--border-radius-8);
+  box-shadow: var(--shadow-sm);
+}
+
+.atlassian-card-elevated {
+  box-shadow: var(--shadow-md);
+}
+
+/* Input styles */
+.atlassian-input {
+  width: 100%;
+  padding: var(--space-8) var(--space-12);
+  border: 2px solid var(--color-neutral-300);
+  border-radius: var(--border-radius-4);
+  font-size: var(--font-size-14);
+  font-family: var(--font-family-sans);
+  background-color: var(--color-neutral-0);
+  color: var(--color-neutral-900);
+  transition: border-color 0.15s ease;
+}
+
+.atlassian-input:focus {
+  outline: none;
+  border-color: var(--color-brand-primary);
+}
+
+.atlassian-input::placeholder {
+  color: var(--color-neutral-500);
+}
+
+/* Layout utilities */
+.atlassian-surface {
+  background-color: var(--color-neutral-0);
+}
+
+.atlassian-surface-sunken {
+  background-color: var(--color-neutral-50);
+}
+
+.atlassian-surface-raised {
+  background-color: var(--color-neutral-0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Text utilities */
+.atlassian-text-heading-large {
+  font-size: var(--font-size-32);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-neutral-1000);
+}
+
+.atlassian-text-heading-medium {
+  font-size: var(--font-size-24);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-neutral-1000);
+}
+
+.atlassian-text-heading-small {
+  font-size: var(--font-size-20);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-neutral-1000);
+}
+
+.atlassian-text-body {
+  font-size: var(--font-size-14);
+  color: var(--color-neutral-800);
+}
+
+.atlassian-text-caption {
+  font-size: var(--font-size-12);
+  color: var(--color-neutral-600);
+}
+
+.atlassian-text-subtle {
+  color: var(--color-neutral-600);
+}
+
+/* Spacing utilities */
+.atlassian-space-4 { margin: var(--space-4); }
+.atlassian-space-8 { margin: var(--space-8); }
+.atlassian-space-12 { margin: var(--space-12); }
+.atlassian-space-16 { margin: var(--space-16); }
+.atlassian-space-24 { margin: var(--space-24); }
+.atlassian-space-32 { margin: var(--space-32); }
+
+.atlassian-gap-4 { gap: var(--space-4); }
+.atlassian-gap-8 { gap: var(--space-8); }
+.atlassian-gap-12 { gap: var(--space-12); }
+.atlassian-gap-16 { gap: var(--space-16); }
+
+/* 個別エリアのスクロールバーのみ無効化（ブラウザ全体スクロールは維持） */
+.overflow-auto:not(html):not(body) {
+  overflow: hidden !important;
+}
+
+.overflow-y-auto:not(html):not(body) {
+  overflow-y: hidden !important;
+}
+
+.overflow-x-auto:not(html):not(body) {
+  overflow-x: hidden !important;
+}
+
+/* 個別コンテナ内のスクロールバーのみ隠す（ブラウザメインスクロールは除外） */
+.flex-1::-webkit-scrollbar,
+.atlassian-surface::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* コンテナレベルでのスクロールバー隠し（Firefox） */
+.flex-1,
+.atlassian-surface,
+.overflow-auto:not(html):not(body),
+.overflow-y-auto:not(html):not(body) {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+/* Slider component */
+.atlassian-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--color-neutral-200);
+  border-radius: var(--border-radius-4);
+  outline: none;
+  opacity: 0.8;
+  transition: opacity 0.15s ease;
+}
+
+.atlassian-slider:hover {
+  opacity: 1;
+}
+
+.atlassian-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-brand-primary);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.atlassian-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-brand-primary);
+  cursor: pointer;
+  border: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Filter tag styles */
+.atlassian-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-8);
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-700);
+  border-radius: var(--border-radius-4);
+  font-size: var(--font-size-12);
+  font-weight: 500;
+  border: 1px solid var(--color-neutral-200);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.atlassian-tag:hover {
+  background-color: var(--color-neutral-200);
+}
+
+.atlassian-tag-selected {
+  background-color: var(--color-brand-primary);
+  color: var(--color-neutral-0);
+  border-color: var(--color-brand-primary);
+}
+
+.atlassian-tag-selected:hover {
+  background-color: var(--color-brand-primary-hover);
+  border-color: var(--color-brand-primary-hover);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-neutral-100);
+  border-radius: var(--border-radius-4);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-300);
+  border-radius: var(--border-radius-4);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-400);
+}

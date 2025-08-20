@@ -19,7 +19,7 @@ export interface MatrixData {
     width: number;
     height: number;
   };
-  matrixType: 'grid' | 'scatter';
+  matrixType: 'grid' | 'scatter' | 'freeboard';
   quadrantLabels?: {
     topLeft: string;
     topRight: string;
@@ -46,7 +46,7 @@ export interface MatrixState {
     width: number;
     height: number;
   };
-  matrixType: 'grid' | 'scatter';
+  matrixType: 'grid' | 'scatter' | 'freeboard';
   quadrantLabels: {
     topLeft: string;
     topRight: string;
@@ -69,7 +69,7 @@ export interface MatrixState {
   updateLeftLabel: (label: string) => void;
   updateRightLabel: (label: string) => void;
   updateGridSize: (width: number, height: number) => void;
-  setMatrixType: (type: 'grid' | 'scatter') => void;
+  setMatrixType: (type: 'grid' | 'scatter' | 'freeboard') => void;
   updateQuadrantLabel: (quadrant: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string) => void;
   updateZoneLabel: (zone: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string) => void;
   updateAxisLabels: (xLabel: string, yLabel: string) => void;

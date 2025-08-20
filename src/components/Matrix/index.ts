@@ -1,3 +1,3 @@
-export { Matrix } from './Matrix';
-export { MatrixGrid } from './MatrixGrid';
-export { MatrixControls } from './MatrixControls';
+export { FreeboardMatrix } from './FreeboardMatrix';
+export { ZoneScatterMatrix } from './ZoneScatterMatrix';
+export { ZoneScatterGrid } from './ZoneScatterGrid';

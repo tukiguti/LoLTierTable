@@ -1,4 +1,3 @@
-export { TierList } from './TierList';
+export { SimpleTierList } from './SimpleTierList';
 export { TierRow } from './TierRow';
 export { UnplacedChampions } from './UnplacedChampions';
-export { TierListControls } from './TierListControls';
