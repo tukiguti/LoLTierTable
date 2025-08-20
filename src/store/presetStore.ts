@@ -83,11 +83,25 @@ export const usePresetStore = create<PresetStore>()(
       initializePresets: () => {
         const { presets } = get();
         
-        // 初回起動時のみデフォルトプリセットを追加
-        if (presets.length === 0) {
-          set({
-            presets: [...DEFAULT_PRESETS, ...SAMPLE_LANE_PRESETS]
-          });
+        // デフォルトプリセットとレーンプリセットが含まれているかチェック
+        const hasDefaultPresets = presets.some(p => !p.isCustom);
+        const hasLanePresets = presets.some(p => p.isCustom && ['top-lane', 'jungle', 'mid-lane', 'adc', 'support'].includes(p.id));
+        
+        let newPresets = [...presets];
+        
+        // デフォルトプリセットがない場合は追加
+        if (!hasDefaultPresets) {
+          newPresets = [...newPresets, ...DEFAULT_PRESETS];
+        }
+        
+        // レーンプリセットがない場合は追加
+        if (!hasLanePresets) {
+          newPresets = [...newPresets, ...SAMPLE_LANE_PRESETS];
+        }
+        
+        // 変更があった場合のみストアを更新
+        if (newPresets.length !== presets.length) {
+          set({ presets: newPresets });
         }
       },
 

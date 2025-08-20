@@ -24,6 +24,27 @@ export const StagingAreaPanel: React.FC = () => {
   };
 
 
+  const handleExportPreset = () => {
+    const championIds = stagingChampions.map(champion => champion.id);
+    const presetData = {
+      id: `staging-${Date.now()}`,
+      name: `Staging ${new Date().toLocaleString()}`,
+      description: '',
+      icon: '📋',
+      champions: championIds,
+      isCustom: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    
+    console.log('プリセット出力:', JSON.stringify(presetData, null, 2));
+    
+    // クリップボードにコピー
+    navigator.clipboard.writeText(JSON.stringify(presetData, null, 2)).then(() => {
+      alert('プリセットデータをクリップボードにコピーしました');
+    });
+  };
+
   const handleClearStaging = () => {
     if (currentMode === 'tierlist') {
       const { clearStaging } = useTierListStore.getState();
@@ -61,24 +82,38 @@ export const StagingAreaPanel: React.FC = () => {
           </div>
           
           {stagingChampions.length > 0 && (
-            <button
-              onClick={handleClearStaging}
-              className="px-4 py-2 text-xs font-bold rounded-lg transition-all duration-200 hover:scale-105"
-              style={{
-                background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
-                color: 'white',
-                border: '1px solid #f87171',
-                boxShadow: '0 4px 15px rgba(220, 38, 38, 0.3)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(220, 38, 38, 0.5)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(220, 38, 38, 0.3)';
-              }}
-            >
-              🗑️ 全て削除
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={handleExportPreset}
+                className="px-3 py-2 text-xs font-bold rounded-lg transition-all duration-200 hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  color: 'white',
+                  border: '1px solid #34d399',
+                  boxShadow: '0 4px 15px rgba(16, 185, 129, 0.3)'
+                }}
+              >
+                📋 プリセット出力
+              </button>
+              <button
+                onClick={handleClearStaging}
+                className="px-4 py-2 text-xs font-bold rounded-lg transition-all duration-200 hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
+                  color: 'white',
+                  border: '1px solid #f87171',
+                  boxShadow: '0 4px 15px rgba(220, 38, 38, 0.3)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(220, 38, 38, 0.5)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(220, 38, 38, 0.3)';
+                }}
+              >
+                🗑️ 全て削除
+              </button>
+            </div>
           )}
         </div>
 

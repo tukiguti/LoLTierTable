@@ -16,8 +16,8 @@ export interface ChampionPreset {
 export const DEFAULT_PRESETS: ChampionPreset[] = [
   {
     id: 'fighters',
-    name: 'ファイター',
-    description: 'Fighter タグのチャンピオン',
+    name: 'Fighter',
+    description: '',
     icon: '⚔️',
     champions: [],
     tags: ['Fighter'],
@@ -27,8 +27,8 @@ export const DEFAULT_PRESETS: ChampionPreset[] = [
   },
   {
     id: 'tanks',
-    name: 'タンク',
-    description: 'Tank タグのチャンピオン',
+    name: 'Tank',
+    description: '',
     icon: '🛡️',
     champions: [],
     tags: ['Tank'],
@@ -38,8 +38,8 @@ export const DEFAULT_PRESETS: ChampionPreset[] = [
   },
   {
     id: 'marksmen',
-    name: 'マークスマン',
-    description: 'Marksman タグのチャンピオン',
+    name: 'Marksman',
+    description: '',
     icon: '🏹',
     champions: [],
     tags: ['Marksman'],
@@ -49,8 +49,8 @@ export const DEFAULT_PRESETS: ChampionPreset[] = [
   },
   {
     id: 'mages',
-    name: 'メイジ',
-    description: 'Mage タグのチャンピオン',
+    name: 'Mage',
+    description: '',
     icon: '🔮',
     champions: [],
     tags: ['Mage'],
@@ -60,8 +60,8 @@ export const DEFAULT_PRESETS: ChampionPreset[] = [
   },
   {
     id: 'assassins',
-    name: 'アサシン',
-    description: 'Assassin タグのチャンピオン',
+    name: 'Assassin',
+    description: '',
     icon: '🗡️',
     champions: [],
     tags: ['Assassin'],
@@ -71,8 +71,8 @@ export const DEFAULT_PRESETS: ChampionPreset[] = [
   },
   {
     id: 'supports',
-    name: 'サポート',
-    description: 'Support タグのチャンピオン',
+    name: 'Support',
+    description: '',
     icon: '💚',
     champions: [],
     tags: ['Support'],
@@ -86,13 +86,19 @@ export const DEFAULT_PRESETS: ChampionPreset[] = [
 export const SAMPLE_LANE_PRESETS: ChampionPreset[] = [
   {
     id: 'top-lane',
-    name: 'トップレーン',
-    description: '一般的なトップレーンチャンピオン',
+    name: 'TOP',
+    description: '',
     icon: '🔝',
     champions: [
-      'Aatrox', 'Camille', 'Darius', 'Fiora', 'Garen', 
-      'Irelia', 'Jax', 'Malphite', 'Ornn', 'Riven',
-      'Sett', 'Teemo', 'Urgot', 'Yorick', 'Gnar'
+      'Ambessa', 'Camille', 'Chogath', 'Darius', 'DrMundo',
+      'Fiora', 'Gangplank', 'Garen', 'Gnar', 'Gragas',
+      'Gwen', 'Illaoi', 'Jax', 'Jayce', 'Kayle',
+      'Kled', 'KSante', 'Malphite', 'Maokai', 'Mordekaiser',
+      'Nasus', 'Olaf', 'Ornn', 'Pantheon', 'Poppy',
+      'Renekton', 'Riven', 'Rumble', 'Sett', 'Shen',
+      'Singed', 'Sion', 'TahmKench', 'Trundle', 'Tryndamere',
+      'Udyr', 'Urgot', 'Vayne', 'Volibear', 'Warwick',
+      'Yone', 'Yorick'
     ],
     isCustom: true,
     createdAt: new Date().toISOString(),
@@ -100,13 +106,19 @@ export const SAMPLE_LANE_PRESETS: ChampionPreset[] = [
   },
   {
     id: 'jungle',
-    name: 'ジャングル',
-    description: '一般的なジャングルチャンピオン',
+    name: 'JG',
+    description: '',
     icon: '🌲',
     champions: [
-      'Graves', 'Hecarim', 'Karthus', 'Kayn', 'Kindred',
-      'LeeSin', 'Lillia', 'Nidalee', 'Rengar', 'Shyvana',
-      'Udyr', 'Viego', 'Warwick', 'XinZhao', 'Zac'
+      'Amumu', 'Belveth', 'Brand', 'Briar', 'Diana',
+      'DrMundo', 'Ekko', 'Elise', 'Evelynn', 'Fiddlesticks',
+      'Gragas', 'Graves', 'Gwen', 'Hecarim', 'Ivern',
+      'JarvanIV', 'Jax', 'Karthus', 'Kayn', 'Khazix',
+      'LeeSin', 'Lillia', 'MasterYi', 'MonkeyKing', 'Naafiri',
+      'Nidalee', 'Nocturne', 'Pantheon', 'Rammus', 'RekSai',
+      'Rengar', 'Shaco', 'Shyvana', 'Skarner', 'Talon',
+      'Trundle', 'Udyr', 'Viego', 'Vi', 'Volibear',
+      'Warwick', 'Zac', 'Zed'
     ],
     isCustom: true,
     createdAt: new Date().toISOString(),
@@ -114,13 +126,19 @@ export const SAMPLE_LANE_PRESETS: ChampionPreset[] = [
   },
   {
     id: 'mid-lane',
-    name: 'ミッドレーン',
-    description: '一般的なミッドレーンチャンピオン',
+    name: 'MID',
+    description: '',
     icon: '🎯',
     champions: [
-      'Ahri', 'Akali', 'Annie', 'Azir', 'Cassiopeia',
-      'Fizz', 'Katarina', 'LeBlanc', 'Lux', 'Orianna',
-      'Syndra', 'Talon', 'Yasuo', 'Yone', 'Zed'
+      'Ahri', 'Anivia', 'Annie', 'AurelionSol', 'Aurora',
+      'Azir', 'Brand', 'Cassiopeia', 'Chogath', 'Diana',
+      'Ekko', 'Galio', 'Heimerdinger', 'Hwei', 'Irelia',
+      'Jayce', 'Kassadin', 'Katarina', 'Leblanc', 'Lissandra',
+      'Lux', 'Malzahar', 'Mel', 'Morgana', 'Naafiri',
+      'Orianna', 'Qiyana', 'Ryze', 'Swain', 'Sylas',
+      'Syndra', 'Taliyah', 'TwistedFate', 'Veigar', 'Velkoz',
+      'Vex', 'Viktor', 'Vladimir', 'Xerath', 'Yasuo',
+      'Yone', 'Zed', 'Ziggs', 'Zoe'
     ],
     isCustom: true,
     createdAt: new Date().toISOString(),
@@ -129,12 +147,14 @@ export const SAMPLE_LANE_PRESETS: ChampionPreset[] = [
   {
     id: 'adc',
     name: 'ADC',
-    description: 'ボットレーンADCチャンピオン',
+    description: '',
     icon: '🏹',
     champions: [
-      'Aphelios', 'Ashe', 'Caitlyn', 'Draven', 'Ezreal',
-      'Jhin', 'Jinx', 'Kaisa', 'Kalista', 'Kogmaw',
-      'Lucian', 'MissFortune', 'Samira', 'Tristana', 'Vayne'
+      'Aphelios', 'Ashe', 'Caitlyn', 'Corki', 'Draven',
+      'Ezreal', 'Jhin', 'Jinx', 'Kaisa', 'Kalista',
+      'KogMaw', 'Lucian', 'MissFortune', 'Samira', 'Senna',
+      'Sivir', 'Smolder', 'Tristana', 'Twitch', 'Varus',
+      'Vayne', 'Xayah', 'Yunara', 'Zeri', 'Ziggs'
     ],
     isCustom: true,
     createdAt: new Date().toISOString(),
@@ -142,16 +162,33 @@ export const SAMPLE_LANE_PRESETS: ChampionPreset[] = [
   },
   {
     id: 'support',
-    name: 'サポート',
-    description: 'ボットレーンサポートチャンピオン',
+    name: 'SUP',
+    description: '',
     icon: '💚',
     champions: [
-      'Bard', 'Blitzcrank', 'Braum', 'Leona', 'Lulu',
-      'Nami', 'Nautilus', 'Pyke', 'Rakan', 'Senna',
-      'Seraphine', 'Soraka', 'Thresh', 'Yuumi', 'Zyra'
+      'Alistar', 'Ashe', 'Bard', 'Blitzcrank', 'Brand',
+      'Braum', 'Elise', 'Heimerdinger', 'Janna', 'Karma',
+      'Leona', 'Lulu', 'Maokai', 'Milio', 'Morgana',
+      'Nami', 'Nautilus', 'Neeko', 'Poppy', 'Pyke',
+      'Rakan', 'Rell', 'Renata', 'Senna', 'Seraphine',
+      'Sona', 'Soraka', 'Swain', 'TahmKench', 'Taric',
+      'Thresh', 'Velkoz', 'Xerath', 'Yuumi', 'Zilean', 'Zyra'
     ],
     isCustom: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
+  
+  // ここに新しいカスタムプリセットを追加できます
+  // 例:
+  // {
+  //   id: 'my-custom-preset',
+  //   name: 'マイプリセット',
+  //   description: '自分だけのチャンピオン選択',
+  //   icon: '⭐',
+  //   champions: ['Ahri', 'Yasuo', 'Jinx'], // 使用したいチャンピオンのIDリスト
+  //   isCustom: true,
+  //   createdAt: new Date().toISOString(),
+  //   updatedAt: new Date().toISOString(),
+  // },
 ];

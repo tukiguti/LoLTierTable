@@ -66,6 +66,8 @@ export const ChampionPresetSelector: React.FC<ChampionPresetSelectorProps> = ({
           </option>
           {currentPresets.map(preset => {
             const presetChampions = getChampionsForPreset(preset, champions);
+            console.log(`プリセット ${preset.name}: ${presetChampions.length}体`, preset.champions);
+            // 0体でも表示する（デバッグ用）
             return (
               <option key={preset.id} value={preset.id}>
                 {preset.icon} {preset.name} ({presetChampions.length}体)
