@@ -6,6 +6,7 @@ export interface SettingsPanelProps {
   onToggle: () => void;
   children: React.ReactNode;
   className?: string;
+  subtitle?: string;
 }
 
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({
@@ -14,30 +15,29 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   onToggle,
   children,
   className = '',
+  subtitle,
 }) => {
   return (
-    <div className={`bg-white rounded-lg shadow-sm border p-4 ${className}`}>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-        <div className="flex gap-2">
-          <button
-            onClick={onToggle}
-            className={`px-4 py-2 rounded-md transition-colors text-sm font-medium ${
-              isVisible 
-                ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            {isVisible ? '設定を隠す' : '設定を表示'}
-          </button>
+    <div className={`rounded-xl border border-slate-200 bg-white p-3 ${className}`}>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+          {subtitle && <p className="mt-0.5 text-[11px] text-slate-500">{subtitle}</p>}
         </div>
+        <button
+          type="button"
+          onClick={onToggle}
+          className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+            isVisible
+              ? 'bg-blue-600 text-white hover:bg-blue-700'
+              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+          }`}
+        >
+          {isVisible ? '\u8a2d\u5b9a\u3092\u975e\u8868\u793a' : '\u8a2d\u5b9a\u3092\u8868\u793a'}
+        </button>
       </div>
 
-      {isVisible && (
-        <div className="space-y-4 border-t pt-4">
-          {children}
-        </div>
-      )}
+      {isVisible && <div className="mt-3 space-y-2">{children}</div>}
     </div>
   );
 };
