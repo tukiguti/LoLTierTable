@@ -1,5 +1,11 @@
 import React from 'react';
 
+const TEXT = {
+  placeholder: '\u30c1\u30e3\u30f3\u30d4\u30aa\u30f3\u540d\u3067\u691c\u7d22',
+  filterLabel: '\u30ed\u30fc\u30eb\u3067\u7d5e\u308a\u8fbc\u307f',
+  clear: '\u7d5e\u308a\u8fbc\u307f\u3092\u30af\u30ea\u30a2',
+} as const;
+
 interface ChampionOperationsProps {
   searchTerm: string;
   onSearchChange: (term: string) => void;
@@ -21,41 +27,40 @@ export const ChampionOperations: React.FC<ChampionOperationsProps> = ({
   onTagToggle,
   onClearFilters,
   hasActiveFilters,
-  placeholder = "Search champions...",
+  placeholder = TEXT.placeholder,
   showTagFilter = true,
-  className = ''
+  className = '',
 }) => {
   return (
-    <div className={`champion-operations space-y-3 ${className}`}>
-      {/* Search Input */}
+    <div className={`champion-operations space-y-2.5 ${className}`}>
       <div className="relative">
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full rounded-lg border border-slate-300 px-4 py-2 pl-9 text-sm focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-400"
         />
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+          <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
       </div>
 
-      {/* Tag Filter */}
       {showTagFilter && availableTags.length > 0 && (
-        <div className="space-y-2">
-          <div className="text-sm font-medium text-gray-700">Filter by role:</div>
+        <div className="space-y-1.5">
+          <div className="text-xs font-medium text-slate-600">{TEXT.filterLabel}</div>
           <div className="flex flex-wrap gap-2">
             {availableTags.map((tag) => (
               <button
                 key={tag}
+                type="button"
                 onClick={() => onTagToggle(tag)}
-                className={`px-3 py-1 text-xs rounded-full border transition-all ${
+                className={`rounded-full border px-3 py-1 text-[11px] transition-all ${
                   selectedTags.includes(tag)
-                    ? 'bg-blue-500 text-white border-blue-500'
-                    : 'bg-white text-gray-700 border-gray-300 hover:border-blue-300'
+                    ? 'border-blue-500 bg-blue-500 text-white'
+                    : 'border-slate-300 bg-white text-slate-700 hover:border-blue-300'
                 }`}
               >
                 {tag}
@@ -65,14 +70,14 @@ export const ChampionOperations: React.FC<ChampionOperationsProps> = ({
         </div>
       )}
 
-      {/* Clear Filters Button */}
       {hasActiveFilters && (
         <div className="flex justify-end">
           <button
+            type="button"
             onClick={onClearFilters}
-            className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 underline"
+            className="text-[11px] text-slate-500 hover:text-slate-700"
           >
-            Clear filters
+            {TEXT.clear}
           </button>
         </div>
       )}

@@ -11,6 +11,7 @@ import { SimpleTierList } from './components/TierList/SimpleTierList';
 import { GridMatrixLayout } from './components/Matrix/FreeboardMatrixLayout';
 import { ZoneScatterMatrixLayout } from './components/Matrix/ZoneScatterMatrixLayout';
 import { DragDropContext } from './components/DragDrop/DragDropContext';
+import { ModeInfoBanner } from './components/Layout/ModeInfoBanner';
 import type { DragEndEvent } from '@dnd-kit/core';
 
 function App() {
@@ -45,12 +46,14 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-slate-100 flex flex-col">
       <Header
         currentMode={currentMode}
         onModeChange={setCurrentMode}
       />
-      
+
+      <ModeInfoBanner mode={currentMode} />
+
       <DragDropContext onDragEnd={handleGlobalDragEnd}>
         <main className="flex-1">
           {currentMode === 'tierlist' && <SimpleTierList />}
@@ -58,9 +61,9 @@ function App() {
           {currentMode === 'scatter' && <ZoneScatterMatrixLayout />}
         </main>
       </DragDropContext>
-      
-      <footer className="bg-gray-100 border-t border-gray-200 py-3 px-4">
-        <div className="text-center text-xs text-gray-600">
+
+      <footer className="bg-white border-t border-slate-200 py-3 px-4">
+        <div className="text-center text-xs text-slate-600">
           LoL Tier Table was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.
         </div>
       </footer>

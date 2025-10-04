@@ -1,16 +1,24 @@
 import React from 'react';
-import type { 
-  Champion, 
-  ChampionContainerFeatures, 
-  ChampionDisplayConfig, 
+import type {
+  Champion,
+  ChampionContainerFeatures,
+  ChampionDisplayConfig,
   ChampionContainerLayout,
-  ChampionOperations 
+  ChampionOperations,
 } from '../../types';
 import { useChampionSearch, useChampionOperations, useComponentState } from '../../hooks';
 import { SearchableChampionGrid } from './SearchableChampionGrid';
 import { ChampionOperations as ChampionOps } from './ChampionOperations';
 import { PresetSelector } from './PresetSelector';
 import { TierListStagingArea } from '../StagingArea/TierListStagingArea';
+
+const TAB_LABELS = {
+  presets: '\u30d7\u30ea\u30bb\u30c3\u30c8',
+  search: '\u691c\u7d22',
+  staging: '\u4e00\u6642\u4fdd\u7ba1',
+} as const;
+
+const stagingLabel = (count: number) => `${TAB_LABELS.staging} (${count})`;
 
 interface UniversalChampionContainerProps {
   champions: Champion[];
@@ -29,189 +37,78 @@ export const UniversalChampionContainer: React.FC<UniversalChampionContainerProp
   layout,
   operations = {},
   mode = 'tierlist',
-  className = ''
+  className = '',
 }) => {
-  // Hooks for functionality
-  const searchHook = useChampionSearch({ 
-    champions, 
-    enableTagFilter: features.filters 
-  });
-  
-  const operationsHook = useChampionOperations({
-    mode,
-    ...operations
-  });
-  
+  const searchHook = useChampionSearch({ champions, enableTagFilter: features.filters });
+  const operationsHook = useChampionOperations({ mode, ...operations });
   const uiState = useComponentState({
     defaultTab: features.presets ? 'presets' : 'search',
-    enableTabs: layout.mode === 'tabs'
+    enableTabs: layout.mode === 'tabs',
   });
 
-  // Handle champion interactions
   const handleChampionClick = (champion: Champion) => {
     operationsHook.handleChampionSelect(champion);
   };
 
-
-  // Render content based on layout mode
-  const renderContent = () => {
-    if (layout.mode === 'tabs') {
-      return (
-        <div className="h-full flex flex-col">
-          {/* Tab Navigation */}
-          <div className="flex border-b bg-gray-50">
-            {features.presets && (
-              <button
-                onClick={uiState.switchToPresets}
-                className={`px-4 py-2 text-sm font-medium transition-all ${
-                  uiState.isTabActive('presets')
-                    ? 'bg-white border-b-2 border-blue-500 text-blue-600'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Presets
-              </button>
-            )}
-            {features.search && (
-              <button
-                onClick={uiState.switchToSearch}
-                className={`px-4 py-2 text-sm font-medium transition-all ${
-                  uiState.isTabActive('search')
-                    ? 'bg-white border-b-2 border-blue-500 text-blue-600'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Search
-              </button>
-            )}
-            {features.staging && (
-              <button
-                onClick={uiState.switchToStaging}
-                className={`px-4 py-2 text-sm font-medium transition-all ${
-                  uiState.isTabActive('staging')
-                    ? 'bg-white border-b-2 border-blue-500 text-blue-600'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Staging ({operationsHook.stagingCount})
-              </button>
-            )}
-          </div>
-
-          {/* Tab Content */}
-          <div className="flex-1 overflow-hidden">
-            {uiState.isTabActive('presets') && features.presets && (
-              <div className="h-full p-4">
-                <PresetSelector
-                  selectedGroup={uiState.selectedPresetGroup}
-                  onGroupChange={uiState.setSelectedPresetGroup}
-                  onPresetLoad={operationsHook.handlePresetLoad}
-                />
-              </div>
-            )}
-            
-            {uiState.isTabActive('search') && features.search && (
-              <div className="h-full flex flex-col">
-                <div className="p-4 border-b">
-                  <ChampionOps
-                    searchTerm={searchHook.searchTerm}
-                    onSearchChange={searchHook.setSearchTerm}
-                    selectedTags={searchHook.selectedTags}
-                    availableTags={searchHook.availableTags}
-                    onTagToggle={searchHook.toggleTag}
-                    onClearFilters={searchHook.clearFilters}
-                    hasActiveFilters={searchHook.hasActiveFilters}
-                    showTagFilter={features.filters}
-                  />
-                </div>
-                <div className="flex-1">
-                  <SearchableChampionGrid
-                    champions={searchHook.filteredChampions}
-                    config={displayConfig}
-                    onChampionClick={handleChampionClick}
-                  />
-                </div>
-              </div>
-            )}
-            
-            {uiState.isTabActive('staging') && features.staging && (
-              <div className="h-full p-4">
-                <TierListStagingArea />
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    }
-
-    // Horizontal layout
-    if (layout.mode === 'horizontal') {
-      return (
-        <div className="h-full flex gap-4">
-          {features.presets && (
-            <div style={{ width: layout.presetWidth }}>
-              <PresetSelector
-                selectedGroup={uiState.selectedPresetGroup}
-                onGroupChange={uiState.setSelectedPresetGroup}
-                onPresetLoad={operationsHook.handlePresetLoad}
-              />
-            </div>
-          )}
-          
-          {features.search && (
-            <div className="flex-1 flex flex-col">
-              <div className="mb-4">
-                <ChampionOps
-                  searchTerm={searchHook.searchTerm}
-                  onSearchChange={searchHook.setSearchTerm}
-                  selectedTags={searchHook.selectedTags}
-                  availableTags={searchHook.availableTags}
-                  onTagToggle={searchHook.toggleTag}
-                  onClearFilters={searchHook.clearFilters}
-                  hasActiveFilters={searchHook.hasActiveFilters}
-                  showTagFilter={features.filters}
-                />
-              </div>
-              <div className="flex-1">
-                <SearchableChampionGrid
-                  champions={searchHook.filteredChampions}
-                  config={displayConfig}
-                  onChampionClick={handleChampionClick}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    // Vertical layout (default)
-    return (
-      <div className="h-full flex flex-col space-y-4">
+  const renderTabs = () => (
+    <div className="h-full flex flex-col">
+      <div className="flex rounded-lg bg-slate-100 p-1 text-[11px] font-medium text-slate-600">
         {features.presets && (
-          <div>
-            <PresetSelector
-              selectedGroup={uiState.selectedPresetGroup}
-              onGroupChange={uiState.setSelectedPresetGroup}
-              onPresetLoad={operationsHook.handlePresetLoad}
-            />
-          </div>
+          <button
+            type="button"
+            onClick={uiState.switchToPresets}
+            className={`flex-1 rounded-md px-3 py-1.5 transition-colors ${
+              uiState.isTabActive('presets') ? 'bg-white text-slate-900 shadow-sm' : 'hover:text-slate-900'
+            }`}
+          >
+            {TAB_LABELS.presets}
+          </button>
         )}
-        
         {features.search && (
-          <>
-            <div>
-              <ChampionOps
-                searchTerm={searchHook.searchTerm}
-                onSearchChange={searchHook.setSearchTerm}
-                selectedTags={searchHook.selectedTags}
-                availableTags={searchHook.availableTags}
-                onTagToggle={searchHook.toggleTag}
-                onClearFilters={searchHook.clearFilters}
-                hasActiveFilters={searchHook.hasActiveFilters}
-                showTagFilter={features.filters}
-              />
-            </div>
+          <button
+            type="button"
+            onClick={uiState.switchToSearch}
+            className={`flex-1 rounded-md px-3 py-1.5 transition-colors ${
+              uiState.isTabActive('search') ? 'bg-white text-slate-900 shadow-sm' : 'hover:text-slate-900'
+            }`}
+          >
+            {TAB_LABELS.search}
+          </button>
+        )}
+        {features.staging && (
+          <button
+            type="button"
+            onClick={uiState.switchToStaging}
+            className={`flex-1 rounded-md px-3 py-1.5 transition-colors ${
+              uiState.isTabActive('staging') ? 'bg-white text-slate-900 shadow-sm' : 'hover:text-slate-900'
+            }`}
+          >
+            {stagingLabel(operationsHook.stagingCount)}
+          </button>
+        )}
+      </div>
+
+      <div className="mt-2 flex-1 overflow-hidden rounded-xl border border-slate-200 bg-white p-3">
+        {uiState.isTabActive('presets') && features.presets && (
+          <PresetSelector
+            selectedGroup={uiState.selectedPresetGroup}
+            onGroupChange={uiState.setSelectedPresetGroup}
+            onPresetLoad={operationsHook.handlePresetLoad}
+          />
+        )}
+
+        {uiState.isTabActive('search') && features.search && (
+          <div className="flex h-full flex-col gap-3">
+            <ChampionOps
+              searchTerm={searchHook.searchTerm}
+              onSearchChange={searchHook.setSearchTerm}
+              selectedTags={searchHook.selectedTags}
+              availableTags={searchHook.availableTags}
+              onTagToggle={searchHook.toggleTag}
+              onClearFilters={searchHook.clearFilters}
+              hasActiveFilters={searchHook.hasActiveFilters}
+              showTagFilter={features.filters}
+            />
             <div className="flex-1">
               <SearchableChampionGrid
                 champions={searchHook.filteredChampions}
@@ -219,21 +116,104 @@ export const UniversalChampionContainer: React.FC<UniversalChampionContainerProp
                 onChampionClick={handleChampionClick}
               />
             </div>
-          </>
-        )}
-        
-        {features.staging && (
-          <div style={{ height: layout.stagingHeight }}>
-            <TierListStagingArea />
           </div>
         )}
-      </div>
-    );
-  };
 
-  return (
-    <div className={`universal-champion-container h-full ${className}`}>
-      {renderContent()}
+        {uiState.isTabActive('staging') && features.staging && <TierListStagingArea />}
+      </div>
     </div>
   );
+
+  const renderHorizontal = () => (
+    <div className="flex h-full gap-3">
+      {features.presets && (
+        <div
+          className="overflow-auto rounded-xl border border-slate-200 bg-white p-3"
+          style={{ width: layout.presetWidth ?? 200 }}
+        >
+          <PresetSelector
+            selectedGroup={uiState.selectedPresetGroup}
+            onGroupChange={uiState.setSelectedPresetGroup}
+            onPresetLoad={operationsHook.handlePresetLoad}
+          />
+        </div>
+      )}
+      {features.search && (
+        <div className="flex-1 rounded-xl border border-slate-200 bg-white p-3">
+          <div className="flex h-full flex-col gap-3">
+            <ChampionOps
+              searchTerm={searchHook.searchTerm}
+              onSearchChange={searchHook.setSearchTerm}
+              selectedTags={searchHook.selectedTags}
+              availableTags={searchHook.availableTags}
+              onTagToggle={searchHook.toggleTag}
+              onClearFilters={searchHook.clearFilters}
+              hasActiveFilters={searchHook.hasActiveFilters}
+              showTagFilter={features.filters}
+            />
+            <div className="flex-1">
+              <SearchableChampionGrid
+                champions={searchHook.filteredChampions}
+                config={displayConfig}
+                onChampionClick={handleChampionClick}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  const renderVertical = () => (
+    <div className={`h-full space-y-3 ${className}`}>
+      {features.presets && (
+        <div className="rounded-xl border border-slate-200 bg-white p-3">
+          <PresetSelector
+            selectedGroup={uiState.selectedPresetGroup}
+            onGroupChange={uiState.setSelectedPresetGroup}
+            onPresetLoad={operationsHook.handlePresetLoad}
+          />
+        </div>
+      )}
+      {features.search && (
+        <div className="rounded-xl border border-slate-200 bg-white p-3">
+          <ChampionOps
+            searchTerm={searchHook.searchTerm}
+            onSearchChange={searchHook.setSearchTerm}
+            selectedTags={searchHook.selectedTags}
+            availableTags={searchHook.availableTags}
+            onTagToggle={searchHook.toggleTag}
+            onClearFilters={searchHook.clearFilters}
+            hasActiveFilters={searchHook.hasActiveFilters}
+            showTagFilter={features.filters}
+          />
+          <div className="mt-3">
+            <SearchableChampionGrid
+              champions={searchHook.filteredChampions}
+              config={displayConfig}
+              onChampionClick={handleChampionClick}
+            />
+          </div>
+        </div>
+      )}
+      {features.staging && (
+        <div
+          className="rounded-xl border border-slate-200 bg-white p-3"
+          style={{ height: layout.stagingHeight }}
+        >
+          <TierListStagingArea />
+        </div>
+      )}
+    </div>
+  );
+
+  if (layout.mode === 'tabs') {
+    return <div className={`h-full ${className}`}>{renderTabs()}</div>;
+  }
+
+  if (layout.mode === 'horizontal') {
+    return <div className={`h-full ${className}`}>{renderHorizontal()}</div>;
+  }
+
+  return renderVertical();
 };

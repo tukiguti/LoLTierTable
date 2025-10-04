@@ -1,104 +1,143 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useMatrixStore } from '../../store/matrixStore';
 import { DroppableZone } from '../DragDrop/DroppableZone';
 import { DraggableChampion } from '../DragDrop/DraggableChampion';
 import { InlineEditField, SettingsPanel, ResetButton } from '../shared';
 
+const UI_TEXT = {
+  panelTitle: 'ゾーン フリーボード',
+  panelSubtitle: 'ゾーンごとのラベルと色はここで編集できます。',
+  resetConfirm: 'ゾーンスキャッターをリセットしますか？配置したチャンピオンも削除されます。',
+  resetNotice: 'リセットすると配置とラベルが初期化されます。',
+  labelHeading: 'ゾーンラベル設定',
+  hintInline: 'ゾーン内のラベルも直接編集できます',
+  statsPlaced: '配置済み',
+  statsStaging: '一時保管',
+} as const;
+
+const ZONE_SIZE = {
+  width: 420,
+  height: 320,
+} as const;
+
+const ZONE_META = [
+  {
+    id: 'topLeft' as const,
+    title: '左上',
+    chipColor: '#dc2626',
+    area: '1 / 1',
+    background: 'linear-gradient(135deg, #dc2626 0%, #fef2f2 100%)',
+  },
+  {
+    id: 'topRight' as const,
+    title: '右上',
+    chipColor: '#16a34a',
+    area: '1 / 2',
+    background: 'linear-gradient(225deg, #16a34a 0%, #f0fdf4 100%)',
+  },
+  {
+    id: 'bottomLeft' as const,
+    title: '左下',
+    chipColor: '#9333ea',
+    area: '2 / 1',
+    background: 'linear-gradient(45deg, #9333ea 0%, #faf5ff 100%)',
+  },
+  {
+    id: 'bottomRight' as const,
+    title: '右下',
+    chipColor: '#ea580c',
+    area: '2 / 2',
+    background: 'linear-gradient(315deg, #ea580c 0%, #fff7ed 100%)',
+  },
+];
+
 export const ZoneScatterMatrix: React.FC = () => {
-  const { 
-    champions, 
+  const {
+    champions,
     zoneLabels,
     updateZoneLabel,
     setMatrixType,
   } = useMatrixStore();
-  
-  // Set matrix type to scatter when this component mounts
+
   React.useEffect(() => {
     setMatrixType('scatter');
   }, [setMatrixType]);
-  
-  const [showSettings, setShowSettings] = useState(false);
 
-  // Compact zone sizes for better 2x2 layout
-  const ZONE_WIDTH = 480;
-  const ZONE_HEIGHT = 360;
+  const [showSettings, setShowSettings] = React.useState(false);
 
   const handleReset = () => {
-    // Remove only scatter mode champions (keep grid mode champions)
     const { removeChampion } = useMatrixStore.getState();
-    const scatterChampionsToRemove = champions.filter(pc => pc.quadrant !== undefined);
-    scatterChampionsToRemove.forEach(pc => {
-      removeChampion(pc.champion.id);
-    });
+    champions
+      .filter((pc) => pc.quadrant !== undefined)
+      .forEach((pc) => removeChampion(pc.champion.id));
   };
 
-  // Get champions for each zone
   const getChampionsInZone = (zone: string) => {
-    return champions.filter(pc => pc.quadrant === zone);
+    return champions.filter((pc) => pc.quadrant === zone);
   };
 
-  const renderZone = (zoneType: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', label: string, backgroundColor: string, gridArea?: string) => {
-    const zoneChampions = getChampionsInZone(zoneType);
-    
+  const renderZone = (
+    zoneId: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight',
+    label: string,
+    fallbackLabel: string,
+    backgroundColor: string,
+    gridArea: string,
+  ) => {
+    const zoneChampions = getChampionsInZone(zoneId);
+    const zoneLabel = (label ?? '').trim() || fallbackLabel;
+
     return (
-      <div className="relative" style={{ gridArea: gridArea }}>
-        {/* Zone Label - Corner position based on gradient origin (darkest part) */}
-        {label && (
-          <div 
-            className="absolute px-2 py-1 rounded text-xs font-semibold z-20 pointer-events-none"
+      <div className="relative" style={{ gridArea }}>
+        {zoneLabel && (
+          <div
+            className="pointer-events-none absolute rounded bg-black/70 px-2 py-1 text-[11px] font-semibold text-white"
             style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              color: 'white',
-              backdropFilter: 'blur(6px)',
+              top: zoneId.includes('top') ? '6px' : 'auto',
+              bottom: zoneId.includes('bottom') ? '6px' : 'auto',
+              left: zoneId.includes('Left') ? '8px' : 'auto',
+              right: zoneId.includes('Right') ? '8px' : 'auto',
               maxWidth: '140px',
-              wordBreak: 'break-word' as const,
-              fontSize: '11px',
               lineHeight: '1.2',
-              textAlign: zoneType.includes('Right') ? 'right' as const : 'left' as const,
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              // 各ゾーンの適切な角に配置
-              top: zoneType === 'topLeft' || zoneType === 'topRight' ? '8px' : 'auto',
-              bottom: zoneType === 'bottomLeft' || zoneType === 'bottomRight' ? '8px' : 'auto',
-              left: zoneType === 'topLeft' || zoneType === 'bottomLeft' ? '8px' : 'auto',
-              right: zoneType === 'topRight' || zoneType === 'bottomRight' ? '8px' : 'auto'
+              textAlign: zoneId.includes('Right') ? 'right' : 'left',
+              zIndex: 10,
             }}
           >
-            {label}
+            {zoneLabel}
           </div>
         )}
-        
-        {/* Zone Board - Color Coded with seamless borders */}
+
         <DroppableZone
-          id={`zone-${zoneType}`}
-          data={{ type: 'zone-freeboard', zone: zoneType }}
+          id={`zone-${zoneId}`}
+          data={{ type: 'zone-freeboard', zone: zoneId }}
           className="relative"
           style={{
-            width: ZONE_WIDTH,
-            height: ZONE_HEIGHT,
+            width: ZONE_SIZE.width,
+            height: ZONE_SIZE.height,
             background: backgroundColor,
-            border: '1px solid rgba(255, 255, 255, 0.2)', // Subtle inner border for zone distinction
-            borderRadius: zoneType === 'topLeft' ? '12px 0 0 0' :
-                         zoneType === 'topRight' ? '0 12px 0 0' :
-                         zoneType === 'bottomLeft' ? '0 0 0 12px' :
-                         zoneType === 'bottomRight' ? '0 0 12px 0' : '0',
-            boxSizing: 'border-box'
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius:
+              zoneId === 'topLeft'
+                ? '12px 0 0 0'
+                : zoneId === 'topRight'
+                ? '0 12px 0 0'
+                : zoneId === 'bottomLeft'
+                ? '0 0 0 12px'
+                : '0 0 12px 0',
           }}
           activeClassName="brightness-110"
         >
-          {/* Positioned Champions in this zone */}
           {zoneChampions.map((champion) => (
             <div
-              key={`${zoneType}-${champion.champion.id}`}
+              key={`${zoneId}-${champion.champion.id}`}
               className="absolute"
               style={{
                 left: champion.x,
                 top: champion.y,
                 transform: 'translate(-50%, -50%)',
-                zIndex: 50
               }}
             >
               <DraggableChampion
-                uniqueId={`${zoneType}-${champion.champion.id}`}
+                uniqueId={`${zoneId}-${champion.champion.id}`}
                 champion={champion.champion}
                 size="small"
               />
@@ -110,118 +149,73 @@ export const ZoneScatterMatrix: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Control Panel */}
+    <div className="space-y-3">
       <SettingsPanel
-        title="ゾーン フリーボード"
+        title={UI_TEXT.panelTitle}
+        subtitle={UI_TEXT.panelSubtitle}
         isVisible={showSettings}
-        onToggle={() => setShowSettings(!showSettings)}
+        onToggle={() => setShowSettings((value) => !value)}
       >
-        <div className="flex justify-end gap-2 mb-4">
+        <div className="flex items-center justify-between gap-2 text-[11px] text-slate-600">
+          <span>{UI_TEXT.resetNotice}</span>
           <ResetButton
             onReset={handleReset}
-            confirmMessage="ゾーンフリーボードをリセットしますか？配置されたチャンピオンも削除されます。"
+            confirmMessage={UI_TEXT.resetConfirm}
+            className="px-3 py-1 text-xs"
           />
         </div>
 
-        {/* Settings Panel - Collapsible */}
         {showSettings && (
-          <div className="space-y-4 border-t pt-4">
-            <h3 className="text-md font-medium text-gray-800 mb-4">ゾーンラベル設定</h3>
-            
-            {/* Visual 2x2 Grid for Label Setting */}
-            <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
-              {/* Top Left Zone - Red */}
-              <div className="p-3 bg-red-100 rounded border-2 border-red-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-3 h-3 bg-red-600 rounded-full"></div>
-                  <span className="text-xs font-semibold text-red-800">左上</span>
+          <div className="space-y-2">
+            <div className="text-xs font-semibold text-slate-700">{UI_TEXT.labelHeading}</div>
+            <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600">
+              {ZONE_META.map((zone) => (
+                <div
+                  key={zone.id}
+                  className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2 py-2"
+                >
+                  <span
+                    className="inline-flex h-2.5 w-2.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: zone.chipColor }}
+                  />
+                  <InlineEditField
+                    value={zoneLabels[zone.id]}
+                    onSave={(value) => updateZoneLabel(zone.id, value)}
+                    className="flex-1"
+                    displayClassName="flex w-full items-center rounded-md border border-transparent px-2 py-1 text-left text-xs font-medium text-slate-700 hover:border-slate-300"
+                    editClassName="w-full rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-800 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-300"
+                    placeholder="ラベル名"
+                  />
                 </div>
-                <InlineEditField
-                  value={zoneLabels.topLeft}
-                  onSave={(value) => updateZoneLabel('topLeft', value)}
-                  className="w-full px-2 py-1 text-xs border border-red-300 rounded focus:outline-none focus:ring-1 focus:ring-red-500 bg-white"
-                  placeholder="ラベル名"
-                />
-              </div>
-
-              {/* Top Right Zone - Green */}
-              <div className="p-3 bg-green-100 rounded border-2 border-green-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-3 h-3 bg-green-600 rounded-full"></div>
-                  <span className="text-xs font-semibold text-green-800">右上</span>
-                </div>
-                <InlineEditField
-                  value={zoneLabels.topRight}
-                  onSave={(value) => updateZoneLabel('topRight', value)}
-                  className="w-full px-2 py-1 text-xs border border-green-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 bg-white"
-                  placeholder="ラベル名"
-                />
-              </div>
-
-              {/* Bottom Left Zone - Purple */}
-              <div className="p-3 bg-purple-100 rounded border-2 border-purple-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-3 h-3 bg-purple-600 rounded-full"></div>
-                  <span className="text-xs font-semibold text-purple-800">左下</span>
-                </div>
-                <InlineEditField
-                  value={zoneLabels.bottomLeft}
-                  onSave={(value) => updateZoneLabel('bottomLeft', value)}
-                  className="w-full px-2 py-1 text-xs border border-purple-300 rounded focus:outline-none focus:ring-1 focus:ring-purple-500 bg-white"
-                  placeholder="ラベル名"
-                />
-              </div>
-
-              {/* Bottom Right Zone - Orange */}
-              <div className="p-3 bg-orange-100 rounded border-2 border-orange-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-3 h-3 bg-orange-600 rounded-full"></div>
-                  <span className="text-xs font-semibold text-orange-800">右下</span>
-                </div>
-                <InlineEditField
-                  value={zoneLabels.bottomRight}
-                  onSave={(value) => updateZoneLabel('bottomRight', value)}
-                  className="w-full px-2 py-1 text-xs border border-orange-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500 bg-white"
-                  placeholder="ラベル名"
-                />
-              </div>
+              ))}
             </div>
-            
-            <div className="text-xs text-gray-600 text-center">
-              💡 各ゾーンのラベルをクリックして編集できます
-            </div>
+            <div className="text-center text-[11px] text-slate-500">{UI_TEXT.hintInline}</div>
           </div>
         )}
       </SettingsPanel>
 
-      {/* Zone Free Boards - 2x2 Grid without gaps */}
-      <div className="bg-white rounded-lg shadow-sm border p-4">
-        <div 
-          className="w-fit mx-auto rounded-xl overflow-hidden"
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(2, 480px)',
-            gridTemplateRows: 'repeat(2, 360px)',
-            gap: '0px', // Remove gaps between zones
-            width: 'fit-content',
-            border: '2px solid rgba(0, 0, 0, 0.1)' // Outer border for the whole grid
+      <div className="flex justify-center rounded-xl border border-slate-200 bg-white p-3">
+        <div
+          className="overflow-hidden rounded-lg"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(2, ${ZONE_SIZE.width}px)`,
+            gridTemplateRows: `repeat(2, ${ZONE_SIZE.height}px)`,
+            border: '1px solid rgba(0,0,0,0.08)',
           }}
         >
-          {/* Top Row: Red and Green zones */}
-          {renderZone('topLeft', zoneLabels.topLeft, 'linear-gradient(135deg, #dc2626 0%, #fef2f2 100%)', '1 / 1')}
-          {renderZone('topRight', zoneLabels.topRight, 'linear-gradient(225deg, #16a34a 0%, #f0fdf4 100%)', '1 / 2')}
-          
-          {/* Bottom Row: Purple and Orange zones */}
-          {renderZone('bottomLeft', zoneLabels.bottomLeft, 'linear-gradient(45deg, #9333ea 0%, #faf5ff 100%)', '2 / 1')}
-          {renderZone('bottomRight', zoneLabels.bottomRight, 'linear-gradient(315deg, #ea580c 0%, #fff7ed 100%)', '2 / 2')}
+          {ZONE_META.map((zone) =>
+            renderZone(zone.id, zoneLabels[zone.id], zone.title, zone.background, zone.area)
+          )}
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="text-center text-sm text-gray-500">
-        配置済みチャンピオン: {champions.filter(pc => pc.quadrant !== undefined && pc.quadrant !== 'staging').length} 体 | 一時保存: {champions.filter(pc => pc.quadrant === 'staging').length} 体
+      <div className="text-center text-xs text-slate-500">
+        {UI_TEXT.statsPlaced}: {champions.filter((pc) => pc.quadrant && pc.quadrant !== 'staging').length} 体 | {UI_TEXT.statsStaging}: {champions.filter((pc) => pc.quadrant === 'staging').length} 体
       </div>
     </div>
   );
 };
+
+
+

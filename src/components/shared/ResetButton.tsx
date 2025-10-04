@@ -21,8 +21,9 @@ export const ResetButton: React.FC<ResetButtonProps> = ({
 
   return (
     <button
+      type="button"
       onClick={handleReset}
-      className={`px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors text-sm font-medium ${className}`}
+      className={`px-4 py-2 bg-slate-600 text-white rounded-md hover:bg-slate-700 transition-colors text-sm font-medium ${className}`}
     >
       {children}
     </button>
