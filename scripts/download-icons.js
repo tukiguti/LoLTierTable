@@ -9,6 +9,12 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+if (process.env.CI) {
+  console.log('CI environment detected. Skipping champion icon download.');
+  process.exit(0);
+}
+
+
 const DDRAGON_VERSION = '13.24.1';
 const LANGUAGE = 'ja_JP';
 const CHAMPIONS_URL = `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VERSION}/data/${LANGUAGE}/champion.json`;

@@ -8,6 +8,12 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+if (process.env.CI) {
+  console.log('CI environment detected. Skipping local data setup.');
+  process.exit(0);
+}
+
+
 // Configuration - can be overridden by command line arguments
 let DDRAGON_VERSION = '15.14.1';
 let LANGUAGE = 'ja_JP';
