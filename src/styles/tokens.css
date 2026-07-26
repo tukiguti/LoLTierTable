@@ -1,0 +1,105 @@
+/**
+ * デザイントークン
+ *
+ * 値の出典: zikken/playground/loltiertable-plan/03_デザイン仕様.md §2(配色) 系
+ * 実測値をそのまま転記している。丸めたり別の値に置き換えたりしないこと。
+ * 迷ったら design-mock/LoLTierTable.dc.html を参照する。
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* ===== 面（背景） ===== */
+  --surface-canvas: #0a0d12; /* キャンバス地（body背景） */
+  --surface-app: oklch(0.19 0.015 265); /* アプリ枠 */
+  --surface-header: oklch(0.155 0.015 265);
+  --surface-sidebar: oklch(0.165 0.015 265);
+  --surface-footer: oklch(0.145 0.015 265);
+  --surface-tier-row: oklch(0.225 0.015 265); /* 段の行 */
+  --surface-input: oklch(0.235 0.015 265); /* 入力欄・チップ */
+  --surface-button-secondary: oklch(0.24 0.015 265); /* 副ボタン */
+  --surface-rail: oklch(0.20 0.015 265); /* 行の右レール・未分類枠 */
+  --surface-matrix-board: oklch(0.215 0.015 265);
+  --surface-export-bg: oklch(0.135 0.015 265); /* 書き出し画像の地 */
+  --surface-export-row: oklch(0.205 0.015 265); /* 書き出しの段の行 */
+  --surface-tooltip: oklch(0.26 0.02 265 / 0.95); /* ヒントの吹き出し */
+  --surface-mobile-scrim: oklch(0.1 0.01 265 / 0.55); /* モバイルの覆い */
+  --surface-badge-band: oklch(0.2 0.02 265 / 0.82); /* 配置済みバッジの帯 */
+  --surface-segment-hover: oklch(0.28 0.015 265); /* モード切替・非選択ホバー地 */
+
+  /* ===== 罫線 ===== */
+  --border-main: oklch(0.3 0.02 265); /* 主罫線 */
+  --border-weak: oklch(0.26 0.015 265); /* 弱い罫線 */
+  --border-weak-2: oklch(0.28 0.02 265); /* 弱い罫線（もう一段） */
+  --border-matrix-grid: oklch(0.28 0.015 265); /* マトリクスのマス目 */
+  --border-input: oklch(0.32 0.02 265); /* 入力・タイル（下限） */
+  --border-input-strong: oklch(0.33 0.02 265); /* 検索欄・レーンプリセット */
+  --border-input-focus: oklch(0.82 0.13 85 / 0.5); /* 入力中の罫線（金50%） */
+  --border-tile: oklch(0.34 0.02 265); /* 入力・タイル（上限） */
+  --border-tile-placed: oklch(0.36 0.02 265); /* 配置済みアイコン */
+  --border-dashed: oklch(0.4 0.02 265); /* 破線の段追加 */
+  --border-matrix-piece: oklch(0.45 0.02 265); /* マトリクスの駒 */
+  --border-scrollbar: oklch(0.42 0.02 265);
+  --border-secondary-btn: oklch(0.38 0.02 265); /* 共有ボタン */
+  --border-secondary-btn-hover: oklch(0.55 0.02 265);
+
+  /* ===== 文字 ===== */
+  --text-primary: oklch(0.92 0.01 265); /* 主 */
+  --text-logo: oklch(0.95 0.01 265);
+  --text-button: oklch(0.9 0.01 265);
+  --text-secondary: oklch(0.82 0.01 265);
+  --text-tertiary: oklch(0.72 0.01 265);
+  --text-muted: oklch(0.7 0.01 265);
+  --text-weak: oklch(0.62 0.01 265);
+  --text-weaker: oklch(0.58 0.01 265);
+  --text-caption: oklch(0.55 0.01 265);
+  --text-faint: oklch(0.5 0.01 265);
+
+  /* ===== 金の差し色 ===== */
+  --gold: oklch(0.82 0.13 85); /* 基本 */
+  --gold-hover: oklch(0.88 0.12 85);
+  --gold-ink: oklch(0.2 0.03 85); /* 金の上の文字 */
+  --gold-text: oklch(0.85 0.1 85); /* 暗地の上の金文字 */
+  --gold-text-strong: oklch(0.88 0.1 85);
+  --gold-text-soft: oklch(0.8 0.1 85);
+  --gold-text-mid: oklch(0.78 0.12 85);
+  --gold-text-weak: oklch(0.72 0.1 85);
+  --gold-selected-bg: oklch(0.82 0.13 85 / 0.16); /* 選択中ロールの地 */
+  --gold-selected-border: oklch(0.82 0.13 85 / 0.6);
+  --gold-matrix-center: oklch(0.82 0.13 85 / 0.45); /* マトリクス中心線 */
+  --gold-drop-border: oklch(0.82 0.13 85 / 0.55); /* ドロップ予定枠 */
+  --gold-drop-bg: oklch(0.82 0.13 85 / 0.07);
+  --gold-sheet-border: oklch(0.82 0.13 85 / 0.35); /* モバイルシート上端 */
+  --gold-gradient-start: oklch(0.82 0.13 85); /* ロゴの菱形 */
+  --gold-gradient-end: oklch(0.58 0.1 70);
+
+  /* ===== 危険操作（全消去・行削除） ===== */
+  --danger-text: oklch(0.72 0.1 25);
+  --danger-text-hover: oklch(0.85 0.12 25);
+  --danger-border: oklch(0.36 0.03 25);
+  --danger-bg-hover: oklch(0.28 0.05 25);
+  --danger-row-hover: oklch(0.75 0.12 25); /* 行削除ホバー */
+
+  /* ===== 段のパレット（既定5段。色変更候補としてそのまま使う） ===== */
+  --tier-s-bg: oklch(0.55 0.17 25);
+  --tier-s-ink: oklch(0.97 0.02 25);
+  --tier-a-bg: oklch(0.63 0.14 55);
+  --tier-a-ink: oklch(0.2 0.05 55);
+  --tier-b-bg: oklch(0.75 0.13 92);
+  --tier-b-ink: oklch(0.22 0.05 92);
+  --tier-c-bg: oklch(0.58 0.11 155);
+  --tier-c-ink: oklch(0.97 0.02 155);
+  --tier-d-bg: oklch(0.52 0.1 255);
+  --tier-d-ink: oklch(0.97 0.02 255);
+
+  /* ===== 角丸 ===== */
+  --radius-app: 6px; /* アプリ枠 */
+  --radius-panel: 5px; /* パネル（段の行など） */
+  --radius-control: 4px; /* 操作部（ボタン・入力欄） */
+  --radius-small: 3px; /* 小物（チップ・ピル・アイコン） */
+
+  /* ===== 骨格の寸法（デスクトップ） ===== */
+  --header-height: 64px;
+  --footer-height: 58px;
+  --sidebar-width: 300px;
+}

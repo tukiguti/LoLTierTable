@@ -1,0 +1,49 @@
+@import "tailwindcss";
+@import "./styles/tokens.css";
+
+/* ページ全体をスクロールさせない土台（仕様書 §3）。
+   内部スクロールはサイドバーのアイコン一覧とメイン領域だけが持つ。 */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--surface-canvas);
+  color: var(--text-primary);
+  font-family: "Barlow", "Noto Sans JP", sans-serif;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height: 100%;
+}
+
+/* 見出し・ボタン・段ラベル・ロゴ用（仕様書 §1） */
+.font-display {
+  font-family: "Barlow Condensed", "Noto Sans JP", sans-serif;
+}
+
+/* メタ情報・パッチ・件数用（仕様書 §1） */
+.font-mono-ui {
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* 原本のスクロールバー見た目を踏襲 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-scrollbar);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
