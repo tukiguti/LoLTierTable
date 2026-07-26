@@ -1,0 +1,33 @@
+# 依存とビルド成果物
+node_modules
+dist
+dist-ssr
+.vite
+
+# Data Dragon からビルド時に取得する Riot の素材。リポジトリには含めない
+public/champions/
+public/tiles/
+public/data/
+
+# 環境変数
+.env
+.env.*
+!.env.example
+
+# ログ
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# エディタ・OS
+.DS_Store
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.local
