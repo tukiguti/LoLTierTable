@@ -102,4 +102,11 @@
   --header-height: 64px;
   --footer-height: 58px;
   --sidebar-width: 300px;
+
+  /* ===== モバイル専用（仕様書 §9・design-mock 03画面から実測） =====
+     色や既存の寸法と一致する値は上の変数を使い回し、ここには
+     モバイルにしか出てこない値だけを追加する。 */
+  --radius-sheet: 16px; /* 下部シート上端の角丸 */
+  --radius-logo-mobile: 2px; /* モバイルヘッダーの18pxロゴ菱形の角丸 */
+  --text-icon-muted: oklch(0.75 0.01 265); /* モバイルヘッダー「⋯」アイコン */
 }

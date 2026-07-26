@@ -3,6 +3,7 @@ import { AppShell } from './components/layout/AppShell'
 import { AppHeader } from './components/layout/AppHeader'
 import { AppFooter } from './components/layout/AppFooter'
 import { SidebarShell } from './components/layout/SidebarShell'
+import { MobileSidebarSheet } from './components/layout/MobileSidebarSheet'
 import { loadChampionRoster } from './services/championData'
 import { useDiagramStore } from './store/useDiagramStore'
 import type { Champion } from './types'
@@ -42,6 +43,7 @@ function App() {
     <AppShell
       header={<AppHeader mode={mode} onModeChange={setMode} />}
       sidebar={<SidebarShell championCount={champions.length} />}
+      mobileSidebar={<MobileSidebarSheet championCount={champions.length} />}
       main={
         <main className="flex h-full min-h-0 items-center justify-center overflow-y-auto">
           <p className="font-display text-[20px] uppercase tracking-[0.04em] text-[var(--text-weak)]">
