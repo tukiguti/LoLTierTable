@@ -11,7 +11,8 @@ import type { CollisionDetection } from '@dnd-kit/core';
 export type ChampionDragData =
   | { type: 'champion'; championId: string; from: 'roster' }
   | { type: 'champion'; championId: string; from: 'tier'; tierId: string }
-  | { type: 'champion'; championId: string; from: 'unclassified' };
+  | { type: 'champion'; championId: string; from: 'unclassified' }
+  | { type: 'champion'; championId: string; from: 'matrix' };
 
 /** 段の行そのものの並べ替え用ドラッグデータ（右レールの掴み手からのみ開始する） */
 export interface TierRowDragData {
@@ -19,10 +20,11 @@ export interface TierRowDragData {
   tierId: string;
 }
 
-/** ドロップ先（段のコンテナ・未分類のコンテナ）、または他のアイコン/行の上 */
+/** ドロップ先（段のコンテナ・未分類のコンテナ・マトリクスの盤面）、または他のアイコン/行の上 */
 export type DropData =
   | { type: 'tier'; tierId: string }
   | { type: 'unclassified' }
+  | { type: 'matrix' }
   | ChampionDragData
   | TierRowDragData;
 
@@ -52,6 +54,29 @@ export const tierListCollisionDetection: CollisionDetection = (args) => {
         containerType === 'tier' || containerType === 'unclassified' || containerType === 'champion'
       );
     }
+    return true;
+  });
+  const filteredArgs = { ...args, droppableContainers: containers };
+  const pointerCollisions = pointerWithin(filteredArgs);
+  if (pointerCollisions.length > 0) return pointerCollisions;
+  return rectIntersection(filteredArgs);
+};
+
+/**
+ * マトリクスモード用の衝突判定。ドロップ先は盤面（droppable-matrix）の1つだけで、
+ * 駒(champion)同士は重ならせない（マス目に吸着しない自由配置のため、駒はドロップ先にしない）。
+ *
+ * tierListCollisionDetection をそのまま使うと、その絞り込みが
+ * tier/unclassified/championだけを候補にするため matrix 型のdroppableが候補から外れ、
+ * 常に over=null になって配置できなくなる。そのためモードに応じてこちらに切り替える。
+ * 「盤面の外に出したら外れる」判定はティアリストと同じ
+ * pointerWithin→rectIntersection の方式で保つ。
+ */
+export const matrixCollisionDetection: CollisionDetection = (args) => {
+  const activeType = (args.active.data.current as { type?: string } | undefined)?.type;
+  const containers = args.droppableContainers.filter((container) => {
+    const containerType = (container.data.current as { type?: string } | undefined)?.type;
+    if (activeType === 'champion') return containerType === 'matrix';
     return true;
   });
   const filteredArgs = { ...args, droppableContainers: containers };

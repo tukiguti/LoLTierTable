@@ -14,15 +14,17 @@ import { SidebarShell } from './components/layout/SidebarShell'
 import { MobileSidebarSheet } from './components/layout/MobileSidebarSheet'
 import { ChampionIcon } from './components/champion/ChampionIcon'
 import { TierListView } from './components/tierlist/TierListView'
-import { tierListCollisionDetection } from './components/tierlist/dnd'
+import { tierListCollisionDetection, matrixCollisionDetection } from './components/tierlist/dnd'
 import type { ChampionDragData, DropData, TierRowDragData } from './components/tierlist/dnd'
+import { MatrixView } from './components/matrix/MatrixView'
 import { useChampionRoster } from './hooks/useChampionRoster'
 import { useDiagramStore } from './store/useDiagramStore'
 import type { Champion } from './types'
 
 /**
- * Phase 3 の到達点。ティアリスト本体とドラッグ&ドロップ全体を実装した状態。
- * マトリクスモードのメイン領域はPhase 4以降で実装するプレースホルダのまま。
+ * Phase 4 の到達点。ティアリスト・マトリクスの両モードでメイン領域と
+ * ドラッグ&ドロップ全体を実装した状態。DndContext/DragOverlay は1つだけで、
+ * モードに応じて衝突判定とオーバーレイの見た目を切り替える。
  */
 function App() {
   const mode = useDiagramStore((state) => state.mode)
@@ -57,6 +59,36 @@ function App() {
     if (!activeData) return
 
     const store = useDiagramStore.getState()
+
+    if (mode === 'matrix') {
+      if (activeData.type !== 'champion') return
+      const { championId, from } = activeData
+      const overData = over?.data.current as DropData | undefined
+
+      if (!over || overData?.type !== 'matrix') {
+        // 盤面の外（盤面そのものではない場所）へドロップ: 盤面から取り除く（デザイン仕様§12と同じ考え方）。
+        // サイドバー起点はそもそも配置されていないので何もしない。
+        if (from === 'matrix') store.removeChampionFromMatrix(championId)
+        return
+      }
+
+      // 落下位置の計算: activatorEvent（ドラッグ開始時のポインタ座標）+ delta（移動量）で
+      // ドロップ時のポインタ座標を求め、盤面のrect（over.rect）に対する割合(0-100)に変換する。
+      // over.rectだけでは「盤面のどこ」かが分からず、ポインタ座標だけでは「盤面のどこを基準に」が
+      // 分からないため、両方が必要。
+      const activatorEvent = event.activatorEvent as PointerEvent
+      const rect = over.rect
+      const endX = activatorEvent.clientX + event.delta.x
+      const endY = activatorEvent.clientY + event.delta.y
+      const xPercent = ((endX - rect.left) / rect.width) * 100
+      const yPercent = ((endY - rect.top) / rect.height) * 100
+      store.placeChampionOnMatrix(
+        championId,
+        Math.min(100, Math.max(0, xPercent)),
+        Math.min(100, Math.max(0, yPercent)),
+      )
+      return
+    }
 
     if (activeData.type === 'tier-row') {
       if (!over) return
@@ -118,7 +150,7 @@ function App() {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={tierListCollisionDetection}
+      collisionDetection={mode === 'tierlist' ? tierListCollisionDetection : matrixCollisionDetection}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDragCancel={() => setActiveChampion(null)}
@@ -137,19 +169,24 @@ function App() {
           ) : mode === 'tierlist' ? (
             <TierListView champions={champions} />
           ) : (
-            <main className="flex h-full min-h-0 items-center justify-center overflow-y-auto">
-              <p className="font-display text-[20px] uppercase tracking-[0.04em] text-[var(--text-weak)]">
-                ここにマトリクスが入ります
-              </p>
-            </main>
+            <MatrixView champions={champions} />
           )
         }
         footer={<AppFooter patchVersion={patchVersion} />}
       />
       <DragOverlay>
-        {activeChampion && (
-          <ChampionIcon champion={activeChampion} size={64} borderColor="var(--gold)" />
-        )}
+        {activeChampion &&
+          (mode === 'matrix' ? (
+            <ChampionIcon
+              champion={activeChampion}
+              size={52}
+              radius={4}
+              borderColor="var(--gold)"
+              className="scale-[1.12] shadow-[0_6px_18px_-6px_#000]"
+            />
+          ) : (
+            <ChampionIcon champion={activeChampion} size={64} borderColor="var(--gold)" />
+          ))}
       </DragOverlay>
     </DndContext>
   )
