@@ -70,11 +70,15 @@ interface DiagramState {
   unplaceChampion: (championId: string) => void;
 
   // --- マトリクス ---
+  /** 同じチャンピオンでも盤面上に複数の配置を持てる（要求: 同一チャンピオンを別々の位置に置いて比較したい）。
+   * championId だけでは配置を一意に特定できないため、配置ごとに id を持つ。 */
   matrixPlacements: MatrixPlacement[];
-  /** 盤面への配置・移動（既に配置済みなら座標を上書き） */
-  placeChampionOnMatrix: (championId: string, x: number, y: number) => void;
-  /** 盤面外へドラッグしたときの配置解除 */
-  removeChampionFromMatrix: (championId: string) => void;
+  /** サイドバーから盤面への新規配置。既存の配置は上書きせず追加する */
+  addChampionToMatrix: (championId: string, x: number, y: number) => void;
+  /** 盤面上の駒を動かす。指定した配置idの座標だけを更新し、同じチャンピオンの他の配置には触れない */
+  moveMatrixPlacement: (placementId: string, x: number, y: number) => void;
+  /** 盤面外へドラッグしたときの配置解除。指定した配置idだけを消す */
+  removeMatrixPlacement: (placementId: string) => void;
   matrixAxisLabels: MatrixAxisLabels;
   updateMatrixAxisLabels: (labels: Partial<MatrixAxisLabels>) => void;
   matrixGridSize: MatrixGridSize;
@@ -116,9 +120,54 @@ function removeChampionFromPlacements(
   };
 }
 
+/**
+ * 新しく置く駒が既存の駒とほぼ完全に重なるときだけ、少しずらして両方を掴める状態にする。
+ * 仕様に指定は無く実装判断。しきい値は駒の見た目サイズ（盤面比 約4〜7%）より小さくして
+ * 「ほぼ重なった」場合だけを検出し、ずらし幅はその倍以上にして重なりの解消を目で分かるようにしている。
+ * championId は問わない（別チャンピオン同士でも完全に重なれば下の駒が掴めなくなるため）。
+ *
+ * **盤面上の駒を動かすときには使わない。** 自分で位置を決めている最中に勝手に動かされると
+ * 操作を邪魔されたように感じるうえ、動かす側は両方の駒が見えているので重ねるのは意図的な選択になる。
+ * 端に寄せた座標でも解決できるよう、ずらす向きは4方向を順に試す。
+ */
+const OVERLAP_THRESHOLD = 2.5;
+const OVERLAP_NUDGE = 3.5;
+const MAX_NUDGE_ATTEMPTS = 12;
+const NUDGE_DIRECTIONS = [
+  [1, 1],
+  [-1, 1],
+  [1, -1],
+  [-1, -1],
+] as const;
+
+function resolveOverlap(
+  placements: MatrixPlacement[],
+  x: number,
+  y: number,
+): { x: number; y: number } {
+  const collides = (cx: number, cy: number) =>
+    placements.some(
+      (placement) =>
+        Math.abs(placement.x - cx) < OVERLAP_THRESHOLD &&
+        Math.abs(placement.y - cy) < OVERLAP_THRESHOLD,
+    );
+
+  if (!collides(x, y)) return { x, y };
+
+  for (let attempt = 1; attempt <= MAX_NUDGE_ATTEMPTS; attempt++) {
+    for (const [dx, dy] of NUDGE_DIRECTIONS) {
+      const candidateX = Math.min(100, Math.max(0, x + OVERLAP_NUDGE * attempt * dx));
+      const candidateY = Math.min(100, Math.max(0, y + OVERLAP_NUDGE * attempt * dy));
+      if (!collides(candidateX, candidateY)) return { x: candidateX, y: candidateY };
+    }
+  }
+  // 空きが見つからないほど混んでいる場合は元の座標に置く（置けないよりは重なった方がまし）
+  return { x, y };
+}
+
 const STORAGE_KEY = 'loltiertable:diagram';
 /** 保存形式のバージョン。永続化するstateの形を変えたらインクリメントし、migrateで移行する */
-const STORAGE_VERSION = 1;
+const STORAGE_VERSION = 2;
 
 export const useDiagramStore = create<DiagramState>()(
   persist(
@@ -245,22 +294,41 @@ export const useDiagramStore = create<DiagramState>()(
 
       matrixPlacements: [],
 
-      placeChampionOnMatrix: (championId, x, y) =>
+      addChampionToMatrix: (championId, x, y) =>
         set((state) => {
           const clampedX = Math.min(100, Math.max(0, x));
           const clampedY = Math.min(100, Math.max(0, y));
-          const withoutChampion = state.matrixPlacements.filter(
-            (placement) => placement.championId !== championId,
+          const { x: resolvedX, y: resolvedY } = resolveOverlap(
+            state.matrixPlacements,
+            clampedX,
+            clampedY,
           );
           return {
-            matrixPlacements: [...withoutChampion, { championId, x: clampedX, y: clampedY }],
+            matrixPlacements: [
+              ...state.matrixPlacements,
+              { id: crypto.randomUUID(), championId, x: resolvedX, y: resolvedY },
+            ],
           };
         }),
 
-      removeChampionFromMatrix: (championId) =>
+      moveMatrixPlacement: (placementId, x, y) =>
+        set((state) => {
+          // 動かす操作では重なり回避をしない。置いた場所をそのまま尊重する
+          const clampedX = Math.min(100, Math.max(0, x));
+          const clampedY = Math.min(100, Math.max(0, y));
+          return {
+            matrixPlacements: state.matrixPlacements.map((placement) =>
+              placement.id === placementId
+                ? { ...placement, x: clampedX, y: clampedY }
+                : placement,
+            ),
+          };
+        }),
+
+      removeMatrixPlacement: (placementId) =>
         set((state) => ({
           matrixPlacements: state.matrixPlacements.filter(
-            (placement) => placement.championId !== championId,
+            (placement) => placement.id !== placementId,
           ),
         })),
 
@@ -316,6 +384,43 @@ export const useDiagramStore = create<DiagramState>()(
         dimPlaced: state.dimPlaced,
         showHints: state.showHints,
       }),
+      // version 1 → 2: matrixPlacements に配置ごとの id が無かった（championId のみでの管理から、
+      // 同一チャンピオンを複数配置できる形へ変更したため id を追加）。既存の保存データが
+      // 壊れていたり古い形のままでも落ちないよう、フィールドごとにフォールバックしつつ組み直す。
+      migrate: (persistedState, _version) => {
+        const state = (persistedState ?? {}) as Partial<{
+          mode: AppMode;
+          tiers: Tier[];
+          unclassifiedChampionIds: string[];
+          matrixPlacements: Array<
+            Partial<MatrixPlacement> & { championId?: string; x?: number; y?: number }
+          >;
+          matrixAxisLabels: MatrixAxisLabels;
+          matrixGridSize: MatrixGridSize;
+          dimPlaced: boolean;
+          showHints: boolean;
+        }>;
+
+        const migratedPlacements: MatrixPlacement[] = (state.matrixPlacements ?? []).map(
+          (placement) => ({
+            id: typeof placement.id === 'string' ? placement.id : crypto.randomUUID(),
+            championId: placement.championId ?? '',
+            x: typeof placement.x === 'number' ? placement.x : 0,
+            y: typeof placement.y === 'number' ? placement.y : 0,
+          }),
+        );
+
+        return {
+          mode: state.mode ?? 'tierlist',
+          tiers: state.tiers ?? createDefaultTiers(),
+          unclassifiedChampionIds: state.unclassifiedChampionIds ?? [],
+          matrixPlacements: migratedPlacements,
+          matrixAxisLabels: state.matrixAxisLabels ?? createDefaultMatrixAxisLabels(),
+          matrixGridSize: state.matrixGridSize ?? DEFAULT_MATRIX_GRID_SIZE,
+          dimPlaced: state.dimPlaced ?? true,
+          showHints: state.showHints ?? true,
+        };
+      },
     },
   ),
 );

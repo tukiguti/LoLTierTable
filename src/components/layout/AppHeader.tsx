@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { AppMode } from '../../types'
+import { PngExportDialog } from '../export/PngExportDialog'
 
 interface AppHeaderProps {
   mode: AppMode
@@ -51,6 +52,7 @@ const mobileModeButtonInactive = 'bg-transparent text-[var(--text-muted)]'
  */
 export function AppHeader({ mode, onModeChange }: AppHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [pngDialogOpen, setPngDialogOpen] = useState(false)
 
   return (
     <header className="h-full border-b border-[var(--border-main)] bg-[var(--surface-header)]">
@@ -96,6 +98,7 @@ export function AppHeader({ mode, onModeChange }: AppHeaderProps) {
         <div className="ml-auto flex flex-none items-center gap-2">
           <button
             type="button"
+            onClick={() => setPngDialogOpen(true)}
             className="cursor-pointer rounded-[var(--radius-control)] border border-[var(--gold)] bg-[var(--gold)] px-[18px] py-[9px] text-[14px] font-bold text-[var(--gold-ink)] hover:bg-[var(--gold-hover)]"
           >
             PNG保存
@@ -136,6 +139,7 @@ export function AppHeader({ mode, onModeChange }: AppHeaderProps) {
           <div className="flex items-center gap-[6px]">
             <button
               type="button"
+              onClick={() => setPngDialogOpen(true)}
               className="flex h-[32px] flex-none items-center rounded-[var(--radius-control)] bg-[var(--gold)] px-[12px] text-[13px] font-bold text-[var(--gold-ink)]"
             >
               PNG
@@ -204,6 +208,8 @@ export function AppHeader({ mode, onModeChange }: AppHeaderProps) {
           </button>
         </div>
       </div>
+
+      <PngExportDialog open={pngDialogOpen} onClose={() => setPngDialogOpen(false)} />
     </header>
   )
 }

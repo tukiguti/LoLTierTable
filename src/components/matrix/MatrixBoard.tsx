@@ -125,7 +125,8 @@ export function MatrixBoard({ champions }: MatrixBoardProps) {
 
           {placements.map(({ placement, champion }) => (
             <MatrixChampionPiece
-              key={champion.id}
+              key={placement.id}
+              placementId={placement.id}
               champion={champion}
               x={placement.x}
               y={placement.y}

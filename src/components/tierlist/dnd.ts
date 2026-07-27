@@ -12,7 +12,9 @@ export type ChampionDragData =
   | { type: 'champion'; championId: string; from: 'roster' }
   | { type: 'champion'; championId: string; from: 'tier'; tierId: string }
   | { type: 'champion'; championId: string; from: 'unclassified' }
-  | { type: 'champion'; championId: string; from: 'matrix' };
+  // placementId: 盤面上のどの配置(MatrixPlacement)かの識別子。同じチャンピオンを複数配置できるため、
+  // championIdだけでは動かす/消す対象の駒を特定できない。
+  | { type: 'champion'; championId: string; from: 'matrix'; placementId: string };
 
 /** 段の行そのものの並べ替え用ドラッグデータ（右レールの掴み手からのみ開始する） */
 export interface TierRowDragData {

@@ -4,6 +4,9 @@ import { ChampionIcon } from '../champion/ChampionIcon';
 import type { Champion } from '../../types';
 
 interface MatrixChampionPieceProps {
+  /** この駒がどの配置(MatrixPlacement)かを一意に特定するid。同じチャンピオンが複数配置されうるため
+   * championId だけでは駒を特定できない（useDraggableのidが衝突し、移動・削除の対象も曖昧になる）。 */
+  placementId: string;
   champion: Champion;
   /** 盤面左上を原点(0,0)としたパーセント座標（MatrixPlacement参照） */
   x: number;
@@ -20,11 +23,12 @@ interface MatrixChampionPieceProps {
  * ドラッグ中は元の駒を薄くし（SortableChampionIcon と同じ作法）、実際に指へ追従する
  * 見た目は App.tsx の共有 DragOverlay が担う（マトリクス専用の2つ目のオーバーレイは作らない）。
  */
-export function MatrixChampionPiece({ champion, x, y }: MatrixChampionPieceProps) {
+export function MatrixChampionPiece({ placementId, champion, x, y }: MatrixChampionPieceProps) {
   const [hovered, setHovered] = useState(false);
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `matrix:${champion.id}`,
-    data: { type: 'champion', championId: champion.id, from: 'matrix' },
+    // 配置id基準。同じチャンピオンが複数置かれるとchampionIdだけでは衝突するため。
+    id: `matrix:${placementId}`,
+    data: { type: 'champion', championId: champion.id, from: 'matrix', placementId },
   });
 
   return (

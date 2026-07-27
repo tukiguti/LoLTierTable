@@ -68,7 +68,7 @@ function App() {
       if (!over || overData?.type !== 'matrix') {
         // 盤面の外（盤面そのものではない場所）へドロップ: 盤面から取り除く（デザイン仕様§12と同じ考え方）。
         // サイドバー起点はそもそも配置されていないので何もしない。
-        if (from === 'matrix') store.removeChampionFromMatrix(championId)
+        if (from === 'matrix') store.removeMatrixPlacement(activeData.placementId)
         return
       }
 
@@ -82,11 +82,16 @@ function App() {
       const endY = activatorEvent.clientY + event.delta.y
       const xPercent = ((endX - rect.left) / rect.width) * 100
       const yPercent = ((endY - rect.top) / rect.height) * 100
-      store.placeChampionOnMatrix(
-        championId,
-        Math.min(100, Math.max(0, xPercent)),
-        Math.min(100, Math.max(0, yPercent)),
-      )
+      const clampedX = Math.min(100, Math.max(0, xPercent))
+      const clampedY = Math.min(100, Math.max(0, yPercent))
+
+      if (from === 'matrix') {
+        // 既存の駒を動かす: その配置idだけ座標を更新する（同じチャンピオンの他の配置は動かさない）。
+        store.moveMatrixPlacement(activeData.placementId, clampedX, clampedY)
+      } else {
+        // サイドバーからの新規配置: 既存の配置を上書きせず追加する（同じチャンピオンを何体でも置ける）。
+        store.addChampionToMatrix(championId, clampedX, clampedY)
+      }
       return
     }
 

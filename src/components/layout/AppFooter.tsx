@@ -8,7 +8,8 @@ interface AppFooterProps {
 
 // Riot Games「Legal Jibber Jabber」ポリシーで指定される定型文。
 // 要求定義 §5.6 / デザイン仕様 §8 の原文をそのまま使用し、自前で翻訳・改変しない。
-const DISCLAIMER =
+// PNG書き出し（デザイン仕様§10）でも同じ原文を使うため export する。
+export const DISCLAIMER =
   'LoLTierTable was created under Riot Games’ "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.'
 
 /**
