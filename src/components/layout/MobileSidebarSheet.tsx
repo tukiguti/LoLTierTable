@@ -1,13 +1,18 @@
 import { useState, type ReactNode } from 'react'
+import { ChampionGrid } from '../sidebar/ChampionGrid'
+import { LanePresets } from '../sidebar/LanePresets'
+import { RoleChips } from '../sidebar/RoleChips'
+import { SearchInput } from '../sidebar/SearchInput'
+import { useSidebarChampions } from '../sidebar/useSidebarChampions'
 
 interface MobileSidebarSheetProps {
-  /** CHAMPIONS の件数行。実データ接続までの暫定既定値。 */
+  /** @deprecated 実データ（useSidebarChampions）に置き換え済み。App.tsx の型互換のためだけに残す */
   championCount?: number
-  /** ROLE チップの並び。中身は別担当が差し込む。 */
+  /** @deprecated 中身を自己完結で描画するようになったため未使用 */
   roleChips?: ReactNode
-  /** LANE PRESET ボタンの並び。中身は別担当が差し込む。 */
+  /** @deprecated 中身を自己完結で描画するようになったため未使用 */
   lanePresets?: ReactNode
-  /** チャンピオンアイコンの一覧。中身は別担当が差し込む（未指定時は空のグリッド）。 */
+  /** @deprecated 中身を自己完結で描画するようになったため未使用 */
   championGrid?: ReactNode
 }
 
@@ -27,14 +32,14 @@ interface MobileSidebarSheetProps {
  *
  * ルート要素に lg:hidden を付けているため、デスクトップでは開閉状態に
  * 関わらず何も表示しない。
+ *
+ * 検索・ロール絞り込み・レーンプリセット・アイコン一覧はデスクトップ版
+ * （SidebarShell）と同じ部品（src/components/sidebar/ 以下）を variant="mobile"
+ * で使い回す。見た目（寸法・並び順）だけが仕様書§9のとおり異なる。
  */
-export function MobileSidebarSheet({
-  championCount = 0,
-  roleChips,
-  lanePresets,
-  championGrid,
-}: MobileSidebarSheetProps) {
+export function MobileSidebarSheet(_props: MobileSidebarSheetProps = {}) {
   const [open, setOpen] = useState(false)
+  const { champions, totalCount, error } = useSidebarChampions()
 
   if (!open) {
     return (
@@ -45,7 +50,7 @@ export function MobileSidebarSheet({
       >
         チャンピオンを選ぶ
         <span className="font-mono-ui text-[11px] font-normal normal-case tracking-normal text-[var(--text-caption)]">
-          {championCount}
+          {totalCount}
         </span>
       </button>
     )
@@ -78,9 +83,7 @@ export function MobileSidebarSheet({
             <div className="font-display text-[17px] font-bold uppercase tracking-[0.05em] text-[var(--text-primary)]">
               Champions
             </div>
-            <div className="font-mono-ui text-[10px] text-[var(--text-caption)]">
-              {championCount}
-            </div>
+            <div className="font-mono-ui text-[10px] text-[var(--text-caption)]">{totalCount}</div>
             <div className="flex-1" />
             <button
               type="button"
@@ -92,27 +95,24 @@ export function MobileSidebarSheet({
             </button>
           </div>
 
-          {/* 検索欄 */}
-          <label className="flex h-[44px] items-center gap-[9px] rounded-[var(--radius-panel)] border border-[var(--border-input-strong)] bg-[var(--surface-input)] px-[12px] focus-within:border-[var(--border-input-focus)]">
-            <span className="h-[14px] w-[14px] flex-none rounded-full border-[1.6px] border-[var(--text-weak)]" />
-            <input
-              type="text"
-              placeholder="チャンピオン名で検索"
-              className="w-full bg-transparent text-[15px] text-[var(--text-primary)] outline-none placeholder:text-[var(--text-caption)]"
-              style={{ caretColor: 'var(--gold)' }}
-            />
-          </label>
+          <SearchInput variant="mobile" />
 
           {/* レーン（5等分） */}
-          <div className="flex gap-[6px]">{lanePresets}</div>
+          <LanePresets variant="mobile" />
 
           {/* ロール（横スクロール） */}
-          <div className="flex flex-nowrap gap-[6px] overflow-x-auto">{roleChips}</div>
+          <RoleChips variant="mobile" />
         </div>
 
-        {/* アイコン一覧（内部スクロール。中身が無ければ空のグリッドのまま） */}
+        {/* アイコン一覧（内部スクロール） */}
         <div className="min-h-0 flex-1 overflow-y-auto px-[14px] pb-[22px]">
-          <div className="grid grid-cols-5 gap-[8px]">{championGrid}</div>
+          {error ? (
+            <p className="text-[12px] text-[var(--danger-text)]">
+              チャンピオン情報を読み込めません: {error}
+            </p>
+          ) : (
+            <ChampionGrid champions={champions} variant="mobile" />
+          )}
         </div>
       </div>
     </div>
