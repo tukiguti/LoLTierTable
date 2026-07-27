@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { AppMode } from '../../types'
 import { PngExportDialog } from '../export/PngExportDialog'
+import { ShareDialog } from '../../share/ShareDialog'
 
 interface AppHeaderProps {
   mode: AppMode
@@ -53,6 +54,7 @@ const mobileModeButtonInactive = 'bg-transparent text-[var(--text-muted)]'
 export function AppHeader({ mode, onModeChange }: AppHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [pngDialogOpen, setPngDialogOpen] = useState(false)
+  const [shareDialogOpen, setShareDialogOpen] = useState(false)
 
   return (
     <header className="h-full border-b border-[var(--border-main)] bg-[var(--surface-header)]">
@@ -105,6 +107,7 @@ export function AppHeader({ mode, onModeChange }: AppHeaderProps) {
           </button>
           <button
             type="button"
+            onClick={() => setShareDialogOpen(true)}
             className="cursor-pointer rounded-[var(--radius-control)] border border-[var(--border-secondary-btn)] bg-[var(--surface-button-secondary)] px-4 py-[9px] text-[14px] font-semibold text-[var(--text-button)] hover:border-[var(--border-secondary-btn-hover)]"
           >
             共有
@@ -169,7 +172,10 @@ export function AppHeader({ mode, onModeChange }: AppHeaderProps) {
                   <div className="absolute right-0 top-[calc(100%+6px)] z-20 flex w-[140px] flex-col gap-[6px] rounded-[var(--radius-control)] border border-[var(--border-input)] bg-[var(--surface-button-secondary)] p-[8px] shadow-[0_10px_30px_-12px_#000]">
                     <button
                       type="button"
-                      onClick={() => setMenuOpen(false)}
+                      onClick={() => {
+                        setMenuOpen(false)
+                        setShareDialogOpen(true)
+                      }}
                       className="cursor-pointer rounded-[var(--radius-control)] border border-[var(--border-secondary-btn)] bg-transparent px-[10px] py-[8px] text-left text-[13px] font-semibold text-[var(--text-button)] hover:border-[var(--border-secondary-btn-hover)]"
                     >
                       共有
@@ -210,6 +216,7 @@ export function AppHeader({ mode, onModeChange }: AppHeaderProps) {
       </div>
 
       <PngExportDialog open={pngDialogOpen} onClose={() => setPngDialogOpen(false)} />
+      <ShareDialog open={shareDialogOpen} onClose={() => setShareDialogOpen(false)} />
     </header>
   )
 }

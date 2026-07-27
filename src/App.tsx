@@ -19,6 +19,8 @@ import type { ChampionDragData, DropData, TierRowDragData } from './components/t
 import { MatrixView } from './components/matrix/MatrixView'
 import { useChampionRoster } from './hooks/useChampionRoster'
 import { useDiagramStore } from './store/useDiagramStore'
+import { useShareImport } from './share/useShareImport'
+import { ImportConfirmDialog } from './share/ImportConfirmDialog'
 import type { Champion } from './types'
 
 /**
@@ -29,6 +31,10 @@ import type { Champion } from './types'
 function App() {
   const mode = useDiagramStore((state) => state.mode)
   const setMode = useDiagramStore((state) => state.setMode)
+
+  // URL共有(要求定義§5.4 SHOULD)。起動時に#d=...を見て図を復元する。保存済みの図が
+  // 空でなければ上書き確認が必要になるため、確認待ちの状態をここで受け取る。
+  const { pendingImport, confirmImport, cancelImport } = useShareImport()
 
   // チャンピオン情報はビルド時に取得した public/data/champions.json から読む。
   // useChampionRoster が起動時に一度だけ読み込み、以後はモジュールスコープの
@@ -193,6 +199,9 @@ function App() {
             <ChampionIcon champion={activeChampion} size={64} borderColor="var(--gold)" />
           ))}
       </DragOverlay>
+      {pendingImport && (
+        <ImportConfirmDialog onConfirm={confirmImport} onCancel={cancelImport} />
+      )}
     </DndContext>
   )
 }

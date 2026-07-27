@@ -98,6 +98,19 @@ interface DiagramState {
   dimPlaced: boolean;
   setDimPlaced: (dim: boolean) => void;
 
+  // --- 共有 ---
+  /** URL共有・インポート等、図の状態（モード・段・未分類・マトリクス配置・軸ラベル・
+   * グリッドサイズ）を丸ごと差し替える唯一の操作。検索語・ロール選択・表示設定には触れない
+   * （clearAllと同じ方針）。呼び出し側（src/share/）が値の妥当性を検証してから呼ぶ想定。 */
+  loadDiagram: (diagram: {
+    mode: AppMode;
+    tiers: Tier[];
+    unclassifiedChampionIds: string[];
+    matrixPlacements: MatrixPlacement[];
+    matrixAxisLabels: MatrixAxisLabels;
+    matrixGridSize: MatrixGridSize;
+  }) => void;
+
   // --- 全消去 ---
   /** 図の内容（段・未分類・マトリクス配置・軸ラベル・グリッドサイズ）を初期状態に戻す。
    * モード・検索語・ロール選択・表示設定は「作業内容」ではないため保持する。 */
@@ -357,6 +370,16 @@ export const useDiagramStore = create<DiagramState>()(
       dismissHints: () => set({ showHints: false }),
       dimPlaced: true,
       setDimPlaced: (dim) => set({ dimPlaced: dim }),
+
+      loadDiagram: (diagram) =>
+        set({
+          mode: diagram.mode,
+          tiers: diagram.tiers,
+          unclassifiedChampionIds: diagram.unclassifiedChampionIds,
+          matrixPlacements: diagram.matrixPlacements,
+          matrixAxisLabels: diagram.matrixAxisLabels,
+          matrixGridSize: diagram.matrixGridSize,
+        }),
 
       clearAll: () =>
         set({
