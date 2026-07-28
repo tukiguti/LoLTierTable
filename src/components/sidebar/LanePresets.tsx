@@ -15,11 +15,20 @@ interface LanePresetsProps {
  * ストア側が対象から外すため、評価済みの作業内容は消えない。
  */
 export function LanePresets({ variant }: LanePresetsProps) {
+  const mode = useDiagramStore((state) => state.mode);
   const replaceUnclassifiedWithPreset = useDiagramStore(
     (state) => state.replaceUnclassifiedWithPreset,
   );
+  const scatterChampionsOnMatrix = useDiagramStore((state) => state.scatterChampionsOnMatrix);
   const activeLanePreset = useDiagramStore((state) => state.activeLanePreset);
   const isMobile = variant === 'mobile';
+
+  // マトリクスには未分類の置き場が無いので、盤面へ直接散らす
+  const applyPreset = (lane: string) => {
+    const championIds = [...LANE_PRESETS[lane as keyof typeof LANE_PRESETS]];
+    if (mode === 'matrix') scatterChampionsOnMatrix(lane, championIds);
+    else replaceUnclassifiedWithPreset(lane, championIds);
+  };
 
   return (
     <div className={isMobile ? 'flex gap-[6px]' : 'grid grid-cols-5 gap-[5px]'}>
@@ -30,7 +39,7 @@ export function LanePresets({ variant }: LanePresetsProps) {
             key={lane}
             type="button"
             aria-pressed={active}
-            onClick={() => replaceUnclassifiedWithPreset(lane, [...LANE_PRESETS[lane]])}
+            onClick={() => applyPreset(lane)}
             style={
               active
                 ? {

@@ -71,6 +71,12 @@ interface DiagramState {
   activeLanePreset: string | null;
   /** 未分類への個別追加（サイドバーから未分類へドラッグしたとき）。既に配置済みのIDは無視する */
   addChampionIdsToUnclassified: (championIds: string[]) => void;
+  /**
+   * マトリクスでレーンプリセットを押したときの一括配置。盤面を渡したIDで置き換え、
+   * 重ならないよう格子状に散らす。マトリクスには未分類の置き場が無いので、
+   * プリセットは盤面に直接置かないと使えない。位置は仮なので、そこから動かして使う。
+   */
+  scatterChampionsOnMatrix: (lane: string, championIds: string[]) => void;
   /** 段への配置。他の段・未分類にあれば取り除いてから挿入する（段間移動も兼ねる） */
   placeChampionInTier: (championId: string, tierId: string, index?: number) => void;
   /** 段内の並べ替え */
@@ -265,6 +271,29 @@ export const useDiagramStore = create<DiagramState>()(
           const toAdd = championIds.filter((id) => !alreadyPlaced.has(id));
           if (toAdd.length === 0) return state;
           return { unclassifiedChampionIds: [...state.unclassifiedChampionIds, ...toAdd] };
+        }),
+
+      scatterChampionsOnMatrix: (lane, championIds) =>
+        set(() => {
+          // 盤面の 10%〜90% の範囲へ格子状に並べる。端に寄せると駒が枠から
+          // はみ出して見えるため内側に収める
+          const count = championIds.length;
+          const columns = Math.max(1, Math.ceil(Math.sqrt(count)));
+          const rows = Math.max(1, Math.ceil(count / columns));
+          const span = 80;
+          return {
+            activeLanePreset: lane,
+            matrixPlacements: championIds.map((championId, index) => {
+              const column = index % columns;
+              const row = Math.floor(index / columns);
+              return {
+                id: crypto.randomUUID(),
+                championId,
+                x: 10 + ((column + 0.5) * span) / columns,
+                y: 10 + ((row + 0.5) * span) / rows,
+              };
+            }),
+          };
         }),
 
       replaceUnclassifiedWithPreset: (lane, championIds) =>
