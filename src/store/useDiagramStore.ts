@@ -60,7 +60,16 @@ interface DiagramState {
   // --- ティアリスト: チャンピオンの配置 ---
   /** 未分類の一時置き場（候補を集めてから各段へ振り分ける、要求定義§5.2 SHOULD） */
   unclassifiedChampionIds: string[];
-  /** レーンプリセットの一括投入等。既にどこかに配置済みのIDは無視する */
+  /**
+   * レーンプリセットの投入。未分類の置き場を、渡したIDで**置き換える**。
+   * レーンは1つを選んで使うものなので、押すたびに積み上がると別レーンの候補が混ざってしまう。
+   * ただし既に段へ振り分け済みのチャンピオンは触らない（作業内容を消さないため、
+   * かつ1体につき1箇所という制約を壊さないため、未分類側からは除いて置き換える）。
+   */
+  replaceUnclassifiedWithPreset: (lane: string, championIds: string[]) => void;
+  /** 現在選んでいるレーンプリセット。どれが効いているかを画面で示すために持つ */
+  activeLanePreset: string | null;
+  /** 未分類への個別追加（サイドバーから未分類へドラッグしたとき）。既に配置済みのIDは無視する */
   addChampionIdsToUnclassified: (championIds: string[]) => void;
   /** 段への配置。他の段・未分類にあれば取り除いてから挿入する（段間移動も兼ねる） */
   placeChampionInTier: (championId: string, tierId: string, index?: number) => void;
@@ -245,6 +254,8 @@ export const useDiagramStore = create<DiagramState>()(
 
       unclassifiedChampionIds: [],
 
+      activeLanePreset: null,
+
       addChampionIdsToUnclassified: (championIds) =>
         set((state) => {
           const alreadyPlaced = new Set([
@@ -254,6 +265,17 @@ export const useDiagramStore = create<DiagramState>()(
           const toAdd = championIds.filter((id) => !alreadyPlaced.has(id));
           if (toAdd.length === 0) return state;
           return { unclassifiedChampionIds: [...state.unclassifiedChampionIds, ...toAdd] };
+        }),
+
+      replaceUnclassifiedWithPreset: (lane, championIds) =>
+        set((state) => {
+          // 段に振り分け済みのチャンピオンは未分類へ戻さない。既に評価が決まっており、
+          // 戻すと同じチャンピオンが2箇所に存在してしまう
+          const inTiers = new Set(state.tiers.flatMap((tier) => tier.championIds));
+          return {
+            unclassifiedChampionIds: championIds.filter((id) => !inTiers.has(id)),
+            activeLanePreset: lane,
+          };
         }),
 
       placeChampionInTier: (championId, tierId, index) =>
@@ -379,6 +401,8 @@ export const useDiagramStore = create<DiagramState>()(
           matrixPlacements: diagram.matrixPlacements,
           matrixAxisLabels: diagram.matrixAxisLabels,
           matrixGridSize: diagram.matrixGridSize,
+          // 共有された図はプリセット由来ではないので、選択表示を消す
+          activeLanePreset: null,
         }),
 
       clearAll: () =>
@@ -388,6 +412,7 @@ export const useDiagramStore = create<DiagramState>()(
           matrixPlacements: [],
           matrixAxisLabels: createDefaultMatrixAxisLabels(),
           matrixGridSize: DEFAULT_MATRIX_GRID_SIZE,
+          activeLanePreset: null,
         }),
     }),
     {
@@ -406,6 +431,8 @@ export const useDiagramStore = create<DiagramState>()(
         matrixGridSize: state.matrixGridSize,
         dimPlaced: state.dimPlaced,
         showHints: state.showHints,
+        // 未分類の中身と対で意味を持つので一緒に保存する
+        activeLanePreset: state.activeLanePreset,
       }),
       // version 1 → 2: matrixPlacements に配置ごとの id が無かった（championId のみでの管理から、
       // 同一チャンピオンを複数配置できる形へ変更したため id を追加）。既存の保存データが
