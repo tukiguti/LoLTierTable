@@ -1,10 +1,17 @@
 import { ChampionIcon } from '../champion/ChampionIcon';
 import { buildChampionMap, EXPORT_MIDDLE_HEIGHT, EXPORT_MIDDLE_WIDTH } from './exportMetrics';
-import type { Champion, MatrixAxisLabels, MatrixGridSize, MatrixPlacement } from '../../types';
+import type {
+  Champion,
+  MatrixAxisLabelOffsets,
+  MatrixAxisLabels,
+  MatrixGridSize,
+  MatrixPlacement,
+} from '../../types';
 
 interface ExportMatrixBoardProps {
   placements: MatrixPlacement[];
   axisLabels: MatrixAxisLabels;
+  axisLabelOffsets: MatrixAxisLabelOffsets;
   gridSize: MatrixGridSize;
   champions: Champion[];
 }
@@ -23,12 +30,25 @@ const PIECE_SIZE = 56;
  * 画面用はコンテナクエリで可変幅に追従するのに対し、書き出しは常に1200×900固定なので、
  * 盤面のピクセルサイズをExportFrameの定数から一度だけ計算して決め打ちする。
  */
-export function ExportMatrixBoard({ placements, axisLabels, gridSize, champions }: ExportMatrixBoardProps) {
+export function ExportMatrixBoard({
+  placements,
+  axisLabels,
+  axisLabelOffsets,
+  gridSize,
+  champions,
+}: ExportMatrixBoardProps) {
   const championMap = buildChampionMap(champions);
 
   const availableRowHeight = EXPORT_MIDDLE_HEIGHT - AXIS_END_SIZE - AXIS_LABEL_SIZE - GRID_GAP * 2;
   const availableColWidth = EXPORT_MIDDLE_WIDTH - AXIS_LABEL_SIZE - AXIS_END_SIZE - GRID_GAP * 2;
   const boardSize = Math.max(120, Math.min(availableRowHeight, availableColWidth));
+
+  // 画面用(MatrixBoard/EditableAxisLabel)と同じ考え方: 位置ずれは盤面サイズに対する比率で
+  // 持っているので、書き出し固定の盤面pxサイズを掛けてtranslateへ変換する。
+  function offsetTransform(key: keyof MatrixAxisLabels): string {
+    const offset = axisLabelOffsets[key];
+    return `translate(${offset.dx * boardSize}px, ${offset.dy * boardSize}px)`;
+  }
 
   const resolvedPlacements = placements
     .map((placement) => ({ placement, champion: championMap.get(placement.championId) }))
@@ -62,6 +82,7 @@ export function ExportMatrixBoard({ placements, axisLabels, gridSize, champions 
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
             color: 'var(--gold)',
+            transform: offsetTransform('yAxisLabel'),
           }}
         >
           {axisLabels.yAxisLabel}
@@ -78,10 +99,26 @@ export function ExportMatrixBoard({ placements, axisLabels, gridSize, champions 
           padding: '6px 0',
         }}
       >
-        <div style={{ writingMode: 'vertical-rl', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>
+        <div
+          style={{
+            writingMode: 'vertical-rl',
+            fontSize: 13,
+            fontWeight: 600,
+            color: 'var(--text-secondary)',
+            transform: offsetTransform('yTopLabel'),
+          }}
+        >
           {axisLabels.yTopLabel}
         </div>
-        <div style={{ writingMode: 'vertical-rl', fontSize: 13, fontWeight: 600, color: 'var(--text-weak)' }}>
+        <div
+          style={{
+            writingMode: 'vertical-rl',
+            fontSize: 13,
+            fontWeight: 600,
+            color: 'var(--text-weak)',
+            transform: offsetTransform('yBottomLabel'),
+          }}
+        >
           {axisLabels.yBottomLabel}
         </div>
       </div>
@@ -153,8 +190,26 @@ export function ExportMatrixBoard({ placements, axisLabels, gridSize, champions 
 
       {/* X軸両端 */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 8px' }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-weak)' }}>{axisLabels.xLeftLabel}</div>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>{axisLabels.xRightLabel}</div>
+        <div
+          style={{
+            fontSize: 13,
+            fontWeight: 600,
+            color: 'var(--text-weak)',
+            transform: offsetTransform('xLeftLabel'),
+          }}
+        >
+          {axisLabels.xLeftLabel}
+        </div>
+        <div
+          style={{
+            fontSize: 13,
+            fontWeight: 600,
+            color: 'var(--text-secondary)',
+            transform: offsetTransform('xRightLabel'),
+          }}
+        >
+          {axisLabels.xRightLabel}
+        </div>
       </div>
 
       {/* 左2列は空セル(row3) */}
@@ -171,6 +226,7 @@ export function ExportMatrixBoard({ placements, axisLabels, gridSize, champions 
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
             color: 'var(--gold)',
+            transform: offsetTransform('xAxisLabel'),
           }}
         >
           {axisLabels.xAxisLabel}

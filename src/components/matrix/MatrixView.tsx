@@ -21,6 +21,14 @@ const segmentButtonInactive =
 export function MatrixView({ champions }: MatrixViewProps) {
   const gridSize = useDiagramStore((state) => state.matrixGridSize);
   const setMatrixGridSize = useDiagramStore((state) => state.setMatrixGridSize);
+  const axisLabelOffsets = useDiagramStore((state) => state.matrixAxisLabelOffsets);
+  const resetMatrixAxisLabelOffsets = useDiagramStore(
+    (state) => state.resetMatrixAxisLabelOffsets,
+  );
+  // 全ラベルが既定位置のときはボタンを出さない(邪魔にならない配慮。要求)
+  const hasCustomLabelPositions = Object.values(axisLabelOffsets).some(
+    (offset) => offset.dx !== 0 || offset.dy !== 0,
+  );
 
   return (
     <main className="flex h-full min-h-0 flex-col gap-[14px] overflow-y-auto p-[14px_16px] lg:p-[18px_24px]">
@@ -38,8 +46,17 @@ export function MatrixView({ champions }: MatrixViewProps) {
             </button>
           ))}
         </div>
+        {hasCustomLabelPositions && (
+          <button
+            type="button"
+            onClick={resetMatrixAxisLabelOffsets}
+            className="cursor-pointer rounded-[var(--radius-control)] border border-[var(--border-secondary-btn)] bg-[var(--surface-button-secondary)] px-[12px] py-[5px] text-[12px] font-semibold text-[var(--text-button)] hover:border-[var(--border-secondary-btn-hover)]"
+          >
+            ラベル位置をリセット
+          </button>
+        )}
         <div className="text-[12px] text-[var(--text-caption)]">
-          アイコンはグリッド上の任意の位置にドラッグで移動できます
+          アイコンはグリッド上の任意の位置にドラッグで移動できます。軸ラベルはドラッグで動かせます
         </div>
       </div>
 

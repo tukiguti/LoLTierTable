@@ -32,6 +32,7 @@ export function PngExportDialog({ open, onClose }: PngExportDialogProps) {
   const tiers = useDiagramStore((state) => state.tiers);
   const matrixPlacements = useDiagramStore((state) => state.matrixPlacements);
   const matrixAxisLabels = useDiagramStore((state) => state.matrixAxisLabels);
+  const matrixAxisLabelOffsets = useDiagramStore((state) => state.matrixAxisLabelOffsets);
   const matrixGridSize = useDiagramStore((state) => state.matrixGridSize);
   const { champions, version: patchVersion } = useChampionRoster();
 
@@ -126,6 +127,7 @@ export function PngExportDialog({ open, onClose }: PngExportDialogProps) {
       <ExportMatrixBoard
         placements={matrixPlacements}
         axisLabels={matrixAxisLabels}
+        axisLabelOffsets={matrixAxisLabelOffsets}
         gridSize={matrixGridSize}
         champions={champions}
       />

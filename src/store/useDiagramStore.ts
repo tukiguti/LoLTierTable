@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import type {
   AppMode,
   ChampionRole,
+  MatrixAxisLabelOffsets,
   MatrixAxisLabels,
   MatrixGridSize,
   MatrixPlacement,
@@ -31,14 +32,34 @@ function createDefaultTiers(): Tier[] {
   }));
 }
 
+/**
+ * 軸ラベルの既定文言（実装判断・チームリード指示）。以前は「操作難易度」「簡単」「強い」等の
+ * 具体的な内容を既定にしていたが、完成した表示に見えてしまい「編集できる」と気づかれなかった。
+ * 軸名は番号付きの汎用名（ラベル1・ラベル2）、両端は「低い/高い」という向きだけを示す語にする。
+ * 低い/高いはX（左→右）・Y（下→上）どちらの軸でも「低い方の端・高い方の端」として自然に読め、
+ * 特定の意味（強さ・難易度等）を先取りしないため両軸で使い回せる。
+ */
 function createDefaultMatrixAxisLabels(): MatrixAxisLabels {
   return {
-    xAxisLabel: '操作難易度',
-    yAxisLabel: '現環境の強さ',
-    xLeftLabel: '簡単',
-    xRightLabel: '難しい',
-    yTopLabel: '強い',
-    yBottomLabel: '弱い',
+    xAxisLabel: 'ラベル1',
+    yAxisLabel: 'ラベル2',
+    xLeftLabel: '低い',
+    xRightLabel: '高い',
+    yTopLabel: '高い',
+    yBottomLabel: '低い',
+  };
+}
+
+/** 軸ラベル位置ずれの既定値（全て0＝ドラッグ前の既定位置） */
+export function createDefaultMatrixAxisLabelOffsets(): MatrixAxisLabelOffsets {
+  const zero = { dx: 0, dy: 0 };
+  return {
+    xAxisLabel: { ...zero },
+    yAxisLabel: { ...zero },
+    xLeftLabel: { ...zero },
+    xRightLabel: { ...zero },
+    yTopLabel: { ...zero },
+    yBottomLabel: { ...zero },
   };
 }
 
@@ -96,6 +117,15 @@ interface DiagramState {
   removeMatrixPlacement: (placementId: string) => void;
   matrixAxisLabels: MatrixAxisLabels;
   updateMatrixAxisLabels: (labels: Partial<MatrixAxisLabels>) => void;
+  /** 軸ラベルの位置（デザイン仕様の既定位置からのずれ）。キーはmatrixAxisLabelsと同じ6種 */
+  matrixAxisLabelOffsets: MatrixAxisLabelOffsets;
+  /** 1つのラベルをドラッグしたときの位置更新。他のラベルの位置には触れない */
+  updateMatrixAxisLabelOffset: (
+    key: keyof MatrixAxisLabels,
+    offset: { dx: number; dy: number },
+  ) => void;
+  /** 6つのラベル位置をすべて既定（ずれ0）へ戻す。ドラッグで散らかったときの救済手段 */
+  resetMatrixAxisLabelOffsets: () => void;
   matrixGridSize: MatrixGridSize;
   setMatrixGridSize: (size: MatrixGridSize) => void;
 
@@ -123,6 +153,7 @@ interface DiagramState {
     unclassifiedChampionIds: string[];
     matrixPlacements: MatrixPlacement[];
     matrixAxisLabels: MatrixAxisLabels;
+    matrixAxisLabelOffsets: MatrixAxisLabelOffsets;
     matrixGridSize: MatrixGridSize;
   }) => void;
 
@@ -195,7 +226,7 @@ function resolveOverlap(
 
 const STORAGE_KEY = 'loltiertable:diagram';
 /** 保存形式のバージョン。永続化するstateの形を変えたらインクリメントし、migrateで移行する */
-const STORAGE_VERSION = 2;
+const STORAGE_VERSION = 3;
 
 export const useDiagramStore = create<DiagramState>()(
   persist(
@@ -401,6 +432,16 @@ export const useDiagramStore = create<DiagramState>()(
       updateMatrixAxisLabels: (labels) =>
         set((state) => ({ matrixAxisLabels: { ...state.matrixAxisLabels, ...labels } })),
 
+      matrixAxisLabelOffsets: createDefaultMatrixAxisLabelOffsets(),
+
+      updateMatrixAxisLabelOffset: (key, offset) =>
+        set((state) => ({
+          matrixAxisLabelOffsets: { ...state.matrixAxisLabelOffsets, [key]: offset },
+        })),
+
+      resetMatrixAxisLabelOffsets: () =>
+        set({ matrixAxisLabelOffsets: createDefaultMatrixAxisLabelOffsets() }),
+
       matrixGridSize: DEFAULT_MATRIX_GRID_SIZE,
 
       setMatrixGridSize: (size) => set({ matrixGridSize: size }),
@@ -429,6 +470,7 @@ export const useDiagramStore = create<DiagramState>()(
           unclassifiedChampionIds: diagram.unclassifiedChampionIds,
           matrixPlacements: diagram.matrixPlacements,
           matrixAxisLabels: diagram.matrixAxisLabels,
+          matrixAxisLabelOffsets: diagram.matrixAxisLabelOffsets,
           matrixGridSize: diagram.matrixGridSize,
           // 共有された図はプリセット由来ではないので、選択表示を消す
           activeLanePreset: null,
@@ -440,6 +482,7 @@ export const useDiagramStore = create<DiagramState>()(
           unclassifiedChampionIds: [],
           matrixPlacements: [],
           matrixAxisLabels: createDefaultMatrixAxisLabels(),
+          matrixAxisLabelOffsets: createDefaultMatrixAxisLabelOffsets(),
           matrixGridSize: DEFAULT_MATRIX_GRID_SIZE,
           activeLanePreset: null,
         }),
@@ -457,6 +500,7 @@ export const useDiagramStore = create<DiagramState>()(
         unclassifiedChampionIds: state.unclassifiedChampionIds,
         matrixPlacements: state.matrixPlacements,
         matrixAxisLabels: state.matrixAxisLabels,
+        matrixAxisLabelOffsets: state.matrixAxisLabelOffsets,
         matrixGridSize: state.matrixGridSize,
         dimPlaced: state.dimPlaced,
         showHints: state.showHints,
@@ -464,8 +508,11 @@ export const useDiagramStore = create<DiagramState>()(
         activeLanePreset: state.activeLanePreset,
       }),
       // version 1 → 2: matrixPlacements に配置ごとの id が無かった（championId のみでの管理から、
-      // 同一チャンピオンを複数配置できる形へ変更したため id を追加）。既存の保存データが
-      // 壊れていたり古い形のままでも落ちないよう、フィールドごとにフォールバックしつつ組み直す。
+      // 同一チャンピオンを複数配置できる形へ変更したため id を追加）。
+      // version 2 → 3: matrixAxisLabelOffsets（軸ラベルの位置ずれ）を追加。旧データには存在しない
+      // フィールドなので、無ければ全て0（既定位置）として扱う。
+      // 既存の保存データが壊れていたり古い形のままでも落ちないよう、フィールドごとに
+      // フォールバックしつつ組み直す。
       migrate: (persistedState, _version) => {
         const state = (persistedState ?? {}) as Partial<{
           mode: AppMode;
@@ -475,6 +522,7 @@ export const useDiagramStore = create<DiagramState>()(
             Partial<MatrixPlacement> & { championId?: string; x?: number; y?: number }
           >;
           matrixAxisLabels: MatrixAxisLabels;
+          matrixAxisLabelOffsets: Partial<MatrixAxisLabelOffsets>;
           matrixGridSize: MatrixGridSize;
           dimPlaced: boolean;
           showHints: boolean;
@@ -489,12 +537,19 @@ export const useDiagramStore = create<DiagramState>()(
           }),
         );
 
+        const defaultOffsets = createDefaultMatrixAxisLabelOffsets();
+        const migratedOffsets: MatrixAxisLabelOffsets = {
+          ...defaultOffsets,
+          ...state.matrixAxisLabelOffsets,
+        };
+
         return {
           mode: state.mode ?? 'tierlist',
           tiers: state.tiers ?? createDefaultTiers(),
           unclassifiedChampionIds: state.unclassifiedChampionIds ?? [],
           matrixPlacements: migratedPlacements,
           matrixAxisLabels: state.matrixAxisLabels ?? createDefaultMatrixAxisLabels(),
+          matrixAxisLabelOffsets: migratedOffsets,
           matrixGridSize: state.matrixGridSize ?? DEFAULT_MATRIX_GRID_SIZE,
           dimPlaced: state.dimPlaced ?? true,
           showHints: state.showHints ?? true,

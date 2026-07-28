@@ -19,7 +19,7 @@ export interface MatrixPlacement {
 
 /**
  * 軸ラベル一式。軸名2つ（xAxisLabel/yAxisLabel）と両端4つ（デザイン仕様§7）。
- * 既定値: X = 操作難易度（簡単→難しい）、Y = 現環境の強さ（下が弱い・上が強い）
+ * 既定値は編集前提の汎用文言（ラベル1/ラベル2、低い/高い）。ユーザーが実際の軸の意味に書き換えて使う。
  */
 export interface MatrixAxisLabels {
   xAxisLabel: string;
@@ -29,3 +29,17 @@ export interface MatrixAxisLabels {
   yTopLabel: string;
   yBottomLabel: string;
 }
+
+/**
+ * 軸ラベル1個ぶんの、既定位置からのずれ。
+ * 盤面（正方形部分）の一辺のピクセルサイズに対する比率で持つ（ピクセル固定だと
+ * デスクトップ・モバイル・PNG書き出し(盤面602px固定)で見た目の位置がずれるため）。
+ * dx: 正が右方向 / dy: 正が下方向。0がドラッグ前の既定位置と同じ見た目。
+ */
+export interface MatrixAxisLabelOffset {
+  dx: number;
+  dy: number;
+}
+
+/** MatrixAxisLabels と同じ6キーぶんの位置ずれ */
+export type MatrixAxisLabelOffsets = Record<keyof MatrixAxisLabels, MatrixAxisLabelOffset>;
