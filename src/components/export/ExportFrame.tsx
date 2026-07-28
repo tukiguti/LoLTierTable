@@ -71,15 +71,18 @@ export const ExportFrame = forwardRef<HTMLDivElement, ExportFrameProps>(function
           gap: 16,
         }}
       >
-        <div
-          style={{
-            width: 34,
-            height: 34,
-            flex: 'none',
-            transform: 'rotate(45deg)',
-            borderRadius: 4,
-            background: 'linear-gradient(135deg, var(--gold-gradient-start), var(--gold-gradient-end))',
-          }}
+        {/*
+          サイト共通の菱形ではなく、このツール自身のアイコンを出す。
+          書き出した画像はSNSに貼られて単体で流通するので、
+          タブやカードで見えているものと同じ絵が載っている方が結びつく。
+          html2canvas は inline SVG の扱いが不安定なため、img として読み込ませる。
+        */}
+        <img
+          src="/favicon.svg"
+          alt=""
+          width={40}
+          height={40}
+          style={{ width: 40, height: 40, flex: 'none', display: 'block' }}
         />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
           <div
