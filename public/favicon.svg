@@ -1,30 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <!--
-    LoLTierTable のアイコン。2つの機能を1つの図案に収める。
-    左の3本の色帯＝ティア表の段、右の格子と金の十字線＝マトリクスの2軸。
-    格子の上に不規則に置いた駒で「自由配置」を表す。
+    LoLTierTable のアイコン。3つの要素を左から順に置く。
+      左   3本の色帯      … ティア表の段
+      中央 金の L          … ツール名の頭文字
+      右   十字と散った駒  … マトリクスの2軸と自由配置
+    要素同士を重ねると小さいサイズで潰れるため、領域を分けて配置している。
     色はアプリのデザイントークン(oklch)をsRGBへ変換した値をそのまま使う。
-    16pxまで縮むと右側の格子は地の模様として溶けるが、左の3色は残るので
-    何のツールか読み取れる状態を保てる。
   -->
   <rect width="64" height="64" rx="13" fill="#10141b"/>
   <rect x="1.75" y="1.75" width="60.5" height="60.5" rx="11.5" fill="none" stroke="#ebbd57" stroke-width="2.5"/>
 
-  <!-- マトリクス: 中心の2軸。
-       目安の格子線も試したが、16pxまで縮むと駒と混ざって潰れるため入れていない。
-       十字だけの方が「2軸に置く図」だと小さくても読み取れる。 -->
-  <g stroke="#ebbd57" stroke-width="1.8" opacity="0.85">
-    <path d="M41 11V53"/>
-    <path d="M23 32H56"/>
+  <!-- 左: ティア表の段 -->
+  <rect x="7" y="14" width="9" height="11" rx="2.5" fill="#c13c3b"/>
+  <rect x="7" y="27" width="9" height="11" rx="2.5" fill="#c86f25"/>
+  <rect x="7" y="40" width="9" height="11" rx="2.5" fill="#cbab3e"/>
+
+  <!-- 中央: 頭文字の L -->
+  <path d="M25 18V44H37" fill="none" stroke="#ebbd57" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 右: マトリクスの2軸 -->
+  <g stroke="#ebbd57" stroke-width="1.6" opacity="0.8">
+    <path d="M50 14V50"/>
+    <path d="M43 32H58"/>
   </g>
 
-  <!-- マトリクス: 盤面に置いた駒（格子に揃えず散らす） -->
-  <rect x="26" y="14" width="8" height="8" rx="2" fill="#3a4150"/>
-  <rect x="45" y="19" width="8" height="8" rx="2" fill="#3a4150"/>
-  <rect x="35" y="38" width="8" height="8" rx="2" fill="#3a4150"/>
-
-  <!-- ティア表: 段のラベル -->
-  <rect x="8" y="13" width="11" height="12" rx="2.5" fill="#c13c3b"/>
-  <rect x="8" y="27" width="11" height="12" rx="2.5" fill="#c86f25"/>
-  <rect x="8" y="41" width="11" height="12" rx="2.5" fill="#cbab3e"/>
+  <!-- 右: 盤面に置いた駒 -->
+  <rect x="44" y="17" width="7" height="7" rx="1.8" fill="#3a4150"/>
+  <rect x="52" y="36" width="7" height="7" rx="1.8" fill="#3a4150"/>
 </svg>
