@@ -48,7 +48,7 @@ export const EXPORT_MIDDLE_HEIGHT =
  * 書き出しのドメイン表記。デザイン仕様§12の決定により、実在しない
  * `loltiertable.gg`（原本デザインの値）ではなく実際の公開予定ドメインを使う。
  */
-export const EXPORT_DOMAIN = 'tier.tukiguti.com';
+export const EXPORT_DOMAIN = 'loltiertable.tukiguti.com';
 
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));

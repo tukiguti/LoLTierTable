@@ -2,7 +2,7 @@
 
 League of Legends のチャンピオンでティア表とマトリクス図を作れるWebツールです。左のチャンピオン一覧からドラッグして配置し、作った図はPNG画像として書き出せます。
 
-公開先: tier.tukiguti.com（準備中）
+公開先: https://loltiertable.tukiguti.com
 
 ## 2つのモード
 
