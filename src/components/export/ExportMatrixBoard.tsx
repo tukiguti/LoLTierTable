@@ -20,6 +20,69 @@ const AXIS_LABEL_SIZE = 34;
 const AXIS_END_SIZE = 30;
 const GRID_GAP = 6;
 const PIECE_SIZE = 56;
+/** 縦に積んだ1文字あたりの高さ（フォントサイズに対する倍率） */
+const VERTICAL_LINE_RATIO = 1.06;
+
+interface VerticalTextProps {
+  text: string;
+  fontSize: number;
+  fontWeight: number;
+  color: string;
+  /** この高さに収まらない場合は文字を縮める */
+  maxHeight: number;
+  transform: string;
+  className?: string;
+  letterSpacing?: string;
+}
+
+/**
+ * 縦書きのラベル。**`writing-mode: vertical-rl` を使わず、1文字ずつ縦に積む。**
+ *
+ * html2canvas は writing-mode を解釈せず横書きとして描画するため、画面では縦書きに
+ * 見えているラベルが、書き出した画像では幅30px程度の列に横書きで押し込まれ、
+ * 折り返しと見切れを起こしていた（「きつくない」→「きつ/くない」など）。
+ * 日本語の縦書きは1文字ずつ積むのと見た目が変わらないので、確実に描ける形にしている。
+ *
+ * 文字数が多くて縦に収まらない場合は、切るのではなく文字を縮めて全部見せる。
+ * ラベルは軸の意味そのものなので、途中で切れると図として読めなくなる。
+ */
+function VerticalText({
+  text,
+  fontSize,
+  fontWeight,
+  color,
+  maxHeight,
+  transform,
+  className,
+  letterSpacing,
+}: VerticalTextProps) {
+  const characters = [...text];
+  const naturalHeight = characters.length * fontSize * VERTICAL_LINE_RATIO;
+  const scale = naturalHeight > maxHeight ? maxHeight / naturalHeight : 1;
+  const resolvedFontSize = Math.max(9, fontSize * scale);
+
+  return (
+    <div
+      className={className}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        fontSize: resolvedFontSize,
+        fontWeight,
+        color,
+        letterSpacing,
+        lineHeight: VERTICAL_LINE_RATIO,
+        whiteSpace: 'nowrap',
+        transform,
+      }}
+    >
+      {characters.map((character, index) => (
+        <span key={index}>{character}</span>
+      ))}
+    </div>
+  );
+}
 
 /**
  * 書き出し用マトリクスの中央（デザイン仕様には無い画面のため、§7の画面用レイアウトと
@@ -73,20 +136,16 @@ export function ExportMatrixBoard({
     >
       {/* Y軸ラベル */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div
+        <VerticalText
           className="font-display"
-          style={{
-            writingMode: 'vertical-rl',
-            fontSize: 19,
-            fontWeight: 700,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            color: 'var(--gold)',
-            transform: offsetTransform('yAxisLabel'),
-          }}
-        >
-          {axisLabels.yAxisLabel}
-        </div>
+          text={axisLabels.yAxisLabel}
+          fontSize={19}
+          fontWeight={700}
+          letterSpacing="0.12em"
+          color="var(--gold)"
+          maxHeight={boardSize}
+          transform={offsetTransform('yAxisLabel')}
+        />
       </div>
 
       {/* Y軸両端 */}
@@ -99,28 +158,22 @@ export function ExportMatrixBoard({
           padding: '6px 0',
         }}
       >
-        <div
-          style={{
-            writingMode: 'vertical-rl',
-            fontSize: 13,
-            fontWeight: 600,
-            color: 'var(--text-secondary)',
-            transform: offsetTransform('yTopLabel'),
-          }}
-        >
-          {axisLabels.yTopLabel}
-        </div>
-        <div
-          style={{
-            writingMode: 'vertical-rl',
-            fontSize: 13,
-            fontWeight: 600,
-            color: 'var(--text-weak)',
-            transform: offsetTransform('yBottomLabel'),
-          }}
-        >
-          {axisLabels.yBottomLabel}
-        </div>
+        <VerticalText
+          text={axisLabels.yTopLabel}
+          fontSize={13}
+          fontWeight={600}
+          color="var(--text-secondary)"
+          maxHeight={boardSize * 0.42}
+          transform={offsetTransform('yTopLabel')}
+        />
+        <VerticalText
+          text={axisLabels.yBottomLabel}
+          fontSize={13}
+          fontWeight={600}
+          color="var(--text-weak)"
+          maxHeight={boardSize * 0.42}
+          transform={offsetTransform('yBottomLabel')}
+        />
       </div>
 
       {/* 盤面 */}
@@ -194,6 +247,7 @@ export function ExportMatrixBoard({
           style={{
             fontSize: 13,
             fontWeight: 600,
+            whiteSpace: 'nowrap',
             color: 'var(--text-weak)',
             transform: offsetTransform('xLeftLabel'),
           }}
@@ -204,6 +258,7 @@ export function ExportMatrixBoard({
           style={{
             fontSize: 13,
             fontWeight: 600,
+            whiteSpace: 'nowrap',
             color: 'var(--text-secondary)',
             transform: offsetTransform('xRightLabel'),
           }}
@@ -225,6 +280,7 @@ export function ExportMatrixBoard({
             fontWeight: 700,
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
+            whiteSpace: 'nowrap',
             color: 'var(--gold)',
             transform: offsetTransform('xAxisLabel'),
           }}
