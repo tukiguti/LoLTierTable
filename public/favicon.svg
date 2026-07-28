@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    LoLTierTable のファビコン。
+    ティア表そのものを図案にしている。左の色帯が段のラベル、右の四角が並べたチャンピオン。
+    色はアプリのデザイントークン（oklch）をsRGBへ変換した値をそのまま使う。
+    16pxまで縮んでも「色の違う3段が積まれている」と読めるよう、要素はこの3行だけに絞る。
+  -->
+  <rect width="64" height="64" rx="12" fill="#10141b"/>
+  <rect x="2" y="2" width="60" height="60" rx="10" fill="none" stroke="#ebbd57" stroke-width="2.5"/>
+
+  <!-- S段 -->
+  <rect x="11" y="13" width="13" height="12" rx="2" fill="#c13c3b"/>
+  <rect x="27" y="15" width="8" height="8" rx="1.5" fill="#3a4150"/>
+  <rect x="38" y="15" width="8" height="8" rx="1.5" fill="#3a4150"/>
+  <rect x="49" y="15" width="4" height="8" rx="1.5" fill="#2a3039"/>
+
+  <!-- A段 -->
+  <rect x="11" y="27" width="13" height="12" rx="2" fill="#c86f25"/>
+  <rect x="27" y="29" width="8" height="8" rx="1.5" fill="#3a4150"/>
+  <rect x="38" y="29" width="8" height="8" rx="1.5" fill="#2a3039"/>
+
+  <!-- B段 -->
+  <rect x="11" y="41" width="13" height="12" rx="2" fill="#cbab3e"/>
+  <rect x="27" y="43" width="8" height="8" rx="1.5" fill="#2a3039"/>
+</svg>
