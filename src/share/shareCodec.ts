@@ -1,5 +1,6 @@
 import type {
   AppMode,
+  MatrixAxisLabelOffsets,
   MatrixAxisLabels,
   MatrixGridSize,
   MatrixPlacement,
@@ -21,15 +22,37 @@ import type {
  * - base64url: 圧縮後 or 生のUTF-8 JSONバイト列をbase64url化したもの
  */
 
-export const SHARE_FORMAT_VERSION = 1;
+/**
+ * 共有URLの形式バージョン。1→2でmatrixAxisLabelOffsets(軸ラベルの位置ずれ)を追加した。
+ * 既に発行済みのバージョン1リンクを壊さないよう、デコード側はSUPPORTED_SHARE_FORMAT_VERSIONS
+ * に載っている旧バージョンのタグも受け付ける(オフセットが無ければ0として補う)。
+ */
+export const SHARE_FORMAT_VERSION = 2;
+const SUPPORTED_SHARE_FORMAT_VERSIONS = ['1', '2'];
 export const SHARE_HASH_KEY = 'd';
 /** これを超える場合は共有せず理由を伝える(要求。目安として8000文字) */
 export const MAX_SHARE_URL_LENGTH = 8000;
+
+/** 軸ラベル位置ずれの既定値(全て0)。バージョン1のリンクや壊れたデータの補完に使う */
+function createZeroAxisLabelOffsets(): MatrixAxisLabelOffsets {
+  const zero = { dx: 0, dy: 0 };
+  return {
+    xAxisLabel: { ...zero },
+    yAxisLabel: { ...zero },
+    xLeftLabel: { ...zero },
+    xRightLabel: { ...zero },
+    yTopLabel: { ...zero },
+    yBottomLabel: { ...zero },
+  };
+}
 
 /**
  * 共有する図の中身。検索語・ロール選択・表示設定は含めない(作業内容ではないため)。
  * id(段・配置ごとの一意識別子)は共有しない。並び順だけで十分でありURLを短くできる。
  * デコード側(toStoreDiagram)で新規に採番する。
+ *
+ * matrixAxisLabelOffsetsはoptional: バージョン1で発行された既存の共有URLには含まれないため。
+ * 常に付けて出力する(buildSharedDiagramFromState参照)のは新規に作る側だけの話。
  */
 export interface SharedDiagram {
   mode: AppMode;
@@ -37,6 +60,7 @@ export interface SharedDiagram {
   unclassifiedChampionIds: string[];
   matrixPlacements: Array<{ championId: string; x: number; y: number }>;
   matrixAxisLabels: MatrixAxisLabels;
+  matrixAxisLabelOffsets?: MatrixAxisLabelOffsets;
   matrixGridSize: MatrixGridSize;
 }
 
@@ -47,6 +71,7 @@ export interface StoreDiagram {
   unclassifiedChampionIds: string[];
   matrixPlacements: MatrixPlacement[];
   matrixAxisLabels: MatrixAxisLabels;
+  matrixAxisLabelOffsets: MatrixAxisLabelOffsets;
   matrixGridSize: MatrixGridSize;
 }
 
@@ -191,6 +216,33 @@ function isValidAxisLabels(value: unknown): value is MatrixAxisLabels {
   );
 }
 
+const AXIS_LABEL_OFFSET_KEYS = [
+  'xAxisLabel',
+  'yAxisLabel',
+  'xLeftLabel',
+  'xRightLabel',
+  'yTopLabel',
+  'yBottomLabel',
+] as const;
+
+function isValidAxisLabelOffset(value: unknown): boolean {
+  if (!value || typeof value !== 'object') return false;
+  const offset = value as Record<string, unknown>;
+  return (
+    typeof offset.dx === 'number' &&
+    Number.isFinite(offset.dx) &&
+    typeof offset.dy === 'number' &&
+    Number.isFinite(offset.dy)
+  );
+}
+
+/** バージョン1のリンクには存在しないフィールドなので、undefinedは有効として扱う(呼び出し側が0で補う) */
+function isValidAxisLabelOffsets(value: unknown): value is MatrixAxisLabelOffsets {
+  if (!value || typeof value !== 'object') return false;
+  const offsets = value as Record<string, unknown>;
+  return AXIS_LABEL_OFFSET_KEYS.every((key) => isValidAxisLabelOffset(offsets[key]));
+}
+
 /** 壊れたデータを部分的に復元しようとはしない。1箇所でも形が合わなければ全体を無効とする */
 function isSharedDiagram(value: unknown): value is SharedDiagram {
   if (!value || typeof value !== 'object') return false;
@@ -203,6 +255,8 @@ function isSharedDiagram(value: unknown): value is SharedDiagram {
     Array.isArray(diagram.matrixPlacements) &&
     diagram.matrixPlacements.every(isValidPlacement) &&
     isValidAxisLabels(diagram.matrixAxisLabels) &&
+    (diagram.matrixAxisLabelOffsets === undefined ||
+      isValidAxisLabelOffsets(diagram.matrixAxisLabelOffsets)) &&
     (diagram.matrixGridSize === 4 || diagram.matrixGridSize === 6)
   );
 }
@@ -227,7 +281,7 @@ export async function decodeSharedDiagramFromHash(hash: string): Promise<SharedD
   const dotIndex = value.indexOf('.');
   if (dotIndex === -1) return null;
   const version = value.slice(0, dotIndex);
-  if (version !== String(SHARE_FORMAT_VERSION)) return null; // 未知バージョンは黙って無視
+  if (!SUPPORTED_SHARE_FORMAT_VERSIONS.includes(version)) return null; // 未知バージョンは黙って無視
 
   const rest = value.slice(dotIndex + 1);
   const encoding = rest[0];
@@ -271,11 +325,13 @@ export function buildSharedDiagramFromState(state: StoreDiagram): SharedDiagram 
       y,
     })),
     matrixAxisLabels: state.matrixAxisLabels,
+    matrixAxisLabelOffsets: state.matrixAxisLabelOffsets,
     matrixGridSize: state.matrixGridSize,
   };
 }
 
-/** 共有データにidを新規採番し、ストアの loadDiagram にそのまま渡せる形にする */
+/** 共有データにidを新規採番し、ストアの loadDiagram にそのまま渡せる形にする。
+ * matrixAxisLabelOffsetsが無い(バージョン1で発行されたリンク)場合は全て0として補う。 */
 export function toStoreDiagram(diagram: SharedDiagram): StoreDiagram {
   return {
     mode: diagram.mode,
@@ -286,6 +342,7 @@ export function toStoreDiagram(diagram: SharedDiagram): StoreDiagram {
       ...placement,
     })),
     matrixAxisLabels: diagram.matrixAxisLabels,
+    matrixAxisLabelOffsets: diagram.matrixAxisLabelOffsets ?? createZeroAxisLabelOffsets(),
     matrixGridSize: diagram.matrixGridSize,
   };
 }
