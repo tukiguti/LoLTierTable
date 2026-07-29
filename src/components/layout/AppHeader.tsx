@@ -62,13 +62,8 @@ export function AppHeader({ mode, onModeChange }: AppHeaderProps) {
       <div className="hidden h-full items-center gap-[24px] px-[20px] lg:flex">
         {/* ロゴ */}
         <div className="flex flex-none items-center gap-[10px]">
-          <div
-            className="h-[26px] w-[26px] rotate-45 rounded-[var(--radius-small)]"
-            style={{
-              background:
-                'linear-gradient(135deg, var(--gold-gradient-start), var(--gold-gradient-end))',
-            }}
-          />
+          {/* タブ・書き出し画像・tukiguti.comのカードと同じアイコンを出す（旧: 金の菱形） */}
+          <img src="/favicon.svg" alt="" className="h-[30px] w-[30px] flex-none" />
           <div className="font-display text-[23px] font-bold uppercase tracking-[0.06em] text-[var(--text-logo)]">
             LoL<span className="text-[var(--gold)]">TierTable</span>
           </div>
@@ -126,13 +121,7 @@ export function AppHeader({ mode, onModeChange }: AppHeaderProps) {
       <div className="flex h-full flex-col gap-[9px] px-[14px] pb-0 pt-[env(safe-area-inset-top)] lg:hidden">
         {/* 上段: ロゴ + PNG + ⋯メニュー */}
         <div className="flex items-center gap-[8px]">
-          <div
-            className="h-[18px] w-[18px] flex-none rotate-45 rounded-[var(--radius-logo-mobile)]"
-            style={{
-              background:
-                'linear-gradient(135deg, var(--gold-gradient-start), var(--gold-gradient-end))',
-            }}
-          />
+          <img src="/favicon.svg" alt="" className="h-[22px] w-[22px] flex-none" />
           <div className="font-display text-[18px] font-bold uppercase tracking-[0.05em] text-[var(--text-logo)]">
             LoL<span className="text-[var(--gold)]">TierTable</span>
           </div>
